@@ -102,25 +102,111 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {/* Footer */}
       <footer className="border-t bg-background">
-        <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
-          <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
-            <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
+        <div className="container py-10">
+          {/* Main Footer Content */}
+          <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-8">
+            {/* Logo and Description */}
+            <div className="flex flex-col items-start">
+              <div className="flex items-center space-x-2 mb-4">
+                <img 
+                  src="/gopraivate_v10.12.png" 
+                  alt="goprAIvate Logo" 
+                  className="h-8 w-8"
+                />
+                <span className="font-bold text-lg">goprAIvate</span>
+              </div>
+              <p className="text-sm text-muted-foreground max-w-md">
+                Use AI Without Giving Away Sensitive Information. Leverage the power of LLMs without compromising privacy.
+              </p>
+            </div>
+
+            {/* Navigation Links */}
+            <div className="flex flex-col md:flex-row gap-8">
+              <div className="flex flex-col space-y-3">
+                <h3 className="font-semibold text-sm">Navigation</h3>
+                <nav className="flex flex-col space-y-2">
+                  <a
+                    className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
+                    onClick={() => {
+                      document.getElementById('problem')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    Problem
+                  </a>
+                  <a
+                    className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
+                    onClick={() => {
+                      document.getElementById('solutions')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    Solutions
+                  </a>
+                  <a
+                    className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
+                    onClick={() => {
+                      document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    How it works
+                  </a>
+                </nav>
+              </div>
+
+              <div className="flex flex-col space-y-3">
+                <h3 className="font-semibold text-sm">Company</h3>
+                <nav className="flex flex-col space-y-2">
+                  <a
+                    className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
+                    onClick={() => {
+                      document.getElementById('benefits')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    Benefits
+                  </a>
+                  <a
+                    className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
+                    onClick={() => {
+                      document.getElementById('references')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    References
+                  </a>
+                  <a
+                    className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
+                    onClick={() => {
+                      document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    About
+                  </a>
+                </nav>
+              </div>
+
+              <div className="flex flex-col space-y-3">
+                <h3 className="font-semibold text-sm">Legal</h3>
+                <nav className="flex flex-col space-y-2">
+                  <a
+                    href="#"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Privacy Policy
+                  </a>
+                  <a
+                    href="#"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Terms of Service
+                  </a>
+                </nav>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Footer */}
+          <div className="pt-8 border-t border-border">
+            <p className="text-center text-sm text-muted-foreground">
               © 2025 goprAIvate. All rights reserved.
             </p>
-          </div>
-          <div className="flex items-center space-x-4">
-            <a
-              href="#"
-              className="text-sm text-muted-foreground hover:text-foreground"
-            >
-              Privacy Policy
-            </a>
-            <a
-              href="#"
-              className="text-sm text-muted-foreground hover:text-foreground"
-            >
-              Terms of Service
-            </a>
           </div>
         </div>
       </footer>
