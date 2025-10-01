@@ -113,6 +113,27 @@ const Index = () => {
             </div>
           </div>
         </div>
+
+        {/* What's the problem section */}
+        <div className="bg-gray-50 py-16 px-4">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">What's the problem?</h2>
+            
+            <div className="space-y-6 text-gray-700 leading-relaxed">
+              <div>
+                <span className="font-semibold text-gray-900">AI tools are powerful—but risky.</span> Generative AI (e.g., ChatGPT) streamlines email writing, report reviews, coding and more. But these benefits come with massive data privacy concerns, which is why many enterprises block public AI tools internally.
+              </div>
+              
+              <div>
+                <span className="font-semibold text-gray-900">Real incidents, real exposure.</span> Sensitive content pasted into cloud models can be logged, retained for model improvement or monitoring, and inadvertently revealed.
+              </div>
+              
+              <div>
+                <span className="font-semibold text-gray-900">Training retention risks.</span> Some systems can memorize and regurgitate personal data present in training or telemetry—leading to unintentional disclosure of PII.
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <MadeWithDyad />
     </Layout>
