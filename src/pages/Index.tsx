@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +21,14 @@ import { Paperclip, Settings, Send } from "lucide-react";
 
 const Index = () => {
   const [prompt, setPrompt] = useState("");
+  const navigate = useNavigate();
+
+  const handleSend = () => {
+    if (prompt.trim()) {
+      // Navigate to chat page with the prompt
+      navigate('/chat', { state: { initialPrompt: prompt } });
+    }
+  };
 
   return (
     <Layout>
@@ -108,6 +117,7 @@ const Index = () => {
 
                 {/* Send Button */}
                 <Button
+                  onClick={handleSend}
                   size="sm"
                   className="bg-black hover:bg-gray-800 text-white rounded-lg px-6 py-2 h-9 font-medium transition-colors shadow-sm"
                   disabled={!prompt.trim()}
