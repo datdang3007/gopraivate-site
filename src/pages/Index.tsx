@@ -19,7 +19,7 @@ const Index = () => {
     <Layout>
       <div className="min-h-screen bg-white">
         {/* Main Content */}
-        <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
+        <div className="flex flex-col items-center justify-center min-h-[75vh] px-4">
           <div className="w-full max-w-4xl mx-auto">
             {/* Header */}
             <div className="text-center mb-12">
