@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -20,6 +20,7 @@ import {
   RotateCcw,
   User,
   Bot,
+  Home, // Import Home icon
 } from "lucide-react";
 
 interface Message {
@@ -32,12 +33,14 @@ interface Message {
 
 const Chat = () => {
   const location = useLocation();
+  const navigate = useNavigate(); // Initialize useNavigate
   const initialPrompt = location.state?.initialPrompt || "";
 
   const [prompt, setPrompt] = useState(initialPrompt);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [currentModel, setCurrentModel] = useState("chatgpt"); // State to manage current model
 
   // Auto-send initial prompt if provided
   useEffect(() => {
@@ -76,11 +79,16 @@ const Chat = () => {
         content:
           "This is a simulated AI response. In a real implementation, this would be connected to your chosen AI model with privacy protection enabled.",
         timestamp: new Date(),
-        model: "ChatGPT",
+        model: currentModel, // Use the selected model
       };
       setMessages((prev) => [...prev, aiMessage]);
       setIsLoading(false);
     }, 1500);
+  };
+
+  const handleSendWithModelChange = (model: string) => {
+    setCurrentModel(model); // Update the current model
+    handleSend(); // Then send the message
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -92,6 +100,45 @@ const Chat = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
+      {/* Chat Header */}
+      <div className="bg-white border-b border-gray-200 px-4 py-3 lg:px-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <img
+              src="/gopraivate_v10.12.png"
+              alt="goprAIvate Logo"
+              className="h-8 w-8"
+            />
+            <div>
+              <h1 className="text-lg font-semibold text-gray-900">goprAIvate Chat</h1>
+              <p className="text-sm text-gray-500">Private AI conversation</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            {/* Current Model Display */}
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span className="text-sm text-gray-700 font-medium">
+                {currentModel === "chatgpt" ? "ChatGPT" : 
+                 currentModel === "claude" ? "Claude" : 
+                 currentModel === "gemini" ? "Gemini" : "ChatGPT"}
+              </span>
+            </div>
+
+            {/* Home Button */}
+            <Button
+              onClick={() => navigate('/')}
+              variant="ghost"
+              size="sm"
+              className="p-2 hover:bg-gray-100 rounded-lg h-9 w-9 transition-colors"
+            >
+              <Home className="w-4 h-4 text-gray-600" />
+            </Button>
+          </div>
+        </div>
+      </div>
+
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto px-4 py-4 lg:px-6">
         <div className="max-w-4xl mx-auto space-y-6">
@@ -283,7 +330,7 @@ const Chat = () => {
                 {/* Show model selector on tablet and up */}
                 <div className="hidden md:flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <Select defaultValue="chatgpt">
+                  <Select defaultValue={currentModel} onValueChange={setCurrentModel}>
                     <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
                       <SelectValue />
                     </SelectTrigger>
