@@ -121,7 +121,7 @@ const Index = () => {
         </div>
 
         {/* What's the problem section */}
-        <div className="py-16 px-4">
+        <div id="problem" className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">
               What's the problem?
@@ -160,7 +160,7 @@ const Index = () => {
         </div>
 
         {/* Solutions section */}
-        <div className="py-16 px-4">
+        <div id="solutions" className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Solutions</h2>
 
@@ -326,7 +326,7 @@ const Index = () => {
         </div>
 
         {/* How it works section */}
-        <div className="bg-white py-16 px-4">
+        <div id="how-it-works" className="bg-white py-16 px-4">
           <div className="max-w-5xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 items-start">
               {/* Left Column - Text Content */}
@@ -431,7 +431,7 @@ const Index = () => {
         </div>
 
         {/* Benefits section */}
-        <div className="bg-white py-16 px-4">
+        <div id="benefits" className="bg-white py-16 px-4">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-12">Benefits</h2>
 
@@ -490,7 +490,7 @@ const Index = () => {
         </div>
 
         {/* References section */}
-        <div className="py-16 px-4">
+        <div id="references" className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">
               References
@@ -534,7 +534,7 @@ const Index = () => {
         </div>
 
         {/* About goprAIvate section */}
-        <div className="bg-white py-16 px-4">
+        <div id="about" className="bg-white py-16 px-4">
           <div className="max-w-5xl mx-auto">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Left Column - Image */}

@@ -29,38 +29,50 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="flex flex-1 items-center justify-center">
             <nav className="flex items-center space-x-8 text-sm font-medium">
               <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
-                href="#"
+                className="transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
+                onClick={() => {
+                  document.getElementById('problem')?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 Problem
               </a>
               <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
-                href="#"
+                className="transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
+                onClick={() => {
+                  document.getElementById('solutions')?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 Solutions
               </a>
               <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
-                href="#"
+                className="transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
+                onClick={() => {
+                  document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 How it works
               </a>
               <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
-                href="#"
+                className="transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
+                onClick={() => {
+                  document.getElementById('benefits')?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 Benefits
               </a>
               <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
-                href="#"
+                className="transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
+                onClick={() => {
+                  document.getElementById('references')?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 References
               </a>
               <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
-                href="#"
+                className="transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
+                onClick={() => {
+                  document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
                 About
               </a>
