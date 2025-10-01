@@ -10,7 +10,12 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Paperclip, Settings, Send } from "lucide-react";
 
 const Index = () => {
@@ -117,7 +122,7 @@ const Index = () => {
 
         {/* What's the problem section */}
         <div className="bg-gray-50 py-16 px-4">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">
               What's the problem?
             </h2>
@@ -154,129 +159,9 @@ const Index = () => {
           </div>
         </div>
 
-        {/* How it works section */}
-        <div className="bg-white py-16 px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-12 items-start">
-              {/* Left Column - Text Content */}
-              <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-8">How it works</h2>
-                
-                <div className="space-y-6 text-gray-700 leading-relaxed">
-                  <p>
-                    With <span className="font-semibold">goprAIvate</span>, private users and businesses can scrub out 
-                    personal and sensitive business information being 
-                    sent to ChatGPT, Llama, Claude, or other AIs—unlocking the 
-                    benefits of cutting-edge models <span className="italic">without</span> compromising 
-                    customer trust.
-                  </p>
-                  
-                  <div className="space-y-4">
-                    <div>
-                      <span className="font-semibold text-gray-900">1) Redact before you send.</span> We detect and tag PII (names, 
-                      emails, phone numbers, IDs) and sensitive business terms 
-                      (customers, contracts, financials, roadmap items) locally or at 
-                      your edge gateway.
-                    </div>
-                    
-                    <div>
-                      <span className="font-semibold text-gray-900">2) Route via a privacy relay.</span> Sanitized requests are relayed over 
-                      encrypted channels that hide your IP/geo and strip metadata, 
-                      then forwarded to your chosen AI—open or closed source, no 
-                      vendor lock-in.
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column - Example and Diagram */}
-              <div className="space-y-8">
-                {/* Medical Example */}
-                <div>
-                  <div className="text-sm text-gray-500 mb-3">Example medical sanitization</div>
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 font-mono text-sm leading-relaxed">
-                    <div className="space-y-1">
-                      <div>Patient <span className="bg-red-100 text-red-800 px-1 rounded">&lt;NAME&gt;</span> (42) from <span className="bg-red-100 text-red-800 px-1 rounded">&lt;CITY&gt;</span> reports one week of severe</div>
-                      <div>chest pain and shortness of breath. Current meds: Lisinopril</div>
-                      <div>10mg, Metformin 500mg b.i.d., Escitalopram 20mg. Seen at</div>
-                      <div><span className="bg-red-100 text-red-800 px-1 rounded">&lt;HOSPITAL&gt;</span> on <span className="bg-red-100 text-red-800 px-1 rounded">&lt;DATE&gt;</span>. Prior procedure: cardiac</div>
-                      <div>catheterization (03/2024). Follow-up with <span className="bg-red-100 text-red-800 px-1 rounded">&lt;DOCTOR&gt;</span> noted</div>
-                      <div>ejection fraction 45%. Please advise on risk and next steps.</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Workflow Diagram */}
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-                  <div className="flex items-center justify-center mb-6">
-                    <div className="bg-black text-white rounded-full w-16 h-16 flex items-center justify-center font-bold text-sm">
-                      goprAIvate
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    {/* Left Box */}
-                    <div className="text-center">
-                      <div className="bg-white border border-gray-300 rounded-lg p-3 mb-2">
-                        <div className="w-8 h-8 bg-gray-800 rounded-full mx-auto mb-2 flex items-center justify-center">
-                          <div className="w-4 h-4 bg-yellow-400 rounded-full"></div>
-                        </div>
-                        <div className="text-xs font-medium">Privacy<br/>relay</div>
-                      </div>
-                      <div className="text-xs font-semibold">Redact before you send</div>
-                      <div className="text-xs text-gray-600 mt-1">
-                        Dr <span className="text-red-600">&lt;NAME&gt;</span> prescribed 10
-                        mg of Quetiapine to <span className="text-red-600">&lt;NAME&gt;</span>
-                        after a diagnosis of type 2
-                        diabetes. The patient resides
-                        in <span className="text-red-600">&lt;LOCATION&gt;</span> and was
-                        referred by <span className="text-red-600">&lt;NAME&gt;</span>
-                      </div>
-                      <div className="text-xs text-gray-600 mt-2">
-                        We detect and tag PII (names,
-                        emails, phone numbers, IDs)
-                        and sensitive business terms
-                        (customers, contracts, financials,
-                        locally or at your
-                      </div>
-                    </div>
-
-                    {/* Right Box */}
-                    <div className="text-center">
-                      <div className="bg-white border border-gray-300 rounded-lg p-3 mb-2">
-                        <div className="flex items-center justify-center space-x-1 mb-2">
-                          <span className="text-xs">⚪</span>
-                          <span className="text-xs">➡️</span>
-                        </div>
-                        <div className="text-xs">
-                          <div>🔒 ChatGPT</div>
-                          <div>⚙️ Grok 🦙 Llama</div>
-                          <div>🧠 Claude</div>
-                        </div>
-                      </div>
-                      <div className="text-xs font-semibold">Route via a privacy relay</div>
-                      <div className="text-xs text-gray-600 mt-1">
-                        Sanitized requests are relayed
-                        over encrypted channels that
-                        hide your IP/geo and strip
-                        metadata, then forwarded to
-                        your chosen AI—open or closed source, no vendor lock-in.
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="text-center text-xs text-gray-600 font-medium">
-                    Consistent with GDPR, HIPAA, and SOC 2 requirements
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Solutions section */}
         <div className="bg-gray-50 py-16 px-4">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Solutions</h2>
 
             <Tabs defaultValue="private" className="w-full">
@@ -293,7 +178,8 @@ const Index = () => {
                         Automatic PII Redaction
                       </CardTitle>
                       <CardDescription className="text-gray-600 leading-relaxed">
-                        Names, emails, phone numbers, addresses, and IDs are removed in real time.
+                        Names, emails, phone numbers, addresses, and IDs are
+                        removed in real time.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -304,7 +190,8 @@ const Index = () => {
                         IP & Location Shielding
                       </CardTitle>
                       <CardDescription className="text-gray-600 leading-relaxed">
-                        Your IP address and geolocation remain hidden from AI providers.
+                        Your IP address and geolocation remain hidden from AI
+                        providers.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -315,7 +202,8 @@ const Index = () => {
                         Zero Data Retention
                       </CardTitle>
                       <CardDescription className="text-gray-600 leading-relaxed">
-                        Your prompts aren't stored, logged, or reused for training.
+                        Your prompts aren't stored, logged, or reused for
+                        training.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -326,7 +214,8 @@ const Index = () => {
                         Placeholder Reinsertion
                       </CardTitle>
                       <CardDescription className="text-gray-600 leading-relaxed">
-                        Sanitized queries are processed, then placeholders are restored in responses.
+                        Sanitized queries are processed, then placeholders are
+                        restored in responses.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -337,7 +226,8 @@ const Index = () => {
                         Personal Data Never Shared
                       </CardTitle>
                       <CardDescription className="text-gray-600 leading-relaxed">
-                        Sensitive information never reaches external AI providers.
+                        Sensitive information never reaches external AI
+                        providers.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -348,7 +238,8 @@ const Index = () => {
                         Provider Independence
                       </CardTitle>
                       <CardDescription className="text-gray-600 leading-relaxed">
-                        Agnostic to the specific AI, no vendor lock-in. Switch freely between open-source and closed-source models.
+                        Agnostic to the specific AI, no vendor lock-in. Switch
+                        freely between open-source and closed-source models.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -363,7 +254,8 @@ const Index = () => {
                         PII & Customer Data Redaction
                       </CardTitle>
                       <CardDescription className="text-gray-600 leading-relaxed">
-                        Automatically removes customer identifiers, contracts, and client-sensitive information.
+                        Automatically removes customer identifiers, contracts,
+                        and client-sensitive information.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -374,7 +266,8 @@ const Index = () => {
                         Trade Secret Shielding
                       </CardTitle>
                       <CardDescription className="text-gray-600 leading-relaxed">
-                        Protects R&D, roadmaps, financials, and strategy so they never leave your perimeter.
+                        Protects R&D, roadmaps, financials, and strategy so they
+                        never leave your perimeter.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -385,7 +278,8 @@ const Index = () => {
                         IP & Metadata Anonymization
                       </CardTitle>
                       <CardDescription className="text-gray-600 leading-relaxed">
-                        Masks company IP addresses, device details, and geolocation from model providers.
+                        Masks company IP addresses, device details, and
+                        geolocation from model providers.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -396,7 +290,8 @@ const Index = () => {
                         AI-Safe NDA Compliance
                       </CardTitle>
                       <CardDescription className="text-gray-600 leading-relaxed">
-                        Ensures data covered by NDAs never reaches external LLMs.
+                        Ensures data covered by NDAs never reaches external
+                        LLMs.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -407,7 +302,8 @@ const Index = () => {
                         Shadow AI Prevention
                       </CardTitle>
                       <CardDescription className="text-gray-600 leading-relaxed">
-                        Stops employees from pasting confidential info into public AI tools.
+                        Stops employees from pasting confidential info into
+                        public AI tools.
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -418,13 +314,119 @@ const Index = () => {
                         Provider Independence
                       </CardTitle>
                       <CardDescription className="text-gray-600 leading-relaxed">
-                        Use the AI that best suits your needs—open or closed source.
+                        Use the AI that best suits your needs—open or closed
+                        source.
                       </CardDescription>
                     </CardHeader>
                   </Card>
                 </div>
               </TabsContent>
             </Tabs>
+          </div>
+        </div>
+
+        {/* How it works section */}
+        <div className="bg-white py-16 px-4">
+          <div className="max-w-5xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12 items-start">
+              {/* Left Column - Text Content */}
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                  How it works
+                </h2>
+
+                <div className="space-y-6 text-gray-700 leading-relaxed">
+                  <p>
+                    With <span className="font-semibold">goprAIvate</span>,
+                    private users and businesses can scrub out personal and
+                    sensitive business information being sent to ChatGPT, Llama,
+                    Claude, or other AIs—unlocking the benefits of cutting-edge
+                    models <span className="italic">without</span> compromising
+                    customer trust.
+                  </p>
+
+                  <div className="space-y-4">
+                    <div>
+                      <span className="font-semibold text-gray-900">
+                        1) Redact before you send.
+                      </span>{" "}
+                      We detect and tag PII (names, emails, phone numbers, IDs)
+                      and sensitive business terms (customers, contracts,
+                      financials, roadmap items) locally or at your edge
+                      gateway.
+                    </div>
+
+                    <div>
+                      <span className="font-semibold text-gray-900">
+                        2) Route via a privacy relay.
+                      </span>{" "}
+                      Sanitized requests are relayed over encrypted channels
+                      that hide your IP/geo and strip metadata, then forwarded
+                      to your chosen AI—open or closed source, no vendor
+                      lock-in.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column - Example and Diagram */}
+              <div className="space-y-8">
+                {/* Medical Example */}
+                <div>
+                  <div className="text-sm text-gray-500 mb-3">
+                    Example medical sanitization
+                  </div>
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 font-mono text-sm leading-relaxed">
+                    <div className="space-y-1">
+                      <div>
+                        Employee{" "}
+                        <span className="bg-red-100 text-red-800 px-1 rounded">
+                          &lt;NAME&gt;
+                        </span>{" "}
+                        at{" "}
+                        <span className="bg-red-100 text-red-800 px-1 rounded">
+                          &lt;COMPANY&gt;
+                        </span>{" "}
+                        contacted{" "}
+                        <span className="bg-red-100 text-red-800 px-1 rounded">
+                          &lt;BANK&gt;
+                        </span>{" "}
+                        regarding account{" "}
+                        <span className="bg-red-100 text-red-800 px-1 rounded">
+                          &lt;ACCOUNT&gt;
+                        </span>{" "}
+                        on{" "}
+                        <span className="bg-red-100 text-red-800 px-1 rounded">
+                          &lt;DATE&gt;
+                        </span>
+                        . Transfer of €12,450 from{" "}
+                        <span className="bg-red-100 text-red-800 px-1 rounded">
+                          &lt;CITY&gt;
+                        </span>{" "}
+                        branch flagged due to mismatch with IBAN{" "}
+                        <span className="bg-red-100 text-red-800 px-1 rounded">
+                          &lt;IBAN&gt;
+                        </span>
+                        .
+                      </div>
+                      <div>
+                        Please review statements and confirm beneficiary details
+                        before processing.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Workflow Diagram */}
+                <div className="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden">
+                  <img
+                    src="/how_it_works_v01.png"
+                    alt="How it works diagram"
+                    className="w-full h-auto"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
