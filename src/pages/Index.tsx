@@ -65,7 +65,7 @@ const Index = () => {
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <Select defaultValue="chatgpt">
-                      <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 hover:bg-gray-200 rounded px-2 transition-colors">
+                      <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -87,7 +87,7 @@ const Index = () => {
 
                   {/* Privacy Level Selector */}
                   <Select defaultValue="medium">
-                    <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 hover:bg-gray-200 rounded px-2 transition-colors">
+                    <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
