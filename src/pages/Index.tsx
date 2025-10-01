@@ -134,6 +134,70 @@ const Index = () => {
             </div>
           </div>
         </div>
+
+        {/* Solutions section */}
+        <div className="bg-white py-16 px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">Solutions</h2>
+            
+            {/* Tab buttons */}
+            <div className="flex gap-2 mb-12">
+              <Button className="bg-gray-900 text-white px-6 py-2 rounded-full text-sm font-medium">
+                Private
+              </Button>
+              <Button variant="outline" className="px-6 py-2 rounded-full text-sm font-medium border-gray-300 text-gray-700">
+                Teams & Businesses
+              </Button>
+            </div>
+
+            {/* Private solutions grid */}
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Row 1 */}
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-gray-900">Automatic PII Redaction</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Names, emails, phone numbers, addresses, and IDs are removed in real time.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-gray-900">IP & Location Shielding</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Your IP address and geolocation remain hidden from AI providers.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-gray-900">Zero Data Retention</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Your prompts aren't stored, logged, or reused for training.
+                </p>
+              </div>
+
+              {/* Row 2 */}
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-gray-900">Placeholder Reinsertion</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Sanitized queries are processed, then placeholders are restored in responses.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-gray-900">Personal Data Never Shared</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Sensitive information never reaches external AI providers.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-gray-900">Provider Independence</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Agnostic to the specific AI, no vendor lock-in. Switch freely between open-source and closed-source models.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <MadeWithDyad />
     </Layout>
