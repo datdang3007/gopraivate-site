@@ -103,7 +103,7 @@ const Index = () => {
                 {/* Send Button */}
                 <Button
                   size="sm"
-                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-6 py-2 h-9 font-medium transition-colors shadow-sm"
+                  className="bg-black hover:bg-gray-800 text-white rounded-lg px-6 py-2 h-9 font-medium transition-colors shadow-sm"
                   disabled={!prompt.trim()}
                 >
                   <Send className="w-4 h-4 mr-2" />
