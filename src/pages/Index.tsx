@@ -8,29 +8,103 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { MadeWithDyad } from "@/components/made-with-dyad";
 
 const Index = () => {
   return (
     <Layout>
       <div className="flex flex-col">
-        {/* Hero Section */}
+        {/* Hero Section - Chat Interface */}
         <section className="py-20 px-4 text-center bg-gradient-to-b from-background to-muted/20">
           <div className="container mx-auto max-w-4xl">
-            <h1 className="text-5xl font-bold pb-6 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              goprAIvate
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Use AI-powered tools safely with our privacy-first approach. Your
-              data stays secure while you enjoy advanced AI capabilities.
+            <div className="flex items-center justify-center mb-6">
+              <img 
+                src="/gopraivate_v10.12.png" 
+                alt="goprAIvate Logo" 
+                className="h-8 w-8 mr-3"
+              />
+              <h1 className="text-4xl font-bold text-gray-900">
+                goprAIvate
+              </h1>
+            </div>
+            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Use AI Without Giving Away Sensitive Information. Leverage the power of LLMs
+              without compromising privacy.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="px-8">
-                Get Started
-              </Button>
-              <Button variant="outline" size="lg" className="px-8">
-                Learn More
-              </Button>
+            
+            {/* Chat Interface */}
+            <div className="bg-white rounded-lg shadow-sm border p-6 max-w-2xl mx-auto">
+              <div className="flex items-center gap-3 mb-4">
+                <Button variant="ghost" size="sm" className="p-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                  </svg>
+                </Button>
+                
+                <Select defaultValue="chatgpt">
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="chatgpt">ChatGPT</SelectItem>
+                    <SelectItem value="claude">Claude</SelectItem>
+                    <SelectItem value="gemini">Gemini</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Button variant="ghost" size="sm" className="p-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                  </svg>
+                </Button>
+
+                <Select defaultValue="medium">
+                  <SelectTrigger className="w-40">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Privacy level: Low</SelectItem>
+                    <SelectItem value="medium">Privacy level: Medium</SelectItem>
+                    <SelectItem value="high">Privacy level: High</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="relative">
+                <textarea
+                  placeholder="Paste or type your prompt... (e.g., Email sarah.lee@acme.com the Q4 forecast...)"
+                  className="w-full p-4 pr-12 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px]"
+                />
+                <Button 
+                  size="sm" 
+                  className="absolute bottom-4 right-4 bg-blue-600 hover:bg-blue-700"
+                >
+                  Send
+                </Button>
+              </div>
+
+              {/* Suggestion Tabs */}
+              <div className="flex flex-wrap gap-2 mt-4 justify-center">
+                <Button variant="outline" size="sm" className="text-sm">
+                  Personal health
+                </Button>
+                <Button variant="outline" size="sm" className="text-sm">
+                  My finances
+                </Button>
+                <Button variant="outline" size="sm" className="text-sm">
+                  My business
+                </Button>
+                <Button variant="outline" size="sm" className="text-sm">
+                  Contract review
+                </Button>
+              </div>
             </div>
           </div>
         </section>
