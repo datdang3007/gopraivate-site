@@ -121,7 +121,7 @@ const Index = () => {
         </div>
 
         {/* What's the problem section */}
-        <div className="bg-gray-50 py-16 px-4">
+        <div className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">
               What's the problem?
@@ -160,7 +160,7 @@ const Index = () => {
         </div>
 
         {/* Solutions section */}
-        <div className="bg-gray-50 py-16 px-4">
+        <div className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Solutions</h2>
 
@@ -490,36 +490,40 @@ const Index = () => {
         </div>
 
         {/* References section */}
-        <div className="bg-gray-50 py-16 px-4">
+        <div className="py-16 px-4">
           <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">References</h2>
-            
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              References
+            </h2>
+
             <div className="space-y-6 text-gray-700 leading-relaxed mb-12">
               <p>
-                The team behind goprAIvate has built AI applications for multinational companies such as
-                Mercedes, Freudenberg, and Schaeffler in manufacturing and healthcare. We also created{" "}
-                <a 
-                  href="https://www.lexatexer.com/" 
-                  target="_blank" 
+                The team behind goprAIvate has built AI applications for
+                multinational companies such as Mercedes, Freudenberg, and
+                Schaeffler in manufacturing and healthcare. We also created{" "}
+                <a
+                  href="https://www.lexatexer.com/"
+                  target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:text-blue-800 underline hover:no-underline transition-colors font-medium"
+                  className="text-black hover:text-gray-800 underline hover:no-underline transition-colors font-medium"
                 >
                   LexaTexer.com
                 </a>
-                , the enterprise AI platform that powers global manufacturers. Now, we
-                bring the same power and security of enterprise AI to private users and small teams.
+                , the enterprise AI platform that powers global manufacturers.
+                Now, we bring the same power and security of enterprise AI to
+                private users and small teams.
               </p>
             </div>
 
             {/* Company Logos Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 items-center justify-items-center">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center">
               {Array.from({ length: 6 }, (_, i) => (
-                <div 
-                  key={i} 
+                <div
+                  key={i}
                   className="w-32 h-20 bg-white border border-gray-200 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-shadow"
                 >
-                  <img 
-                    src="/placeholder.svg" 
+                  <img
+                    src="/placeholder.svg"
                     alt={`Partner Logo ${i + 1}`}
                     className="w-20 h-12 object-contain opacity-60"
                   />
@@ -535,37 +539,42 @@ const Index = () => {
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               {/* Left Column - Image */}
               <div className="flex justify-center">
-                <div className="w-96 h-96 bg-black rounded-2xl flex items-center justify-center overflow-hidden shadow-2xl">
-                  <div className="w-80 h-80 rounded-full bg-gradient-to-r from-orange-400 via-red-500 to-purple-600 flex items-center justify-center">
-                    <div className="w-32 h-32 bg-black rounded-full flex items-center justify-center">
-                      <span className="text-white font-bold text-lg">goprAIvate</span>
-                    </div>
-                  </div>
-                </div>
+                <img
+                  src="/gopraivate_about.png"
+                  alt="About goprAIvate"
+                  className="w-96 h-96 rounded-2xl shadow-2xl"
+                />
               </div>
 
               {/* Right Column - Content */}
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-8">About goprAIvate</h2>
-                
+                <h2 className="text-3xl font-bold text-gray-900 mb-8">
+                  About goprAIvate
+                </h2>
+
                 <div className="space-y-6 text-gray-700 leading-relaxed">
                   <p>
-                    goprAIvate was founded by a team of AI experts who have built
-                    enterprise-grade AI solutions for multinational corporations.
-                    Drawing from years of experience in manufacturing and
-                    healthcare AI, we created a privacy-first solution to make
-                    advanced AI safe and accessible for everyone — from
-                    individuals to global enterprises.
+                    goprAIvate was founded by a team of AI experts who have
+                    built enterprise-grade AI solutions for multinational
+                    corporations. Drawing from years of experience in
+                    manufacturing and healthcare AI, we created a privacy-first
+                    solution to make advanced AI safe and accessible for
+                    everyone — from individuals to global enterprises.
                   </p>
 
                   <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
-                    <p className="font-semibold text-gray-900 mb-2">Compliance note:</p>
+                    <p className="font-semibold text-gray-900 mb-2">
+                      Compliance note:
+                    </p>
                     <p className="text-sm text-gray-600 leading-relaxed">
-                      Our architecture and controls are designed to
-                      support compliance with GDPR, HIPAA, and SOC 2 requirements when
-                      properly configured and used with appropriate customer policies and
-                      agreements. <span className="italic">We do not provide legal advice; customers are responsible
-                      for their own compliance.</span>
+                      Our architecture and controls are designed to support
+                      compliance with GDPR, HIPAA, and SOC 2 requirements when
+                      properly configured and used with appropriate customer
+                      policies and agreements.{" "}
+                      <span className="italic">
+                        We do not provide legal advice; customers are
+                        responsible for their own compliance.
+                      </span>
                     </p>
                   </div>
                 </div>
