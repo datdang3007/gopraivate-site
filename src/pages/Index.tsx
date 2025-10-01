@@ -39,42 +39,61 @@ const Index = () => {
             </div>
 
             {/* Chat Interface */}
-            <div className="bg-gray-50 rounded-2xl p-8 max-w-3xl mx-auto shadow-sm border border-gray-100">
+            <div className="bg-gray-100 rounded-xl max-w-3xl mx-auto shadow-sm border border-gray-200">
+              {/* Input Area */}
+              <div className="relative p-4">
+                <Textarea
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  placeholder="Paste or type your prompt... (e.g., Email sarah.lee@acme.com the Q4 forecast...)"
+                  className="w-full bg-transparent border-none text-gray-900 placeholder:text-gray-500 text-base leading-relaxed resize-none focus:ring-0 focus:outline-none p-0 min-h-[60px]"
+                />
+                <Button 
+                  size="sm" 
+                  className="absolute top-4 right-4 bg-gray-800 hover:bg-gray-900 text-white rounded-lg p-2 h-8 w-8"
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
+              </div>
+
               {/* Toolbar */}
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-3 px-4 pb-4 border-t border-gray-200 pt-3">
                 {/* Attach File Button */}
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="p-2 hover:bg-gray-200 rounded-lg"
+                  className="p-1 hover:bg-gray-200 rounded h-8 w-8"
                 >
-                  <Paperclip className="w-5 h-5 text-gray-600" />
+                  <Paperclip className="w-4 h-4 text-gray-600" />
                 </Button>
 
                 {/* Model Selector */}
-                <Select defaultValue="chatgpt">
-                  <SelectTrigger className="w-32 h-9 bg-white border-gray-200 text-sm">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="chatgpt">ChatGPT</SelectItem>
-                    <SelectItem value="claude">Claude</SelectItem>
-                    <SelectItem value="gemini">Gemini</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <Select defaultValue="chatgpt">
+                    <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="chatgpt">ChatGPT</SelectItem>
+                      <SelectItem value="claude">Claude</SelectItem>
+                      <SelectItem value="gemini">Gemini</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
                 {/* Settings Button */}
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="p-2 hover:bg-gray-200 rounded-lg"
+                  className="p-1 hover:bg-gray-200 rounded h-8 w-8"
                 >
-                  <Settings className="w-5 h-5 text-gray-600" />
+                  <Settings className="w-4 h-4 text-gray-600" />
                 </Button>
 
                 {/* Privacy Level Selector */}
                 <Select defaultValue="medium">
-                  <SelectTrigger className="w-44 h-9 bg-white border-gray-200 text-sm">
+                  <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -83,54 +102,6 @@ const Index = () => {
                     <SelectItem value="high">Privacy level: High</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-
-              {/* Input Area */}
-              <div className="relative">
-                <Textarea
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  placeholder="Paste or type your prompt... (e.g., Email sarah.lee@acme.com the Q4 forecast...)"
-                  className="w-full bg-white border-gray-200 text-gray-900 placeholder:text-gray-500 text-base leading-relaxed resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-xl p-4 pr-16 min-h-[120px]"
-                />
-                <Button 
-                  size="sm" 
-                  className="absolute bottom-4 right-4 bg-gray-800 hover:bg-gray-900 text-white rounded-lg px-4 py-2 h-9"
-                >
-                  <Send className="w-4 h-4" />
-                </Button>
-              </div>
-
-              {/* Suggestion Tags */}
-              <div className="flex flex-wrap gap-3 mt-6 justify-center">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="text-sm bg-white border-gray-200 text-gray-700 hover:bg-gray-50 rounded-full px-4 py-2"
-                >
-                  Personal health
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="text-sm bg-white border-gray-200 text-gray-700 hover:bg-gray-50 rounded-full px-4 py-2"
-                >
-                  My finances
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="text-sm bg-white border-gray-200 text-gray-700 hover:bg-gray-50 rounded-full px-4 py-2"
-                >
-                  My business
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="text-sm bg-white border-gray-200 text-gray-700 hover:bg-gray-50 rounded-full px-4 py-2"
-                >
-                  Contract review
-                </Button>
               </div>
             </div>
           </div>
