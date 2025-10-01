@@ -45,7 +45,7 @@ const Index = () => {
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   placeholder="Paste or type your prompt... (e.g., Email sarah.lee@acme.com the Q4 forecast...)"
-                  className="w-full bg-transparent border-none text-gray-900 placeholder:text-gray-400 text-base leading-relaxed resize-none focus:ring-0 focus:outline-none p-0 min-h-[80px] max-h-[200px]"
+                  className="w-full bg-transparent border-none text-gray-900 placeholder:text-gray-400 text-base leading-relaxed resize-none focus:ring-0 focus:outline-none focus:border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 min-h-[80px] max-h-[200px]"
                 />
               </div>
 
