@@ -154,7 +154,7 @@ const Index = () => {
 
         {/* Solutions section */}
         <div className="bg-white py-16 px-4">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Solutions</h2>
 
             {/* Tab buttons */}
