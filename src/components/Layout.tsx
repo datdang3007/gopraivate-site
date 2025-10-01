@@ -26,7 +26,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </span>
             </a>
           </div>
-          <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+          <div className="flex flex-1 items-center justify-center">
             <nav className="flex items-center space-x-6 text-sm font-medium">
               <a
                 className="transition-colors hover:text-foreground/80 text-foreground/60"
@@ -53,22 +53,22 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 Contact
               </a>
             </nav>
-            <div className="flex items-center space-x-2">
-              {user ? (
-                <>
-                  <span className="text-sm text-muted-foreground">
-                    {user.email}
-                  </span>
-                  <Button variant="outline" size="sm" onClick={logout}>
-                    Logout
-                  </Button>
-                </>
-              ) : (
-                <Button variant="outline" size="sm">
-                  <a href="/login">Login</a>
+          </div>
+          <div className="flex items-center space-x-2 ml-auto">
+            {user ? (
+              <>
+                <span className="text-sm text-muted-foreground">
+                  {user.email}
+                </span>
+                <Button variant="outline" size="sm" onClick={logout}>
+                  Logout
                 </Button>
-              )}
-            </div>
+              </>
+            ) : (
+              <Button variant="outline" size="sm">
+                <a href="/login">Login</a>
+              </Button>
+            )}
           </div>
         </div>
       </header>
