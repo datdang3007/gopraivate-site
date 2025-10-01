@@ -429,6 +429,65 @@ const Index = () => {
             </div>
           </div>
         </div>
+
+        {/* Benefits section */}
+        <div className="bg-white py-16 px-4">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-gray-900 mb-12">Benefits</h2>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card className="border border-gray-200 hover:shadow-md transition-shadow bg-white">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-gray-900 mb-3">
+                    Discuss privately, stay anonymous
+                  </CardTitle>
+                  <CardDescription className="text-gray-600 leading-relaxed">
+                    Hide device fingerprints, IP address, and geolocation; strip
+                    personal identifiers before anything reaches a provider.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="border border-gray-200 hover:shadow-md transition-shadow bg-white">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-gray-900 mb-3">
+                    No leakage of business-critical data
+                  </CardTitle>
+                  <CardDescription className="text-gray-600 leading-relaxed">
+                    Prevent contracts, customer records, source code, and
+                    roadmaps from leaving your perimeter with automatic
+                    redaction and policy controls.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="border border-gray-200 hover:shadow-md transition-shadow bg-white">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-gray-900 mb-3">
+                    Use any AI—safely & flexibly
+                  </CardTitle>
+                  <CardDescription className="text-gray-600 leading-relaxed">
+                    Vendor-agnostic routing to ChatGPT, Claude, Grok, Llama or
+                    your own models—same privacy guarantees everywhere.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="border border-gray-200 hover:shadow-md transition-shadow bg-white">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-gray-900 mb-3">
+                    Anonymous web search integrated
+                  </CardTitle>
+                  <CardDescription className="text-gray-600 leading-relaxed">
+                    Search the web through a privacy relay that strips
+                    identifiers and masks IP/geo; feed results safely to your
+                    chosen model.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </div>
+          </div>
+        </div>
       </div>
     </Layout>
   );
