@@ -1,7 +1,6 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -82,60 +81,7 @@ const Chat = () => {
   };
 
   return (
-    <Layout>
-      <div className="flex flex-col h-screen bg-gray-50">
-        {/* Chat Header */}
-        <div className="bg-white border-b border-gray-200 px-4 py-3 lg:px-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <img
-                src="/gopraivate_v10.12.png"
-                alt="goprAIvate Logo"
-                className="h-8 w-8"
-              />
-              <div>
-                <h1 className="text-lg font-semibold text-gray-900">goprAIvate Chat</h1>
-                <p className="text-sm text-gray-500">Private AI conversation</p>
-              </div>
-            </div>
-            
-            {/* Model Selector - Hidden on mobile */}
-            <div className="hidden sm:flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <Select defaultValue="chatgpt">
-                  <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-100 rounded px-2 transition-colors">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="chatgpt">ChatGPT</SelectItem>
-                    <SelectItem value="claude">Claude</SelectItem>
-                    <SelectItem value="gemini">Gemini</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <Select defaultValue="medium">
-                <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-100 rounded px-2 transition-colors">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Privacy: Low</SelectItem>
-                  <SelectItem value="medium">Privacy: Medium</SelectItem>
-                  <SelectItem value="high">Privacy: High</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Button
-                variant="ghost"
-                size="sm"
-                className="p-2 hover:bg-gray-100 rounded-lg h-9 w-9"
-              >
-                <Settings className="w-4 h-4 text-gray-600" />
-              </Button>
-            </div>
-          </div>
-        </div>
+    <div className="flex flex-col h-screen bg-gray-50">
 
         {/* Messages Area */}
         <div className="flex-1 overflow-y-auto px-4 py-4 lg:px-6">
@@ -324,7 +270,7 @@ const Chat = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 };
 
