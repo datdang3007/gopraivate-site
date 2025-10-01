@@ -27,30 +27,42 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </a>
           </div>
           <div className="flex flex-1 items-center justify-center">
-            <nav className="flex items-center space-x-6 text-sm font-medium">
+            <nav className="flex items-center space-x-8 text-sm font-medium">
+              <a
+                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                href="#"
+              >
+                Problem
+              </a>
+              <a
+                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                href="#"
+              >
+                Solutions
+              </a>
+              <a
+                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                href="#"
+              >
+                How it works
+              </a>
+              <a
+                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                href="#"
+              >
+                Benefits
+              </a>
+              <a
+                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                href="#"
+              >
+                References
+              </a>
               <a
                 className="transition-colors hover:text-foreground/80 text-foreground/60"
                 href="#"
               >
                 About
-              </a>
-              <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
-                href="#"
-              >
-                Features
-              </a>
-              <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
-                href="#"
-              >
-                Pricing
-              </a>
-              <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
-                href="#"
-              >
-                Contact
               </a>
             </nav>
           </div>
