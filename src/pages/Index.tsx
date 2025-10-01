@@ -9,6 +9,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Paperclip, Settings, Send } from "lucide-react";
 
 const Index = () => {
@@ -157,81 +159,152 @@ const Index = () => {
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Solutions</h2>
 
-            {/* Tab buttons */}
-            <div className="flex gap-2 mb-12">
-              <Button className="bg-gray-900 text-white px-6 py-2 rounded-full text-sm font-medium">
-                Private
-              </Button>
-              <Button
-                variant="outline"
-                className="px-6 py-2 rounded-full text-sm font-medium border-gray-300 text-gray-700"
-              >
-                Teams & Businesses
-              </Button>
-            </div>
+            <Tabs defaultValue="private" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 mb-12">
+                <TabsTrigger value="private">Private</TabsTrigger>
+                <TabsTrigger value="teams">Teams & Businesses</TabsTrigger>
+              </TabsList>
 
-            {/* Private solutions grid */}
-            <div className="grid md:grid-cols-3 gap-8">
-              {/* Row 1 */}
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Automatic PII Redaction
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Names, emails, phone numbers, addresses, and IDs are removed
-                  in real time.
-                </p>
-              </div>
+              <TabsContent value="private">
+                <div className="grid md:grid-cols-3 gap-6">
+                  <Card className="border border-gray-200 hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-gray-900">
+                        Automatic PII Redaction
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 leading-relaxed">
+                        Names, emails, phone numbers, addresses, and IDs are removed in real time.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
 
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  IP & Location Shielding
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Your IP address and geolocation remain hidden from AI
-                  providers.
-                </p>
-              </div>
+                  <Card className="border border-gray-200 hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-gray-900">
+                        IP & Location Shielding
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 leading-relaxed">
+                        Your IP address and geolocation remain hidden from AI providers.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
 
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Zero Data Retention
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Your prompts aren't stored, logged, or reused for training.
-                </p>
-              </div>
+                  <Card className="border border-gray-200 hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-gray-900">
+                        Zero Data Retention
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 leading-relaxed">
+                        Your prompts aren't stored, logged, or reused for training.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
 
-              {/* Row 2 */}
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Placeholder Reinsertion
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Sanitized queries are processed, then placeholders are
-                  restored in responses.
-                </p>
-              </div>
+                  <Card className="border border-gray-200 hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-gray-900">
+                        Placeholder Reinsertion
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 leading-relaxed">
+                        Sanitized queries are processed, then placeholders are restored in responses.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
 
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Personal Data Never Shared
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Sensitive information never reaches external AI providers.
-                </p>
-              </div>
+                  <Card className="border border-gray-200 hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-gray-900">
+                        Personal Data Never Shared
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 leading-relaxed">
+                        Sensitive information never reaches external AI providers.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
 
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">
-                  Provider Independence
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Agnostic to the specific AI, no vendor lock-in. Switch freely
-                  between open-source and closed-source models.
-                </p>
-              </div>
-            </div>
+                  <Card className="border border-gray-200 hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-gray-900">
+                        Provider Independence
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 leading-relaxed">
+                        Agnostic to the specific AI, no vendor lock-in. Switch freely between open-source and closed-source models.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="teams">
+                <div className="grid md:grid-cols-3 gap-6">
+                  <Card className="border border-gray-200 hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-gray-900">
+                        PII & Customer Data Redaction
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 leading-relaxed">
+                        Automatically removes customer identifiers, contracts, and client-sensitive information.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+
+                  <Card className="border border-gray-200 hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-gray-900">
+                        Trade Secret Shielding
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 leading-relaxed">
+                        Protects R&D, roadmaps, financials, and strategy so they never leave your perimeter.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+
+                  <Card className="border border-gray-200 hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-gray-900">
+                        IP & Metadata Anonymization
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 leading-relaxed">
+                        Masks company IP addresses, device details, and geolocation from model providers.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+
+                  <Card className="border border-gray-200 hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-gray-900">
+                        AI-Safe NDA Compliance
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 leading-relaxed">
+                        Ensures data covered by NDAs never reaches external LLMs.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+
+                  <Card className="border border-gray-200 hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-gray-900">
+                        Shadow AI Prevention
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 leading-relaxed">
+                        Stops employees from pasting confidential info into public AI tools.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+
+                  <Card className="border border-gray-200 hover:shadow-md transition-shadow">
+                    <CardHeader>
+                      <CardTitle className="text-lg font-semibold text-gray-900">
+                        Provider Independence
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 leading-relaxed">
+                        Use the AI that best suits your needs—open or closed source.
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </div>
