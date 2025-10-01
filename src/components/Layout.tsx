@@ -16,6 +16,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="container flex h-14 items-center">
           <div className="mr-4 flex">
             <a className="mr-6 flex items-center space-x-2" href="/">
+              <img 
+                src="/gopraivate_v10.12.png" 
+                alt="goprAIvate Logo" 
+                className="h-8 w-8"
+              />
               <span className="hidden font-bold sm:inline-block">
                 goprAIvate
               </span>
