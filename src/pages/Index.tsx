@@ -1,13 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -15,41 +8,52 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { MadeWithDyad } from "@/components/made-with-dyad";
+import { Paperclip, Settings, Send } from "lucide-react";
 
 const Index = () => {
+  const [prompt, setPrompt] = useState("");
+
   return (
     <Layout>
-      <div className="flex flex-col">
-        {/* Hero Section - Chat Interface */}
-        <section className="py-20 px-4 text-center bg-gradient-to-b from-background to-muted/20">
-          <div className="container mx-auto max-w-4xl">
-            <div className="flex items-center justify-center mb-6">
-              <img 
-                src="/gopraivate_v10.12.png" 
-                alt="goprAIvate Logo" 
-                className="h-8 w-8 mr-3"
-              />
-              <h1 className="text-4xl font-bold text-gray-900">
-                goprAIvate
-              </h1>
+      <div className="min-h-screen bg-white">
+        {/* Main Content */}
+        <div className="flex flex-col items-center justify-center min-h-[80vh] px-4">
+          <div className="w-full max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="text-center mb-12">
+              <div className="flex items-center justify-center mb-6">
+                <img 
+                  src="/gopraivate_v10.12.png" 
+                  alt="goprAIvate Logo" 
+                  className="h-12 w-12 mr-4"
+                />
+                <h1 className="text-5xl font-bold text-gray-900">
+                  goprAIvate
+                </h1>
+              </div>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                Use AI Without Giving Away Sensitive Information. Leverage the power of LLMs without compromising privacy.
+              </p>
             </div>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Use AI Without Giving Away Sensitive Information. Leverage the power of LLMs
-              without compromising privacy.
-            </p>
-            
+
             {/* Chat Interface */}
-            <div className="bg-white rounded-lg shadow-sm border p-6 max-w-2xl mx-auto">
-              <div className="flex items-center gap-3 mb-4">
-                <Button variant="ghost" size="sm" className="p-2">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
-                  </svg>
+            <div className="bg-gray-50 rounded-2xl p-8 max-w-3xl mx-auto shadow-sm border border-gray-100">
+              {/* Toolbar */}
+              <div className="flex items-center gap-4 mb-6">
+                {/* Attach File Button */}
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="p-2 hover:bg-gray-200 rounded-lg"
+                >
+                  <Paperclip className="w-5 h-5 text-gray-600" />
                 </Button>
-                
+
+                {/* Model Selector */}
                 <Select defaultValue="chatgpt">
-                  <SelectTrigger className="w-32">
+                  <SelectTrigger className="w-32 h-9 bg-white border-gray-200 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -59,14 +63,18 @@ const Index = () => {
                   </SelectContent>
                 </Select>
 
-                <Button variant="ghost" size="sm" className="p-2">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
-                  </svg>
+                {/* Settings Button */}
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="p-2 hover:bg-gray-200 rounded-lg"
+                >
+                  <Settings className="w-5 h-5 text-gray-600" />
                 </Button>
 
+                {/* Privacy Level Selector */}
                 <Select defaultValue="medium">
-                  <SelectTrigger className="w-40">
+                  <SelectTrigger className="w-44 h-9 bg-white border-gray-200 text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -77,132 +85,56 @@ const Index = () => {
                 </Select>
               </div>
 
+              {/* Input Area */}
               <div className="relative">
-                <textarea
+                <Textarea
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
                   placeholder="Paste or type your prompt... (e.g., Email sarah.lee@acme.com the Q4 forecast...)"
-                  className="w-full p-4 pr-12 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px]"
+                  className="w-full bg-white border-gray-200 text-gray-900 placeholder:text-gray-500 text-base leading-relaxed resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-xl p-4 pr-16 min-h-[120px]"
                 />
                 <Button 
                   size="sm" 
-                  className="absolute bottom-4 right-4 bg-blue-600 hover:bg-blue-700"
+                  className="absolute bottom-4 right-4 bg-gray-800 hover:bg-gray-900 text-white rounded-lg px-4 py-2 h-9"
                 >
-                  Send
+                  <Send className="w-4 h-4" />
                 </Button>
               </div>
 
-              {/* Suggestion Tabs */}
-              <div className="flex flex-wrap gap-2 mt-4 justify-center">
-                <Button variant="outline" size="sm" className="text-sm">
+              {/* Suggestion Tags */}
+              <div className="flex flex-wrap gap-3 mt-6 justify-center">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-sm bg-white border-gray-200 text-gray-700 hover:bg-gray-50 rounded-full px-4 py-2"
+                >
                   Personal health
                 </Button>
-                <Button variant="outline" size="sm" className="text-sm">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-sm bg-white border-gray-200 text-gray-700 hover:bg-gray-50 rounded-full px-4 py-2"
+                >
                   My finances
                 </Button>
-                <Button variant="outline" size="sm" className="text-sm">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-sm bg-white border-gray-200 text-gray-700 hover:bg-gray-50 rounded-full px-4 py-2"
+                >
                   My business
                 </Button>
-                <Button variant="outline" size="sm" className="text-sm">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-sm bg-white border-gray-200 text-gray-700 hover:bg-gray-50 rounded-full px-4 py-2"
+                >
                   Contract review
                 </Button>
               </div>
             </div>
           </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-20 px-4">
-          <div className="container mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">
-              What's the problem?
-            </h2>
-            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Privacy Concerns</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
-                    AI tools often compromise your privacy. We ensure your data
-                    stays private and secure.
-                  </CardDescription>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Data Security</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
-                    Your sensitive information is protected with
-                    enterprise-grade security measures.
-                  </CardDescription>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Full Control</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
-                    You maintain complete control over your data and how it's
-                    processed.
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* How it works */}
-        <section className="py-20 px-4 bg-muted/30">
-          <div className="container mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">
-              How it works
-            </h2>
-            <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto items-center">
-              <div>
-                <h3 className="text-xl font-semibold mb-4">
-                  Simple and Secure
-                </h3>
-                <p className="text-muted-foreground mb-6">
-                  goprAIvate provides secure and compliant tools to enable
-                  organizations to leverage the power of AI without compromising
-                  security or privacy.
-                </p>
-                <ul className="space-y-2 text-sm">
-                  <li>• End-to-end encryption</li>
-                  <li>• Local data processing</li>
-                  <li>• No data retention</li>
-                  <li>• Privacy-first design</li>
-                </ul>
-              </div>
-              <div className="bg-background rounded-lg p-8 shadow-sm border">
-                <div className="space-y-4">
-                  <div className="h-4 bg-muted rounded w-3/4"></div>
-                  <div className="h-4 bg-muted rounded w-1/2"></div>
-                  <div className="h-4 bg-muted rounded w-5/6"></div>
-                  <div className="h-16 bg-gradient-to-r from-blue-100 to-purple-100 rounded"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 px-4">
-          <div className="container mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-6">Ready to get started?</h2>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Join thousands of organizations who trust goprAIvate for their AI
-              needs.
-            </p>
-            <Button size="lg" className="px-8">
-              Start Free Trial
-            </Button>
-          </div>
-        </section>
+        </div>
       </div>
       <MadeWithDyad />
     </Layout>
