@@ -9,7 +9,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Paperclip, Settings, Send } from "lucide-react";
 
 const Index = () => {
@@ -117,19 +116,37 @@ const Index = () => {
         {/* What's the problem section */}
         <div className="bg-gray-50 py-16 px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">What's the problem?</h2>
-            
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">
+              What's the problem?
+            </h2>
+
             <div className="space-y-6 text-gray-700 leading-relaxed">
               <div>
-                <span className="font-semibold text-gray-900">AI tools are powerful—but risky.</span> Generative AI (e.g., ChatGPT) streamlines email writing, report reviews, coding and more. But these benefits come with massive data privacy concerns, which is why many enterprises block public AI tools internally.
+                <span className="font-semibold text-gray-900">
+                  AI tools are powerful—but risky.
+                </span>{" "}
+                Generative AI (e.g., ChatGPT) streamlines email writing, report
+                reviews, coding and more. But these benefits come with massive
+                data privacy concerns, which is why many enterprises block
+                public AI tools internally.
               </div>
-              
+
               <div>
-                <span className="font-semibold text-gray-900">Real incidents, real exposure.</span> Sensitive content pasted into cloud models can be logged, retained for model improvement or monitoring, and inadvertently revealed.
+                <span className="font-semibold text-gray-900">
+                  Real incidents, real exposure.
+                </span>{" "}
+                Sensitive content pasted into cloud models can be logged,
+                retained for model improvement or monitoring, and inadvertently
+                revealed.
               </div>
-              
+
               <div>
-                <span className="font-semibold text-gray-900">Training retention risks.</span> Some systems can memorize and regurgitate personal data present in training or telemetry—leading to unintentional disclosure of PII.
+                <span className="font-semibold text-gray-900">
+                  Training retention risks.
+                </span>{" "}
+                Some systems can memorize and regurgitate personal data present
+                in training or telemetry—leading to unintentional disclosure of
+                PII.
               </div>
             </div>
           </div>
@@ -139,13 +156,16 @@ const Index = () => {
         <div className="bg-white py-16 px-4">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Solutions</h2>
-            
+
             {/* Tab buttons */}
             <div className="flex gap-2 mb-12">
               <Button className="bg-gray-900 text-white px-6 py-2 rounded-full text-sm font-medium">
                 Private
               </Button>
-              <Button variant="outline" className="px-6 py-2 rounded-full text-sm font-medium border-gray-300 text-gray-700">
+              <Button
+                variant="outline"
+                className="px-6 py-2 rounded-full text-sm font-medium border-gray-300 text-gray-700"
+              >
                 Teams & Businesses
               </Button>
             </div>
@@ -154,21 +174,29 @@ const Index = () => {
             <div className="grid md:grid-cols-3 gap-8">
               {/* Row 1 */}
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">Automatic PII Redaction</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Automatic PII Redaction
+                </h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  Names, emails, phone numbers, addresses, and IDs are removed in real time.
+                  Names, emails, phone numbers, addresses, and IDs are removed
+                  in real time.
                 </p>
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">IP & Location Shielding</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  IP & Location Shielding
+                </h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  Your IP address and geolocation remain hidden from AI providers.
+                  Your IP address and geolocation remain hidden from AI
+                  providers.
                 </p>
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">Zero Data Retention</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Zero Data Retention
+                </h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
                   Your prompts aren't stored, logged, or reused for training.
                 </p>
@@ -176,30 +204,37 @@ const Index = () => {
 
               {/* Row 2 */}
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">Placeholder Reinsertion</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Placeholder Reinsertion
+                </h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  Sanitized queries are processed, then placeholders are restored in responses.
+                  Sanitized queries are processed, then placeholders are
+                  restored in responses.
                 </p>
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">Personal Data Never Shared</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Personal Data Never Shared
+                </h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
                   Sensitive information never reaches external AI providers.
                 </p>
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">Provider Independence</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Provider Independence
+                </h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
-                  Agnostic to the specific AI, no vendor lock-in. Switch freely between open-source and closed-source models.
+                  Agnostic to the specific AI, no vendor lock-in. Switch freely
+                  between open-source and closed-source models.
                 </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <MadeWithDyad />
     </Layout>
   );
 };
