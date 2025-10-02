@@ -1,13 +1,18 @@
-
-import React, { useRef } from 'react';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import ReCAPTCHA from 'react-google-recaptcha';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { toast } from '@/hooks/use-toast';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useRef } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface SignUpFormData {
   email: string;
@@ -25,7 +30,7 @@ const SignUp: React.FC = () => {
     formState: { errors, isSubmitting },
   } = useForm<SignUpFormData>();
 
-  const password = watch('password');
+  const password = watch("password");
 
   const onSubmit = async (data: SignUpFormData) => {
     try {
@@ -41,23 +46,23 @@ const SignUp: React.FC = () => {
       }
 
       // TODO: Implement sign up API call here
-      console.log('Sign up data:', { ...data, recaptchaToken: recaptchaValue });
-      
+      console.log("Sign up data:", { ...data, recaptchaToken: recaptchaValue });
+
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       toast({
         title: "Account created successfully",
         description: "Welcome! Please sign in to continue.",
       });
-      
+
       // Reset reCAPTCHA
       recaptchaRef.current?.reset();
-      
+
       // Redirect to login page
-      navigate('/login');
+      navigate("/login");
     } catch (error) {
-      console.error('Sign up failed:', error);
+      console.error("Sign up failed:", error);
       // Reset reCAPTCHA on error
       recaptchaRef.current?.reset();
       toast({
@@ -73,7 +78,9 @@ const SignUp: React.FC = () => {
       <div className="max-w-md w-full space-y-8">
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Create account</CardTitle>
+            <CardTitle className="text-2xl text-center">
+              Create account
+            </CardTitle>
             <CardDescription className="text-center">
               Enter your information to create a new account
             </CardDescription>
@@ -86,11 +93,11 @@ const SignUp: React.FC = () => {
                   id="email"
                   type="email"
                   placeholder="Enter your email"
-                  {...register('email', {
-                    required: 'Email is required',
+                  {...register("email", {
+                    required: "Email is required",
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: 'Invalid email address',
+                      message: "Invalid email address",
                     },
                   })}
                 />
@@ -105,16 +112,18 @@ const SignUp: React.FC = () => {
                   id="password"
                   type="password"
                   placeholder="Enter your password"
-                  {...register('password', {
-                    required: 'Password is required',
+                  {...register("password", {
+                    required: "Password is required",
                     minLength: {
                       value: 6,
-                      message: 'Password must be at least 6 characters',
+                      message: "Password must be at least 6 characters",
                     },
                   })}
                 />
                 {errors.password && (
-                  <p className="text-sm text-red-600">{errors.password.message}</p>
+                  <p className="text-sm text-red-600">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
 
@@ -124,45 +133,43 @@ const SignUp: React.FC = () => {
                   id="confirmPassword"
                   type="password"
                   placeholder="Confirm your password"
-                  {...register('confirmPassword', {
-                    required: 'Please confirm your password',
+                  {...register("confirmPassword", {
+                    required: "Please confirm your password",
                     validate: (value) =>
-                      value === password || 'Passwords do not match',
+                      value === password || "Passwords do not match",
                   })}
                 />
                 {errors.confirmPassword && (
-                  <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
+                  <p className="text-sm text-red-600">
+                    {errors.confirmPassword.message}
+                  </p>
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 flex justify-center">
                 <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
                   onChange={(value) => {
-                    console.log('reCAPTCHA value:', value);
+                    console.log("reCAPTCHA value:", value);
                   }}
                   onExpired={() => {
-                    console.log('reCAPTCHA expired');
+                    console.log("reCAPTCHA expired");
                     recaptchaRef.current?.reset();
                   }}
                 />
               </div>
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Creating account...' : 'Create account'}
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? "Creating account..." : "Create account"}
               </Button>
             </form>
 
             <div className="mt-4 text-center">
               <p className="text-sm text-gray-600">
-                Already have an account?{' '}
+                Already have an account?{" "}
                 <button
-                  onClick={() => navigate('/login')}
+                  onClick={() => navigate("/login")}
                   className="font-medium text-blue-600 hover:text-blue-500 underline"
                 >
                   Sign in
