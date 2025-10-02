@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -8,80 +11,62 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { user, logout } = useAuth();
+  const isMobile = useIsMobile();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const navigationItems = [
+    { label: "Problem", id: "problem" },
+    { label: "Solutions", id: "solutions" },
+    { label: "How it works", id: "how-it-works" },
+    { label: "Benefits", id: "benefits" },
+    { label: "References", id: "references" },
+    { label: "About", id: "about" },
+  ];
+
+  const handleNavClick = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    setIsOpen(false);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center">
-          <div className="mr-4 flex">
-            <a className="mr-6 flex items-center space-x-2" href="/">
+          {/* Logo */}
+          <div className="flex items-center">
+            <a className="flex items-center space-x-2" href="/">
               <img 
                 src="/gopraivate_v10.12.png" 
                 alt="goprAIvate Logo" 
                 className="h-8 w-8"
               />
-              <span className="hidden font-bold sm:inline-block">
+              <span className="font-bold text-lg">
                 goprAIvate
               </span>
             </a>
           </div>
-          <div className="flex flex-1 items-center justify-center">
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex flex-1 items-center justify-center">
             <nav className="flex items-center space-x-8 text-sm font-medium">
-              <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
-                onClick={() => {
-                  document.getElementById('problem')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Problem
-              </a>
-              <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
-                onClick={() => {
-                  document.getElementById('solutions')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Solutions
-              </a>
-              <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
-                onClick={() => {
-                  document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                How it works
-              </a>
-              <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
-                onClick={() => {
-                  document.getElementById('benefits')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Benefits
-              </a>
-              <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
-                onClick={() => {
-                  document.getElementById('references')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                References
-              </a>
-              <a
-                className="transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
-                onClick={() => {
-                  document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                About
-              </a>
+              {navigationItems.map((item) => (
+                <a
+                  key={item.id}
+                  className="transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
+                  onClick={() => handleNavClick(item.id)}
+                >
+                  {item.label}
+                </a>
+              ))}
             </nav>
           </div>
+
+          {/* Auth Section */}
           <div className="flex items-center space-x-2 ml-auto">
             {user ? (
               <>
-                <span className="text-sm text-muted-foreground">
+                <span className="hidden sm:inline-block text-sm text-muted-foreground">
                   {user.email}
                 </span>
                 <Button variant="outline" size="sm" onClick={logout}>
@@ -93,6 +78,48 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <a href="/login">Login</a>
               </Button>
             )}
+
+            {/* Mobile Menu Trigger */}
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="sm" className="lg:hidden p-2">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <div className="flex flex-col space-y-4 mt-8">
+                  <div className="flex items-center space-x-2 mb-6">
+                    <img 
+                      src="/gopraivate_v10.12.png" 
+                      alt="goprAIvate Logo" 
+                      className="h-8 w-8"
+                    />
+                    <span className="font-bold text-lg">goprAIvate</span>
+                  </div>
+                  
+                  <nav className="flex flex-col space-y-4">
+                    {navigationItems.map((item) => (
+                      <a
+                        key={item.id}
+                        className="text-lg font-medium transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer py-2"
+                        onClick={() => handleNavClick(item.id)}
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </nav>
+
+                  {user && (
+                    <div className="pt-4 border-t">
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Signed in as: {user.email}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </header>
