@@ -24,7 +24,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   ];
 
   const handleNavClick = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setIsOpen(false);
   };
 
@@ -36,14 +36,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {/* Logo */}
           <div className="flex items-center">
             <a className="flex items-center space-x-2" href="/">
-              <img 
-                src="/gopraivate_v10.12.png" 
-                alt="goprAIvate Logo" 
+              <img
+                src="/gopraivate_v10.12.png"
+                alt="goprAIvate Logo"
                 className="h-8 w-8"
               />
-              <span className="font-bold text-lg">
-                goprAIvate
-              </span>
+              <span className="font-bold text-lg">goprAIvate</span>
             </a>
           </div>
 
@@ -69,7 +67,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <span className="hidden sm:inline-block text-sm text-muted-foreground">
                   {user.email}
                 </span>
-                <Button variant="outline" size="sm" onClick={logout}>
+                <Button
+                  className="hidden lg:inline-block"
+                  variant="outline"
+                  size="sm"
+                  onClick={logout}
+                >
                   Logout
                 </Button>
               </>
@@ -90,14 +93,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <div className="flex flex-col space-y-4 mt-8">
                   <div className="flex items-center space-x-2 mb-6">
-                    <img 
-                      src="/gopraivate_v10.12.png" 
-                      alt="goprAIvate Logo" 
+                    <img
+                      src="/gopraivate_v10.12.png"
+                      alt="goprAIvate Logo"
                       className="h-8 w-8"
                     />
                     <span className="font-bold text-lg">goprAIvate</span>
                   </div>
-                  
+
                   <nav className="flex flex-col space-y-4">
                     {navigationItems.map((item) => (
                       <a
@@ -108,6 +111,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         {item.label}
                       </a>
                     ))}
+                    <Button size="sm" onClick={logout}>
+                      Logout
+                    </Button>
                   </nav>
 
                   {user && (
@@ -135,15 +141,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             {/* Logo and Description */}
             <div className="flex flex-col items-start">
               <div className="flex items-center space-x-2 mb-4">
-                <img 
-                  src="/gopraivate_v10.12.png" 
-                  alt="goprAIvate Logo" 
+                <img
+                  src="/gopraivate_v10.12.png"
+                  alt="goprAIvate Logo"
                   className="h-8 w-8"
                 />
                 <span className="font-bold text-lg">goprAIvate</span>
               </div>
               <p className="text-sm text-muted-foreground max-w-md">
-                Use AI Without Giving Away Sensitive Information. Leverage the power of LLMs without compromising privacy.
+                Use AI Without Giving Away Sensitive Information. Leverage the
+                power of LLMs without compromising privacy.
               </p>
             </div>
 
@@ -155,7 +162,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <a
                     className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
                     onClick={() => {
-                      document.getElementById('problem')?.scrollIntoView({ behavior: 'smooth' });
+                      document
+                        .getElementById("problem")
+                        ?.scrollIntoView({ behavior: "smooth" });
                     }}
                   >
                     Problem
@@ -163,7 +172,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <a
                     className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
                     onClick={() => {
-                      document.getElementById('solutions')?.scrollIntoView({ behavior: 'smooth' });
+                      document
+                        .getElementById("solutions")
+                        ?.scrollIntoView({ behavior: "smooth" });
                     }}
                   >
                     Solutions
@@ -171,7 +182,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <a
                     className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
                     onClick={() => {
-                      document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+                      document
+                        .getElementById("how-it-works")
+                        ?.scrollIntoView({ behavior: "smooth" });
                     }}
                   >
                     How it works
@@ -185,7 +198,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <a
                     className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
                     onClick={() => {
-                      document.getElementById('benefits')?.scrollIntoView({ behavior: 'smooth' });
+                      document
+                        .getElementById("benefits")
+                        ?.scrollIntoView({ behavior: "smooth" });
                     }}
                   >
                     Benefits
@@ -193,7 +208,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <a
                     className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
                     onClick={() => {
-                      document.getElementById('references')?.scrollIntoView({ behavior: 'smooth' });
+                      document
+                        .getElementById("references")
+                        ?.scrollIntoView({ behavior: "smooth" });
                     }}
                   >
                     References
@@ -201,7 +218,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   <a
                     className="text-sm text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
                     onClick={() => {
-                      document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+                      document
+                        .getElementById("about")
+                        ?.scrollIntoView({ behavior: "smooth" });
                     }}
                   >
                     About

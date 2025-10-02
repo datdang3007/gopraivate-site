@@ -136,5 +136,4 @@ export const registerAPI = async (
 //     throw error;
 //   }
 // };
-
 export default api;
