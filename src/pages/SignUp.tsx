@@ -1,7 +1,8 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,6 +17,7 @@ interface SignUpFormData {
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const {
     register,
     handleSubmit,
@@ -27,8 +29,19 @@ const SignUp: React.FC = () => {
 
   const onSubmit = async (data: SignUpFormData) => {
     try {
+      // Validate reCAPTCHA
+      const recaptchaValue = recaptchaRef.current?.getValue();
+      if (!recaptchaValue) {
+        toast({
+          title: "Error",
+          description: "Please complete the reCAPTCHA verification.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       // TODO: Implement sign up API call here
-      console.log('Sign up data:', data);
+      console.log('Sign up data:', { ...data, recaptchaToken: recaptchaValue });
       
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -38,10 +51,15 @@ const SignUp: React.FC = () => {
         description: "Welcome! Please sign in to continue.",
       });
       
+      // Reset reCAPTCHA
+      recaptchaRef.current?.reset();
+      
       // Redirect to login page
       navigate('/login');
     } catch (error) {
       console.error('Sign up failed:', error);
+      // Reset reCAPTCHA on error
+      recaptchaRef.current?.reset();
       toast({
         title: "Error",
         description: "Failed to create account. Please try again.",
@@ -115,6 +133,20 @@ const SignUp: React.FC = () => {
                 {errors.confirmPassword && (
                   <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
                 )}
+              </div>
+
+              <div className="space-y-2">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                  onChange={(value) => {
+                    console.log('reCAPTCHA value:', value);
+                  }}
+                  onExpired={() => {
+                    console.log('reCAPTCHA expired');
+                    recaptchaRef.current?.reset();
+                  }}
+                />
               </div>
 
               <Button
