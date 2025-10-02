@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { sendMessageDirect } from "@/utils/api";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,10 +24,36 @@ const Index = () => {
   const [prompt, setPrompt] = useState("");
   const navigate = useNavigate();
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (prompt.trim()) {
-      // Navigate to chat page with the prompt
-      navigate('/chat', { state: { initialPrompt: prompt } });
+      try {
+        // Prepare form data
+        const formData = {
+          message: prompt,
+          timestamp: new Date().toISOString(),
+          // Add other form fields as needed
+        };
+
+        // For now, using empty recaptcha token - you can implement recaptcha later
+        const recaptchaValue = "";
+
+        // Call API using the utility function
+        const response = await sendMessageDirect(formData, recaptchaValue);
+        
+        console.log('API Response:', response);
+        
+        // Navigate to chat page with the prompt and response
+        navigate('/chat', { 
+          state: { 
+            initialPrompt: prompt,
+            apiResponse: response 
+          } 
+        });
+      } catch (error) {
+        console.error('Failed to send message:', error);
+        // Still navigate to chat even if API fails
+        navigate('/chat', { state: { initialPrompt: prompt } });
+      }
     }
   };
 
