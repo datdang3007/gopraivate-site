@@ -78,22 +78,22 @@ export const loginAPI = async (email: string, password: string, ip: string = "19
 };
 
 // Generic API call function using common headers
-export const apiCall = async (method: 'GET' | 'POST' | 'PUT' | 'DELETE', endpoint: string, data?: any) => {
-  try {
-    const fullUrl = `${import.meta.env.VITE_CONTACT_API_ENDPOINT}${endpoint}`;
-    const config = {
-      method,
-      url: fullUrl,
-      headers: commonHeaders,
-      data: data ? JSON.stringify(data) : undefined,
-    };
+// export const apiCall = async (method: 'GET' | 'POST' | 'PUT' | 'DELETE', endpoint: string, data?: any) => {
+//   try {
+//     const fullUrl = `${import.meta.env.VITE_CONTACT_API_ENDPOINT}${endpoint}`;
+//     const config = {
+//       method,
+//       url: fullUrl,
+//       headers: commonHeaders,
+//       data: data ? JSON.stringify(data) : undefined,
+//     };
     
-    const response = await axios(config);
-    return response.data;
-  } catch (error) {
-    console.error('API call failed:', error);
-    throw error;
-  }
-};
+//     const response = await axios(config);
+//     return response.data;
+//   } catch (error) {
+//     console.error('API call failed:', error);
+//     throw error;
+//   }
+// };
 
 export default api;
