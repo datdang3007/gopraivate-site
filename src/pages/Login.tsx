@@ -26,10 +26,10 @@ const Login: React.FC = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      // Call login API using utility function
-      const response = await loginAPI(data.email, data.password);
+      // Comment out API call - direct login like before
+      // const response = await loginAPI(data.email, data.password);
 
-      if (response.status === 200 && response.data.includes("Login successful")) {
+      // if (response.status === 200 && response.data.includes("Login successful")) {
         // Call local auth context login for session management
         const success = await login(data.email, data.password);
         if (success) {
@@ -38,16 +38,22 @@ const Login: React.FC = () => {
             description: "Welcome back!",
           });
           navigate('/');
+        } else {
+          toast({
+            title: "Login failed",
+            description: "Invalid credentials. Please try again.",
+            variant: "destructive",
+          });
         }
-      } else {
-        toast({
-          title: "Login failed",
-          description: "Invalid credentials or server error.",
-          variant: "destructive",
-        });
-      }
+      // } else {
+      //   toast({
+      //     title: "Login failed",
+      //     description: "Invalid credentials or server error.",
+      //     variant: "destructive",
+      //   });
+      // }
     } catch (error) {
-      console.error('Login API failed:', error);
+      console.error('Login failed:', error);
       toast({
         title: "Error",
         description: "An error occurred during login. Please try again.",
