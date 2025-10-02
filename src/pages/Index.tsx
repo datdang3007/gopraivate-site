@@ -39,20 +39,20 @@ const Index = () => {
 
         // Call API using the utility function
         const response = await sendMessageDirect(formData, recaptchaValue);
-        
-        console.log('API Response:', response);
-        
+
+        console.log("API Response:", response);
+
         // Navigate to chat page with the prompt and response
-        navigate('/chat', { 
-          state: { 
+        navigate("/chat", {
+          state: {
             initialPrompt: prompt,
-            apiResponse: response 
-          } 
+            apiResponse: response,
+          },
         });
       } catch (error) {
-        console.error('Failed to send message:', error);
+        console.error("Failed to send message:", error);
         // Still navigate to chat even if API fails
-        navigate('/chat', { state: { initialPrompt: prompt } });
+        navigate("/chat", { state: { initialPrompt: prompt } });
       }
     }
   };
