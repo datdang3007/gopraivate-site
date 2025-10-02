@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -9,6 +11,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { user, logout } = useAuth();
+  const isMobile = useIsMobile();
   const [isOpen, setIsOpen] = useState(false);
 
   const navigationItems = [
@@ -77,26 +80,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             )}
 
             {/* Mobile Menu Trigger */}
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="lg:hidden p-2"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </div>
-
-          {/* Mobile Menu Overlay */}
-          {isOpen && (
-            <>
-              <div 
-                className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-                onClick={() => setIsOpen(false)}
-              />
-              <div className="fixed right-0 top-14 z-50 h-[calc(100vh-56px)] w-[300px] bg-white border-l shadow-lg lg:hidden overflow-y-auto">
-                <div className="flex flex-col space-y-4 p-6">
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="sm" className="lg:hidden p-2">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <div className="flex flex-col space-y-4 mt-8">
                   <div className="flex items-center space-x-2 mb-6">
                     <img 
                       src="/gopraivate_v10.12.png" 
@@ -110,7 +102,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     {navigationItems.map((item) => (
                       <a
                         key={item.id}
-                        className="text-lg font-medium transition-colors hover:text-gray-600 text-gray-800 cursor-pointer py-2 border-b border-gray-100"
+                        className="text-lg font-medium transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer py-2"
                         onClick={() => handleNavClick(item.id)}
                       >
                         {item.label}
@@ -120,19 +112,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
                   {user && (
                     <div className="pt-4 border-t">
-                      <p className="text-sm text-gray-500 mb-4">
+                      <p className="text-sm text-muted-foreground mb-4">
                         Signed in as: {user.email}
                       </p>
-                      <Button variant="outline" size="sm" onClick={logout} className="w-full">
-                        Logout
-                      </Button>
                     </div>
                   )}
                 </div>
-              </div>
-            </>
-          )}
+              </SheetContent>
+            </Sheet>
           </div>
+        </div>
       </header>
 
       {/* Main Content */}
