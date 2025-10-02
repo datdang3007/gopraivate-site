@@ -1,56 +1,50 @@
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { loginAPI } from '@/utils/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-interface LoginFormData {
+interface SignUpFormData {
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
-const Login: React.FC = () => {
-  const { login } = useAuth();
+const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormData>();
+  } = useForm<SignUpFormData>();
 
-  const onSubmit = async (data: LoginFormData) => {
+  const password = watch('password');
+
+  const onSubmit = async (data: SignUpFormData) => {
     try {
-      // Call login API using utility function
-      const response = await loginAPI(data.email, data.password);
-
-      if (response.status === 200 && response.data.includes("Login successful")) {
-        // Call local auth context login for session management
-        const success = await login(data.email, data.password);
-        if (success) {
-          toast({
-            title: "Login successful",
-            description: "Welcome back!",
-          });
-          navigate('/');
-        }
-      } else {
-        toast({
-          title: "Login failed",
-          description: "Invalid credentials or server error.",
-          variant: "destructive",
-        });
-      }
+      // TODO: Implement sign up API call here
+      console.log('Sign up data:', data);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast({
+        title: "Account created successfully",
+        description: "Welcome! Please sign in to continue.",
+      });
+      
+      // Redirect to login page
+      navigate('/login');
     } catch (error) {
-      console.error('Login API failed:', error);
+      console.error('Sign up failed:', error);
       toast({
         title: "Error",
-        description: "An error occurred during login. Please try again.",
+        description: "Failed to create account. Please try again.",
         variant: "destructive",
       });
     }
@@ -61,9 +55,9 @@ const Login: React.FC = () => {
       <div className="max-w-md w-full space-y-8">
         <Card>
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Sign in</CardTitle>
+            <CardTitle className="text-2xl text-center">Create account</CardTitle>
             <CardDescription className="text-center">
-              Enter your email and password to access your account
+              Enter your information to create a new account
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -106,23 +100,40 @@ const Login: React.FC = () => {
                 )}
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Confirm your password"
+                  {...register('confirmPassword', {
+                    required: 'Please confirm your password',
+                    validate: (value) =>
+                      value === password || 'Passwords do not match',
+                  })}
+                />
+                {errors.confirmPassword && (
+                  <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
+                )}
+              </div>
+
               <Button
                 type="submit"
                 className="w-full"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Signing in...' : 'Sign in'}
+                {isSubmitting ? 'Creating account...' : 'Create account'}
               </Button>
             </form>
 
             <div className="mt-4 text-center">
               <p className="text-sm text-gray-600">
-                Don't have an account?{' '}
+                Already have an account?{' '}
                 <button
-                  onClick={() => navigate('/signup')}
+                  onClick={() => navigate('/login')}
                   className="font-medium text-blue-600 hover:text-blue-500 underline"
                 >
-                  Sign up
+                  Sign in
                 </button>
               </p>
             </div>
@@ -133,4 +144,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default SignUp;
