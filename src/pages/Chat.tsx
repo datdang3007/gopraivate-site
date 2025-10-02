@@ -103,21 +103,21 @@ const Chat = () => {
       {/* Chat Header */}
       <div className="bg-white border-b border-gray-200 px-4 py-3 lg:px-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 min-w-0 flex-1">
             <img
               src="/gopraivate_v10.12.png"
               alt="goprAIvate Logo"
-              className="h-8 w-8"
+              className="h-8 w-8 flex-shrink-0"
             />
-            <div>
-              <h1 className="text-lg font-semibold text-gray-900">goprAIvate Chat</h1>
-              <p className="text-sm text-gray-500">Private AI conversation</p>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-lg font-semibold text-gray-900 truncate">goprAIvate Chat</h1>
+              <p className="text-sm text-gray-500 hidden sm:block">Private AI conversation</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            {/* Current Model Display */}
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+            {/* Current Model Display - Hidden on very small screens */}
+            <div className="hidden sm:flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               <span className="text-sm text-gray-700 font-medium">
                 {currentModel === "chatgpt" ? "ChatGPT" : 
@@ -127,14 +127,12 @@ const Chat = () => {
             </div>
 
             {/* Home Button */}
-            <Button
+            <button
               onClick={() => navigate('/')}
-              variant="ghost"
-              size="sm"
-              className="p-2 hover:bg-gray-100 rounded-lg h-9 w-9 transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-lg h-9 w-9 transition-colors flex items-center justify-center"
             >
               <Home className="w-4 h-4 text-gray-600" />
-            </Button>
+            </button>
           </div>
         </div>
       </div>
@@ -189,27 +187,27 @@ const Chat = () => {
             messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex gap-3 ${message.type === "user" ? "justify-end" : "justify-start"}`}
+                className={`flex gap-2 sm:gap-3 ${message.type === "user" ? "justify-end" : "justify-start"}`}
               >
                 {message.type === "ai" && (
                   <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                      <Bot className="w-4 h-4 text-gray-600" />
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                      <Bot className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
                     </div>
                   </div>
                 )}
 
                 <div
-                  className={`max-w-xs sm:max-w-md lg:max-w-2xl ${message.type === "user" ? "order-first" : ""}`}
+                  className={`max-w-[250px] sm:max-w-md lg:max-w-2xl ${message.type === "user" ? "order-first" : ""}`}
                 >
                   <div
-                    className={`rounded-2xl px-4 py-3 ${
+                    className={`rounded-2xl px-3 py-2 sm:px-4 sm:py-3 ${
                       message.type === "user"
                         ? "bg-black text-white"
                         : "bg-white border border-gray-200"
                     }`}
                   >
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
                       {message.content}
                     </p>
                   </div>
@@ -229,43 +227,27 @@ const Chat = () => {
                   </div>
 
                   {message.type === "ai" && (
-                    <div className="flex items-center gap-2 mt-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 px-2 text-gray-500 hover:text-gray-700"
-                      >
+                    <div className="flex items-center gap-1 sm:gap-2 mt-2">
+                      <button className="h-6 w-6 sm:h-8 sm:w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors">
                         <Copy className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 px-2 text-gray-500 hover:text-gray-700"
-                      >
+                      </button>
+                      <button className="h-6 w-6 sm:h-8 sm:w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors">
                         <ThumbsUp className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 px-2 text-gray-500 hover:text-gray-700"
-                      >
+                      </button>
+                      <button className="h-6 w-6 sm:h-8 sm:w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors">
                         <ThumbsDown className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 px-2 text-gray-500 hover:text-gray-700"
-                      >
+                      </button>
+                      <button className="h-6 w-6 sm:h-8 sm:w-8 flex items-center justify-center text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors">
                         <RotateCcw className="w-3 h-3" />
-                      </Button>
+                      </button>
                     </div>
                   )}
                 </div>
 
                 {message.type === "user" && (
                   <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
-                      <User className="w-4 h-4 text-white" />
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 bg-black rounded-full flex items-center justify-center">
+                      <User className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                     </div>
                   </div>
                 )}
