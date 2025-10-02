@@ -3,6 +3,8 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { commonHeaders } from '@/utils/api';
+import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,21 +27,42 @@ const Login: React.FC = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      const success = await login(data.email, data.password);
-      if (success) {
-        toast({
-          title: "Login successful",
-          description: "Welcome back!",
-        });
-        navigate('/');
+      // Call login API
+      const endPoint = `${import.meta.env.VITE_CONTACT_API_ENDPOINT}/api/v1/auth/login_id1020`;
+      
+      const loginPayload = {
+        email: data.email,
+        password: data.password,
+        ip: "192.168.1.100", // You might want to get actual client IP
+        project_id: "AIC"
+      };
+
+      const response = await axios.post(endPoint, JSON.stringify(loginPayload), {
+        headers: {
+          ...commonHeaders,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 200 && response.data.includes("Login successful")) {
+        // Call local auth context login for session management
+        const success = await login(data.email, data.password);
+        if (success) {
+          toast({
+            title: "Login successful",
+            description: "Welcome back!",
+          });
+          navigate('/');
+        }
       } else {
         toast({
           title: "Login failed",
-          description: "Invalid email or password. Please try again.",
+          description: "Invalid credentials or server error.",
           variant: "destructive",
         });
       }
     } catch (error) {
+      console.error('Login API failed:', error);
       toast({
         title: "Error",
         description: "An error occurred during login. Please try again.",
