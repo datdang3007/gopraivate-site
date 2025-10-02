@@ -3,8 +3,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { commonHeaders } from '@/utils/api';
-import axios from 'axios';
+import { loginAPI } from '@/utils/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -27,22 +26,8 @@ const Login: React.FC = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      // Call login API
-      const endPoint = `${import.meta.env.VITE_CONTACT_API_ENDPOINT}/api/v1/auth/login_id1020`;
-      
-      const loginPayload = {
-        email: data.email,
-        password: data.password,
-        ip: "192.168.1.100", // You might want to get actual client IP
-        project_id: "AIC"
-      };
-
-      const response = await axios.post(endPoint, JSON.stringify(loginPayload), {
-        headers: {
-          ...commonHeaders,
-          'Content-Type': 'application/json',
-        },
-      });
+      // Call login API using utility function
+      const response = await loginAPI(data.email, data.password);
 
       if (response.status === 200 && response.data.includes("Login successful")) {
         // Call local auth context login for session management
