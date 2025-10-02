@@ -20,8 +20,15 @@ import {
   RotateCcw,
   User,
   Bot,
-  Home, // Import Home icon
+  Home,
+  MoreVertical,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Message {
   id: string;
@@ -300,18 +307,46 @@ const Chat = () => {
             {/* Toolbar */}
             <div className="flex items-center justify-between px-4 py-3 bg-gray-100 border-t border-gray-200">
               <div className="flex items-center gap-2 flex-1 min-w-0">
-                {/* Mobile: Only essential controls */}
+                {/* Mobile: Dropdown menu */}
                 <div className="flex sm:hidden items-center gap-2 flex-1">
-                  {/* Attach File Button */}
-                  <button
-                    type="button"
-                    className="flex-shrink-0 p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors flex items-center justify-center"
-                  >
-                    <Paperclip className="w-4 h-4 text-gray-600" />
-                  </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        type="button"
+                        className="flex-shrink-0 p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors flex items-center justify-center"
+                      >
+                        <MoreVertical className="w-4 h-4 text-gray-600" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                      <DropdownMenuItem onClick={() => {}}>
+                        <Paperclip className="w-4 h-4 mr-2" />
+                        Attach File
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setCurrentModel("chatgpt")}>
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                        ChatGPT
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setCurrentModel("claude")}>
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                        Claude
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setCurrentModel("gemini")}>
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                        Gemini
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                   
-                  {/* Model indicator dot only */}
-                  <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
+                  {/* Current model indicator */}
+                  <div className="flex items-center gap-1">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-xs text-gray-600 font-medium">
+                      {currentModel === "chatgpt" ? "GPT" : 
+                       currentModel === "claude" ? "Claude" : 
+                       currentModel === "gemini" ? "Gemini" : "GPT"}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Tablet: Show model name */}
