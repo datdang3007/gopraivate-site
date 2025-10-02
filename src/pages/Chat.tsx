@@ -300,51 +300,74 @@ const Chat = () => {
             {/* Toolbar */}
             <div className="flex items-center justify-between px-4 py-3 bg-gray-100 border-t border-gray-200">
               <div className="flex items-center gap-2 flex-1 min-w-0">
-                {/* Attach File Button */}
-                <button
-                  type="button"
-                  className="flex-shrink-0 p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors flex items-center justify-center"
-                >
-                  <Paperclip className="w-4 h-4 text-gray-600" />
-                </button>
-
-                {/* Model indicator for mobile */}
-                <div className="flex md:hidden items-center gap-1 flex-shrink-0">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-xs text-gray-600 font-medium">
-                    {currentModel === "chatgpt" ? "GPT" : 
-                     currentModel === "claude" ? "Claude" : 
-                     currentModel === "gemini" ? "Gemini" : "GPT"}
-                  </span>
+                {/* Mobile: Only essential controls */}
+                <div className="flex sm:hidden items-center gap-2 flex-1">
+                  {/* Attach File Button */}
+                  <button
+                    type="button"
+                    className="flex-shrink-0 p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors flex items-center justify-center"
+                  >
+                    <Paperclip className="w-4 h-4 text-gray-600" />
+                  </button>
+                  
+                  {/* Model indicator dot only */}
+                  <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0"></div>
                 </div>
 
-                {/* Full model selector for tablet and up */}
-                <div className="hidden md:flex items-center gap-2 flex-shrink-0">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <Select value={currentModel} onValueChange={setCurrentModel}>
-                    <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 px-2 focus:ring-0 hover:bg-gray-200 rounded transition-colors min-w-0">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="chatgpt">ChatGPT</SelectItem>
-                      <SelectItem value="claude">Claude</SelectItem>
-                      <SelectItem value="gemini">Gemini</SelectItem>
-                    </SelectContent>
-                  </Select>
+                {/* Tablet: Show model name */}
+                <div className="hidden sm:flex md:hidden items-center gap-2 flex-shrink-0">
+                  <button
+                    type="button"
+                    className="flex-shrink-0 p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors flex items-center justify-center"
+                  >
+                    <Paperclip className="w-4 h-4 text-gray-600" />
+                  </button>
+                  
+                  <div className="flex items-center gap-1">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-xs text-gray-600 font-medium">
+                      {currentModel === "chatgpt" ? "GPT" : 
+                       currentModel === "claude" ? "Claude" : 
+                       currentModel === "gemini" ? "Gemini" : "GPT"}
+                    </span>
+                  </div>
                 </div>
 
-                {/* Privacy selector for desktop only */}
-                <div className="hidden lg:flex items-center flex-shrink-0">
-                  <Select defaultValue="medium">
-                    <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 px-2 focus:ring-0 hover:bg-gray-200 rounded transition-colors min-w-0">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="low">Privacy: Low</SelectItem>
-                      <SelectItem value="medium">Privacy: Medium</SelectItem>
-                      <SelectItem value="high">Privacy: High</SelectItem>
-                    </SelectContent>
-                  </Select>
+                {/* Desktop: Full controls */}
+                <div className="hidden md:flex items-center gap-3 flex-1">
+                  <button
+                    type="button"
+                    className="flex-shrink-0 p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors flex items-center justify-center"
+                  >
+                    <Paperclip className="w-4 h-4 text-gray-600" />
+                  </button>
+
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <Select value={currentModel} onValueChange={setCurrentModel}>
+                      <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 px-2 focus:ring-0 hover:bg-gray-200 rounded transition-colors min-w-0">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="chatgpt">ChatGPT</SelectItem>
+                        <SelectItem value="claude">Claude</SelectItem>
+                        <SelectItem value="gemini">Gemini</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="hidden lg:flex items-center flex-shrink-0">
+                    <Select defaultValue="medium">
+                      <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 px-2 focus:ring-0 hover:bg-gray-200 rounded transition-colors min-w-0">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Privacy: Low</SelectItem>
+                        <SelectItem value="medium">Privacy: Medium</SelectItem>
+                        <SelectItem value="high">Privacy: High</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
 
@@ -352,7 +375,7 @@ const Chat = () => {
               <button
                 onClick={handleSend}
                 disabled={!prompt.trim() || isLoading}
-                className="flex-shrink-0 ml-3 bg-black hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg px-3 py-2 h-8 font-medium transition-colors shadow-sm flex items-center gap-2"
+                className="flex-shrink-0 ml-2 sm:ml-3 bg-black hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg px-2 sm:px-3 py-2 h-8 font-medium transition-colors shadow-sm flex items-center gap-1 sm:gap-2"
               >
                 <Send className="w-4 h-4" />
                 <span className="hidden sm:inline">Send</span>
