@@ -1,14 +1,17 @@
 
 import axios from 'axios';
 
-// Create axios instance with default config
+// Common headers configuration
+export const commonHeaders = {
+  'Accept': 'application/json',
+  'Content-Type': 'application/x-www-form-urlencoded',
+  'host': import.meta.env.VITE_API_HOST,
+};
+
+// Create axios instance with default config using common headers
 const api = axios.create({
   baseURL: import.meta.env.VITE_CONTACT_API_ENDPOINT,
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'host': import.meta.env.VITE_API_HOST,
-  },
+  headers: commonHeaders,
 });
 
 // API call function with your structure
@@ -27,7 +30,7 @@ export const sendMessage = async (formData: any, recaptchaValue: string) => {
   }
 };
 
-// Alternative function using axios directly (similar to your fetch structure)
+// Alternative function using axios directly with common headers
 export const sendMessageDirect = async (formData: any, recaptchaValue: string) => {
   try {
     const endPoint = `${import.meta.env.VITE_CONTACT_API_ENDPOINT}/api/v0/msg_id4040`;
@@ -35,13 +38,28 @@ export const sendMessageDirect = async (formData: any, recaptchaValue: string) =
       ...formData,
       recaptchaToken: recaptchaValue,
     }), {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'host': import.meta.env.VITE_API_HOST,
-      },
+      headers: commonHeaders,
     });
     
+    return response.data;
+  } catch (error) {
+    console.error('API call failed:', error);
+    throw error;
+  }
+};
+
+// Generic API call function using common headers
+export const apiCall = async (method: 'GET' | 'POST' | 'PUT' | 'DELETE', endpoint: string, data?: any) => {
+  try {
+    const fullUrl = `${import.meta.env.VITE_CONTACT_API_ENDPOINT}${endpoint}`;
+    const config = {
+      method,
+      url: fullUrl,
+      headers: commonHeaders,
+      data: data ? JSON.stringify(data) : undefined,
+    };
+    
+    const response = await axios(config);
     return response.data;
   } catch (error) {
     console.error('API call failed:', error);
