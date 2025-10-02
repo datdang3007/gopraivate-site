@@ -82,74 +82,95 @@ const Index = () => {
             {/* Chat Interface */}
             <div className="bg-white rounded-2xl max-w-4xl mx-auto shadow-lg border border-gray-200 overflow-hidden">
               {/* Input Area */}
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 <Textarea
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   placeholder="Paste or type your prompt... (e.g., Email sarah.lee@acme.com the Q4 forecast...)"
-                  className="w-full bg-transparent border-none text-gray-900 placeholder:text-gray-400 text-base leading-relaxed resize-none focus:ring-0 focus:outline-none focus:border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 min-h-[80px] max-h-[200px]"
+                  className="w-full bg-transparent border-none text-gray-900 placeholder:text-gray-400 text-sm sm:text-base leading-relaxed resize-none focus:ring-0 focus:outline-none focus:border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 min-h-[60px] sm:min-h-[80px] max-h-[150px] sm:max-h-[200px]"
                 />
               </div>
 
               {/* Toolbar */}
-              <div className="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-100">
-                <div className="flex items-center gap-4">
-                  {/* Attach File Button */}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="p-2 hover:bg-gray-200 rounded-lg h-9 w-9 transition-colors"
-                  >
-                    <Paperclip className="w-4 h-4 text-gray-600" />
-                  </Button>
-
-                  {/* Model Selector */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t border-gray-100 gap-3 sm:gap-0">
+                {/* Mobile: Stack controls vertically */}
+                <div className="flex flex-wrap items-center justify-between sm:justify-start gap-2 sm:gap-4">
+                  {/* Essential controls for mobile */}
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <Select defaultValue="chatgpt">
+                    {/* Attach File Button */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="p-2 hover:bg-gray-200 rounded-lg h-8 w-8 sm:h-9 sm:w-9 transition-colors"
+                    >
+                      <Paperclip className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
+                    </Button>
+
+                    {/* Model Selector - Compact on mobile */}
+                    <div className="flex items-center gap-1 sm:gap-2">
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
+                      <Select defaultValue="chatgpt">
+                        <SelectTrigger className="border-none bg-transparent text-xs sm:text-sm text-gray-700 h-7 sm:h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-1 sm:px-2 transition-colors min-w-[60px] sm:min-w-[80px]">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="chatgpt">ChatGPT</SelectItem>
+                          <SelectItem value="claude">Claude</SelectItem>
+                          <SelectItem value="gemini">Gemini</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {/* Desktop only controls */}
+                  <div className="hidden sm:flex items-center gap-4">
+                    {/* Settings Button */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="p-2 hover:bg-gray-200 rounded-lg h-9 w-9 transition-colors"
+                    >
+                      <Settings className="w-4 h-4 text-gray-600" />
+                    </Button>
+
+                    {/* Privacy Level Selector */}
+                    <Select defaultValue="medium">
                       <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="chatgpt">ChatGPT</SelectItem>
-                        <SelectItem value="claude">Claude</SelectItem>
-                        <SelectItem value="gemini">Gemini</SelectItem>
+                        <SelectItem value="low">Privacy level: Low</SelectItem>
+                        <SelectItem value="medium">
+                          Privacy level: Medium
+                        </SelectItem>
+                        <SelectItem value="high">Privacy level: High</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
-                  {/* Settings Button */}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="p-2 hover:bg-gray-200 rounded-lg h-9 w-9 transition-colors"
-                  >
-                    <Settings className="w-4 h-4 text-gray-600" />
-                  </Button>
-
-                  {/* Privacy Level Selector */}
-                  <Select defaultValue="medium">
-                    <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="low">Privacy level: Low</SelectItem>
-                      <SelectItem value="medium">
-                        Privacy level: Medium
-                      </SelectItem>
-                      <SelectItem value="high">Privacy level: High</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  {/* Mobile: Compact Privacy Selector */}
+                  <div className="sm:hidden">
+                    <Select defaultValue="medium">
+                      <SelectTrigger className="border-none bg-transparent text-xs text-gray-700 h-7 p-0 focus:ring-0 hover:bg-gray-200 rounded px-1 transition-colors min-w-[50px]">
+                        <SelectValue placeholder="Privacy" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
 
-                {/* Send Button */}
+                {/* Send Button - Full width on mobile */}
                 <Button
                   onClick={handleSend}
                   size="sm"
-                  className="bg-black hover:bg-gray-800 text-white rounded-lg px-6 py-2 h-9 font-medium transition-colors shadow-sm"
+                  className="bg-black hover:bg-gray-800 text-white rounded-lg px-4 sm:px-6 py-2 h-8 sm:h-9 font-medium transition-colors shadow-sm w-full sm:w-auto text-sm sm:text-base"
                   disabled={!prompt.trim()}
                 >
-                  <Send className="w-4 h-4 mr-2" />
+                  <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                   Send
                 </Button>
               </div>
