@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
+import { registerAPI } from "@/utils/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -45,29 +46,44 @@ const SignUp: React.FC = () => {
         return;
       }
 
-      // TODO: Implement sign up API call here
-      console.log("Sign up data:", { ...data, recaptchaToken: recaptchaValue });
+      // Call registration API
+      const response = await registerAPI(data.email, data.password, recaptchaValue);
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (response.status === 200 && response.data.includes("Registration successful")) {
+        toast({
+          title: "Registration successful",
+          description: "Your account has been created successfully! Please sign in to continue.",
+        });
 
-      toast({
-        title: "Account created successfully",
-        description: "Welcome! Please sign in to continue.",
-      });
+        // Reset reCAPTCHA
+        recaptchaRef.current?.reset();
 
-      // Reset reCAPTCHA
-      recaptchaRef.current?.reset();
-
-      // Redirect to login page
-      navigate("/login");
+        // Redirect to login page
+        navigate("/login");
+      } else {
+        toast({
+          title: "Registration failed",
+          description: "Unable to create account. Please check your information and try again.",
+          variant: "destructive",
+        });
+        recaptchaRef.current?.reset();
+      }
     } catch (error) {
-      console.error("Sign up failed:", error);
+      console.error("Registration failed:", error);
       // Reset reCAPTCHA on error
       recaptchaRef.current?.reset();
+      
+      // Handle specific error messages
+      let errorMessage = "Failed to create account. Please try again.";
+      if (error.response?.data) {
+        errorMessage = error.response.data.message || errorMessage;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       toast({
-        title: "Error",
-        description: "Failed to create account. Please try again.",
+        title: "Registration failed",
+        description: errorMessage,
         variant: "destructive",
       });
     }

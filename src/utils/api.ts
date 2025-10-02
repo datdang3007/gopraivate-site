@@ -77,6 +77,37 @@ export const loginAPI = async (email: string, password: string, ip: string = "19
   }
 };
 
+// User Registration API function
+export const registerAPI = async (email: string, password: string, recaptchaToken: string, ip: string = "192.168.1.100") => {
+  try {
+    const endPoint = `/api/v1/auth/register_id1000`;
+    const registrationPayload = {
+      email,
+      password,
+      is_human: true,
+      ip,
+      project_id: "AIC",
+      recaptchaToken
+    };
+
+    const response = await axios.post(
+      `${import.meta.env.VITE_CONTACT_API_ENDPOINT}${endPoint}`, 
+      JSON.stringify(registrationPayload),
+      {
+        headers: {
+          ...commonHeaders,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.error('Registration API failed:', error);
+    throw error;
+  }
+};
+
 // Generic API call function using common headers
 // export const apiCall = async (method: 'GET' | 'POST' | 'PUT' | 'DELETE', endpoint: string, data?: any) => {
 //   try {
