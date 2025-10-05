@@ -3,7 +3,8 @@ import axios from "axios";
 // Common headers configuration
 export const commonHeaders = {
   Accept: "application/json",
-  "Content-Type": "application/json",
+  "Accept-Encoding": "gzip, deflate, br, zstd",
+  "Content-Type": "application/x-www-form-urlencoded",
   host: import.meta.env.VITE_API_HOST,
 };
 
@@ -94,7 +95,7 @@ export const registerAPI = async (
   email: string,
   password: string,
   recaptchaToken: string,
-  ip: string = "192.168.1.100",
+  ip: string = "171.250.4.37",
 ) => {
   try {
     const endPoint = `/api/v1/auth/register_id1000`;
@@ -107,8 +108,9 @@ export const registerAPI = async (
       recaptchaToken,
     };
 
-    const response = await axios.get(
+    const response = await axios.post(
       `${import.meta.env.VITE_CONTACT_API_ENDPOINT}${endPoint}`,
+      registrationPayload,
     );
 
     return response;
