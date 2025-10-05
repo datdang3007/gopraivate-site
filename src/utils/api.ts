@@ -5,7 +5,7 @@ export const commonHeaders = {
   Accept: "application/json",
   "Accept-Encoding": "gzip, deflate, br, zstd",
   "Content-Type": "application/x-www-form-urlencoded",
-  host: import.meta.env.VITE_API_HOST,
+  Host: import.meta.env.VITE_API_HOST,
 };
 
 // Create axios instance with default config using common headers
