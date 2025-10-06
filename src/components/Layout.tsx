@@ -6,6 +6,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { apiClient } from "@/api/config/axios";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -22,7 +23,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     const email = localStorage.getItem("userEmail");
-    
+
     if (token && email) {
       setUser({ email });
     } else {
@@ -48,7 +49,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     setIsLoggingOut(true);
     try {
       const token = localStorage.getItem("authToken");
-      
+
       if (!token) {
         console.error("❌ [Layout] No token found for logout");
         return;
@@ -68,13 +69,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       console.log("🚪 [Layout] Calling logout API with payload:", logoutPayload);
 
       const response = await apiClient.post('/api/v1/auth/AuthLogout_ID1030', logoutPayload);
-      
+
       console.log("✅ [Layout] Logout successful:", response.data);
 
       // Clear localStorage
       localStorage.removeItem("authToken");
       localStorage.removeItem("userEmail");
-      
+
       // Update local state
       setUser(null);
 
@@ -87,12 +88,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       navigate("/login");
     } catch (error: any) {
       console.error("❌ [Layout] Logout error:", error);
-      
+
       // Even if API fails, clear local storage
       localStorage.removeItem("authToken");
       localStorage.removeItem("userEmail");
       setUser(null);
-      
+
       toast({
         title: "Logged out",
         description: "You have been logged out locally.",
@@ -190,8 +191,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         {item.label}
                       </a>
                     ))}
-                    <LoadingButton 
-                      size="sm" 
+                    <LoadingButton
+                      size="sm"
                       loading={isLoggingOut}
                       loadingText="Logging out..."
                       onClick={handleLogout}
