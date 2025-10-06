@@ -71,21 +71,35 @@ const SignUp: React.FC = () => {
         onSuccess: async (response) => {
           console.log("✅ [SignUp] Registration successful:", response);
           
+          // Extract token from response based on the actual API response structure
+          let token = null;
+          
+          // Check if response has variables.token (based on your example)
+          if (response.variables && response.variables.token) {
+            token = response.variables.token;
+          } 
+          // Fallback to direct token property
+          else if (response.token) {
+            token = response.token;
+          }
+          
           // Call verification API after successful registration
-          if (response.token) {
+          if (token) {
             try {
-              console.log("🔐 [SignUp] Calling verification API with token:", response.token);
+              console.log("🔐 [SignUp] Calling verification API with token:", token);
               
               const clientIP = await fetch('https://api.ipify.org?format=json')
                 .then(res => res.json())
                 .then(data => data.ip)
-                .catch(() => '0.0.0.0');
+                .catch(() => '192.168.1.100');
 
               const verificationPayload = {
-                token: response.token,
+                token: token,
                 ip: clientIP,
                 project_id: 'AIC'
               };
+
+              console.log("📦 [SignUp] Verification payload:", verificationPayload);
 
               const verifyResponse = await fetch(`${import.meta.env.VITE_CONTACT_API_ENDPOINT}/api/v1/auth/verify_id1010`, {
                 method: 'POST',
@@ -99,20 +113,31 @@ const SignUp: React.FC = () => {
                 const verifyData = await verifyResponse.json();
                 console.log("✅ [SignUp] Verification successful:", verifyData);
                 
-                toast({
-                  title: "Success",
-                  description: "Account created and verified successfully!",
-                });
+                if (verifyData.message && verifyData.message.includes('Activation successful')) {
+                  toast({
+                    title: "Success",
+                    description: "Account created and verified successfully!",
+                  });
+                } else {
+                  toast({
+                    title: "Success", 
+                    description: "Account created and verification completed!",
+                  });
+                }
                 
                 // Redirect to login page
                 navigate("/login");
               } else {
                 console.error("❌ [SignUp] Verification failed:", verifyResponse.status);
+                const errorData = await verifyResponse.json().catch(() => null);
+                console.error("❌ [SignUp] Verification error data:", errorData);
+                
                 toast({
                   title: "Warning",
                   description: "Account created but verification failed. Please try logging in.",
                   variant: "destructive",
                 });
+                navigate("/login");
               }
             } catch (error) {
               console.error("❌ [SignUp] Verification error:", error);
@@ -121,8 +146,10 @@ const SignUp: React.FC = () => {
                 description: "Account created but verification failed. Please try logging in.",
                 variant: "destructive",
               });
+              navigate("/login");
             }
           } else {
+            console.warn("⚠️ [SignUp] No token found in response, skipping verification");
             toast({
               title: "Success",
               description: "Account created successfully!",

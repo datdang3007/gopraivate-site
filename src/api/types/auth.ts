@@ -19,8 +19,16 @@ export interface RegisterRequest {
 }
 
 export interface RegisterResponse {
-  status: number;
-  data: string;
+  statuscode: number;
+  success: boolean;
+  message: string;
+  variables?: {
+    email: string;
+    token: string;
+  };
+  // Keep legacy fields for compatibility
+  status?: number;
+  data?: string;
   token?: string;
 }
 
