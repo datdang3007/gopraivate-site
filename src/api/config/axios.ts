@@ -1,14 +1,19 @@
 import axios, {
   AxiosInstance,
-  AxiosRequestConfig,
+  InternalAxiosRequestConfig,
   AxiosResponse,
   AxiosError,
 } from "axios";
 
 // Create axios instance with base configuration
 const createAxiosInstance = (): AxiosInstance => {
+  // Use proxy in development, direct URL in production
+  const baseURL = import.meta.env.DEV 
+    ? '/api'  // Use proxy in development
+    : import.meta.env.VITE_CONTACT_API_ENDPOINT; // Direct URL in production
+  
   const instance = axios.create({
-    baseURL: import.meta.env.VITE_CONTACT_API_ENDPOINT,
+    baseURL: baseURL,
     withCredentials: false,
     timeout: 30000,
     headers: {
@@ -19,7 +24,7 @@ const createAxiosInstance = (): AxiosInstance => {
 
   // Request interceptor
   instance.interceptors.request.use(
-    (config: AxiosRequestConfig) => {
+    (config: InternalAxiosRequestConfig) => {
       // Add auth token if available
       const token = localStorage.getItem("authToken");
       if (token && config.headers) {
