@@ -7,15 +7,12 @@ import axios, {
 
 // Create axios instance with base configuration
 const createAxiosInstance = (): AxiosInstance => {
-  // Use direct API endpoint
-  const baseURL = import.meta.env.VITE_CONTACT_API_ENDPOINT;
-  
   const instance = axios.create({
-    baseURL: baseURL,
     withCredentials: false,
     timeout: 30000,
     headers: {
       "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
       Accept: "application/json",
     },
   });

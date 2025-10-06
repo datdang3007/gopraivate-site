@@ -45,14 +45,14 @@ const SignUp: React.FC = () => {
     const recaptchaValue = recaptchaRef.current?.getValue();
     console.log("🔑 [SignUp] reCAPTCHA value:", recaptchaValue);
     
-    // if (!recaptchaValue) {
-    //   toast({
-    //     title: "Error",
-    //     description: "Please complete the reCAPTCHA verification.",
-    //     variant: "destructive",
-    //   });
-    //   return;
-    // }
+    if (!recaptchaValue) {
+      toast({
+        title: "Error",
+        description: "Please complete the reCAPTCHA verification.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     console.log("🚀 [SignUp] Calling registerMutation with payload:", {
       email: data.email,
@@ -176,7 +176,7 @@ const SignUp: React.FC = () => {
                 )}
               </div>
 
-              {/* <div className="space-y-2 flex justify-center">
+              <div className="space-y-2 flex justify-center">
                 <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
@@ -188,7 +188,7 @@ const SignUp: React.FC = () => {
                     recaptchaRef.current?.reset();
                   }}
                 />
-              </div> */}
+              </div>
 
               <Button
                 type="submit"
