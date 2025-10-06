@@ -9,7 +9,6 @@ const createAxiosInstance = (): AxiosInstance => {
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Host: import.meta.env.VITE_API_HOST,
     },
   });
 

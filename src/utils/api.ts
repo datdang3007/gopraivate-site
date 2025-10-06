@@ -1,6 +1,10 @@
 
 import axios, { AxiosInstance } from "axios";
 
+// Debug environment variables
+console.log("🛰️ [ENV Debug] VITE_CONTACT_API_ENDPOINT:", import.meta.env.VITE_CONTACT_API_ENDPOINT);
+console.log("🛰️ [ENV Debug] VITE_API_HOST:", import.meta.env.VITE_API_HOST);
+
 /**
  * Create axios instance with base configuration
  */
@@ -11,9 +15,12 @@ const createAxiosInstance = (): AxiosInstance => {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      Host: import.meta.env.VITE_API_HOST,
     },
   });
+
+  // Debug log for axios creation
+  console.log("🛰️ [Axios Init] Base URL:", import.meta.env.VITE_CONTACT_API_ENDPOINT);
+  console.log("🛰️ [Axios Init] Host Header:", import.meta.env.VITE_API_HOST);
 
   return instance;
 };
@@ -70,6 +77,9 @@ export const loginAPI = async (
       project_id: "AIC",
     };
 
+    console.log("🚀 [Login API] Full URL:", `${import.meta.env.VITE_CONTACT_API_ENDPOINT}${endPoint}`);
+    console.log("🚀 [Login API] Payload:", loginPayload);
+
     const response = await api.post(endPoint, loginPayload);
     return response.data;
   } catch (error) {
@@ -98,6 +108,9 @@ export const registerAPI = async (
       project_id: "AIC",
       recaptchaToken,
     };
+
+    console.log("🚀 [Register API] Full URL:", `${import.meta.env.VITE_CONTACT_API_ENDPOINT}${endPoint}`);
+    console.log("🚀 [Register API] Payload:", registrationPayload);
 
     const response = await api.post(endPoint, registrationPayload);
     return response.data;
