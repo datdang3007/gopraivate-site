@@ -37,7 +37,6 @@ export class AuthService {
       is_human: true,
       ip: clientIP,
       project_id: 'AIC',
-      recaptchaToken: request.recaptchaToken,
     };
 
     const response = await apiClient.post<RegisterResponse>(
