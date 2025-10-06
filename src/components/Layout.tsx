@@ -1,18 +1,33 @@
-import React, { useState } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { apiClient } from "@/api/config/axios";
+import { toast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const { user, logout } = useAuth();
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<{ email: string } | null>(null);
+
+  // Check authentication state from localStorage
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    const email = localStorage.getItem("userEmail");
+    
+    if (token && email) {
+      setUser({ email });
+    } else {
+      setUser(null);
+    }
+  }, []);
 
   const navigationItems = [
     { label: "Problem", id: "problem" },
@@ -26,6 +41,64 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const handleNavClick = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setIsOpen(false);
+  };
+
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+      
+      if (!token) {
+        console.error("❌ [Layout] No token found for logout");
+        return;
+      }
+
+      // Get client IP
+      const clientIP = await apiClient.get('https://api.ipify.org?format=json')
+        .then(res => res.data.ip)
+        .catch(() => '192.168.1.100');
+
+      const logoutPayload = {
+        token: token,
+        ip: clientIP,
+        project_id: 'AIC'
+      };
+
+      console.log("🚪 [Layout] Calling logout API with payload:", logoutPayload);
+
+      const response = await apiClient.post('/api/v1/auth/AuthLogout_ID1030', logoutPayload);
+      
+      console.log("✅ [Layout] Logout successful:", response.data);
+
+      // Clear localStorage
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userEmail");
+      
+      // Update local state
+      setUser(null);
+
+      toast({
+        title: "Logout successful",
+        description: "You have been logged out successfully.",
+      });
+
+      // Redirect to login
+      navigate("/login");
+    } catch (error: any) {
+      console.error("❌ [Layout] Logout error:", error);
+      
+      // Even if API fails, clear local storage
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userEmail");
+      setUser(null);
+      
+      toast({
+        title: "Logged out",
+        description: "You have been logged out locally.",
+        variant: "destructive",
+      });
+
+      navigate("/login");
+    }
   };
 
   return (
@@ -71,7 +144,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   className="hidden lg:inline-block"
                   variant="outline"
                   size="sm"
-                  onClick={logout}
+                  onClick={handleLogout}
                 >
                   Logout
                 </Button>
@@ -111,7 +184,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         {item.label}
                       </a>
                     ))}
-                    <Button size="sm" onClick={logout}>
+                    <Button size="sm" onClick={handleLogout}>
                       Logout
                     </Button>
                   </nav>
