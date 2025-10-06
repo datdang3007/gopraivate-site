@@ -59,24 +59,70 @@ export const useRegister = () => {
       console.log("🎯 [useRegister] Mutation started with data:", data);
       return AuthService.register(data);
     },
-    onSuccess: (response: any) => {
+    onSuccess: async (response: any) => {
       console.log("🎉 [useRegister] Success response:", response);
 
-      if (response.status === 200 && response.data.success) {
-        console.log(
-          "✅ [useRegister] Registration successful, navigating to login",
-        );
+      if (response.success && response.variables && response.variables.token) {
+        const token = response.variables.token;
+        console.log("🔐 [useRegister] Extracted token:", token);
 
-        toast({
-          title: "Registration successful",
-          description:
-            "Your account has been created successfully! Please sign in to continue.",
-        });
+        try {
+          // Get client IP
+          const clientIP = await fetch('https://api.ipify.org?format=json')
+            .then(res => res.json())
+            .then(data => data.ip)
+            .catch(() => '192.168.1.100');
 
-        navigate("/login");
+          // Call verification API
+          const verificationPayload = {
+            token: token,
+            ip: clientIP,
+            project_id: 'AIC'
+          };
+
+          console.log("📦 [useRegister] Calling verify API with payload:", verificationPayload);
+
+          const verifyResponse = await fetch(`${import.meta.env.VITE_CONTACT_API_ENDPOINT}/api/v1/auth/verify_id1010`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(verificationPayload)
+          });
+
+          if (verifyResponse.ok) {
+            const verifyData = await verifyResponse.json();
+            console.log("✅ [useRegister] Verification successful:", verifyData);
+
+            // Only show success message after verification is successful
+            toast({
+              title: "Registration successful",
+              description: "Your account has been created and verified successfully! Please sign in to continue.",
+            });
+
+            navigate("/login");
+          } else {
+            console.error("❌ [useRegister] Verification failed:", verifyResponse.status);
+            const errorData = await verifyResponse.json().catch(() => null);
+            console.error("❌ [useRegister] Verification error:", errorData);
+
+            toast({
+              title: "Registration failed",
+              description: "Account verification failed. Please try again.",
+              variant: "destructive",
+            });
+          }
+        } catch (error) {
+          console.error("❌ [useRegister] Verification error:", error);
+          toast({
+            title: "Registration failed", 
+            description: "Account verification failed. Please try again.",
+            variant: "destructive",
+          });
+        }
       } else {
-        console.warn("⚠️ [useRegister] Unexpected response format:", response);
-        throw new Error("Registration failed - unexpected response format");
+        console.warn("⚠️ [useRegister] No token found in response:", response);
+        throw new Error("Registration failed - no token received");
       }
     },
     onError: (error: any) => {
