@@ -69,8 +69,8 @@ export const loginAPI = async (
 ) => {
   try {
     // Get real client IP if not provided
-    const clientIP = ip || await getClientIP();
-    
+    const clientIP = ip || (await getClientIP());
+
     const endPoint = `/api/v1/auth/login_id1020`;
     const loginPayload = {
       email,
@@ -94,7 +94,7 @@ export const loginAPI = async (
 // Function to get client IP address
 export const getClientIP = async (): Promise<string> => {
   try {
-    const response = await fetch('https://api.ipify.org?format=json');
+    const response = await fetch("https://api.ipify.org?format=json");
     const data = await response.json();
     return data.ip;
   } catch (error) {
@@ -112,15 +112,15 @@ export const registerAPI = async (
 ) => {
   try {
     // Get real client IP if not provided
-    const clientIP = ip || await getClientIP();
-    
+    const clientIP = ip || (await getClientIP());
+
     const endPoint = `/api/v1/auth/register_id1000`;
     const registrationPayload = {
       email,
       password,
       is_human: true,
       ip: clientIP,
-      project_id: "AIC",
+      project_id: "PRI",
       recaptchaToken,
     };
 
