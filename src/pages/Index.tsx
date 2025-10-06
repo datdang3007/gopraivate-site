@@ -37,8 +37,8 @@ const Index = () => {
         state: {
           redirectTo: "/",
           message: "Please login to send messages",
-          promptToResend: prompt
-        }
+          promptToResend: prompt,
+        },
       });
       return;
     }
@@ -48,7 +48,7 @@ const Index = () => {
       const payload = {
         payload_b64: prompt,
         ip: clientIP,
-        project_id: "PRI",
+        project_id: "AIC",
       };
 
       console.log("📤 [Index] Sending message with payload:", payload);
