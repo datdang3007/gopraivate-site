@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useLogin } from "@/api/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,51 +20,19 @@ interface LoginFormData {
 }
 
 const Login: React.FC = () => {
-  const { login } = useAuth();
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const loginMutation = useLogin();
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormData>();
 
   const onSubmit = async (data: LoginFormData) => {
-    try {
-      // Comment out API call - direct login like before
-      // const response = await loginAPI(data.email, data.password);
-
-      // if (response.status === 200 && response.data.includes("Login successful")) {
-      // Call local auth context login for session management
-      const success = await login(data.email, data.password);
-      if (success) {
-        toast({
-          title: "Login successful",
-          description: "Welcome back!",
-        });
-        navigate("/");
-      } else {
-        toast({
-          title: "Login failed",
-          description: "Invalid credentials. Please try again.",
-          variant: "destructive",
-        });
-      }
-      // } else {
-      //   toast({
-      //     title: "Login failed",
-      //     description: "Invalid credentials or server error.",
-      //     variant: "destructive",
-      //   });
-      // }
-    } catch (error) {
-      console.error("Login failed:", error);
-      toast({
-        title: "Error",
-        description: "An error occurred during login. Please try again.",
-        variant: "destructive",
-      });
-    }
+    loginMutation.mutate({
+      email: data.email,
+      password: data.password,
+    });
   };
 
   return (
@@ -133,8 +100,8 @@ const Login: React.FC = () => {
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Signing in..." : "Sign in"}
+              <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+                {loginMutation.isPending ? "Signing in..." : "Sign in"}
               </Button>
             </form>
 

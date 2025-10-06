@@ -21,12 +21,10 @@ export const useLogin = () => {
   return useMutation({
     mutationKey: AUTH_KEYS.login,
     mutationFn: (data: LoginRequest) => AuthService.login(data),
-    onSuccess: (response) => {
-      if (response.status === 200 && response.token) {
-        localStorage.setItem('authToken', response.token);
-        
+    onSuccess: (response, variables) => {
+      if (response.status === 200) {
         // Set user data in cache
-        const user: User = { email: data.email };
+        const user: User = { email: variables.email };
         queryClient.setQueryData(AUTH_KEYS.user, user);
         
         toast({
