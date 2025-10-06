@@ -30,14 +30,11 @@ const Index = () => {
     if (!prompt.trim()) return;
 
     try {
-      // Get client IP
       const clientIP = await getClientIP();
-      
-      // Prepare API payload
       const payload = {
-        payload_b64: prompt, // Using prompt directly as payload_b64
+        payload_b64: prompt,
         ip: clientIP,
-        project_id: "PRI"
+        project_id: "AIC",
       };
 
       console.log("📤 [Index] Sending message with payload:", payload);
@@ -58,7 +55,7 @@ const Index = () => {
           console.error("❌ [Index] Failed to send message:", error);
           // Still navigate to chat even if API fails
           navigate("/chat", { state: { initialPrompt: prompt } });
-        }
+        },
       });
     } catch (error) {
       console.error("💥 [Index] Error preparing message:", error);
