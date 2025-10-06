@@ -37,7 +37,7 @@ const Login: React.FC = () => {
     }
   });
 
-  // Auto-fill and auto-login if coming from registration
+  // Auto-fill credentials if coming from registration
   useEffect(() => {
     const state = location.state as { 
       email?: string; 
@@ -56,28 +56,25 @@ const Login: React.FC = () => {
       });
     }
     
-    if (state?.email && state?.password && !loginMutation.isPending) {
+    // Only auto-fill form, no auto-login
+    if (state?.email && state?.password) {
       console.log("🔄 [Login] Auto-filling credentials from registration", {
         email: state.email,
         hasPassword: !!state.password
       });
       
       // Fill the form immediately
-      setValue("email", state.email, { shouldValidate: false });
-      setValue("password", state.password, { shouldValidate: false });
+      setValue("email", state.email, { shouldValidate: true });
+      setValue("password", state.password, { shouldValidate: true });
       
-      // Auto-login after form is filled
-      const timer = setTimeout(() => {
-        console.log("🚀 [Login] Auto-logging in...");
-        loginMutation.mutate({
-          email: state.email,
-          password: state.password,
-        });
-      }, 300);
-
-      return () => clearTimeout(timer);
+      // Show success message for auto-fill
+      toast({
+        title: "Registration Successful",
+        description: "Your credentials have been filled in. Please click 'Sign in' to continue.",
+        variant: "default",
+      });
     }
-  }, [location.state, setValue, loginMutation.isPending]);
+  }, [location.state, setValue]);
 
   const onSubmit = async (data: LoginFormData) => {
     loginMutation.mutate({
