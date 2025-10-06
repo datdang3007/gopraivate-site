@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -54,7 +55,7 @@ const SignUp: React.FC = () => {
       {
         email: data.email,
         password: data.password,
-        recaptchaToken: recaptchaValue,
+        recaptchaToken: recaptchaValue || '',
       },
       {
         onSettled: () => {
