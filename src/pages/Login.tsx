@@ -30,29 +30,39 @@ const Login: React.FC = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<LoginFormData>();
+  } = useForm<LoginFormData>({
+    defaultValues: {
+      email: '',
+      password: ''
+    }
+  });
 
   // Auto-fill and auto-login if coming from registration
   useEffect(() => {
     const state = location.state as { email?: string; password?: string } | null;
     
-    if (state?.email && state?.password) {
-      console.log("🔄 [Login] Auto-filling credentials from registration");
+    if (state?.email && state?.password && !loginMutation.isPending) {
+      console.log("🔄 [Login] Auto-filling credentials from registration", {
+        email: state.email,
+        hasPassword: !!state.password
+      });
       
-      // Fill the form
-      setValue("email", state.email);
-      setValue("password", state.password);
+      // Fill the form immediately
+      setValue("email", state.email, { shouldValidate: false });
+      setValue("password", state.password, { shouldValidate: false });
       
-      // Auto-login after a short delay
-      setTimeout(() => {
+      // Auto-login after form is filled
+      const timer = setTimeout(() => {
         console.log("🚀 [Login] Auto-logging in...");
         loginMutation.mutate({
           email: state.email,
           password: state.password,
         });
-      }, 500);
+      }, 300);
+
+      return () => clearTimeout(timer);
     }
-  }, [location.state, setValue, loginMutation]);
+  }, [location.state, setValue, loginMutation.isPending]);
 
   const onSubmit = async (data: LoginFormData) => {
     loginMutation.mutate({
