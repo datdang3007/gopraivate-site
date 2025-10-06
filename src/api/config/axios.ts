@@ -7,10 +7,8 @@ import axios, {
 
 // Create axios instance with base configuration
 const createAxiosInstance = (): AxiosInstance => {
-  // Use proxy in development, direct URL in production
-  const baseURL = import.meta.env.DEV 
-    ? '/api'  // Use proxy in development
-    : import.meta.env.VITE_CONTACT_API_ENDPOINT; // Direct URL in production
+  // Use direct API endpoint
+  const baseURL = import.meta.env.VITE_CONTACT_API_ENDPOINT;
   
   const instance = axios.create({
     baseURL: baseURL,
