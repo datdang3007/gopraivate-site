@@ -1,13 +1,12 @@
 
 export interface SendMessageRequest {
-  message: string;
-  email?: string;
-  name?: string;
-  recaptchaToken: string;
+  payload_b64: string;
+  ip: string;
+  project_id: string;
 }
 
 export interface SendMessageResponse {
   status: number;
   data: string;
-  messageId?: string;
+  message?: string;
 }

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSendMessage } from "@/api/hooks/useMessage";
+import { getClientIP } from "@/api/utils/ip";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,42 +21,56 @@ import {
 } from "@/components/ui/card";
 import { Paperclip, Settings, Send } from "lucide-react";
 
-const sendMessageDirect = (formData, recaptchaValue) => {};
-
 const Index = () => {
   const [prompt, setPrompt] = useState("");
   const navigate = useNavigate();
+  const sendMessageMutation = useSendMessage();
 
   const handleSend = async () => {
-    if (prompt.trim()) {
-      try {
-        // Prepare form data
-        const formData = {
-          message: prompt,
-          timestamp: new Date().toISOString(),
-          // Add other form fields as needed
-        };
+    if (!prompt.trim()) return;
 
-        // For now, using empty recaptcha token - you can implement recaptcha later
-        const recaptchaValue = "";
+    try {
+      // Get client IP
+      const clientIP = await getClientIP();
+      
+      // Prepare API payload
+      const payload = {
+        payload_b64: prompt, // Using prompt directly as payload_b64
+        ip: clientIP,
+        project_id: "PRI"
+      };
 
-        // Call API using the utility function
-        const response = await sendMessageDirect(formData, recaptchaValue);
+      console.log("📤 [Index] Sending message with payload:", payload);
 
-        console.log("API Response:", response);
+      // Call API
+      sendMessageMutation.mutate(payload, {
+        onSuccess: (response) => {
+          console.log("✅ [Index] Message sent successfully:", response);
+          // Navigate to chat page with the prompt and response
+          navigate("/chat", {
+            state: {
+              initialPrompt: prompt,
+              apiResponse: response,
+            },
+          });
+        },
+        onError: (error) => {
+          console.error("❌ [Index] Failed to send message:", error);
+          // Still navigate to chat even if API fails
+          navigate("/chat", { state: { initialPrompt: prompt } });
+        }
+      });
+    } catch (error) {
+      console.error("💥 [Index] Error preparing message:", error);
+      // Still navigate to chat even if preparation fails
+      navigate("/chat", { state: { initialPrompt: prompt } });
+    }
+  };
 
-        // Navigate to chat page with the prompt and response
-        navigate("/chat", {
-          state: {
-            initialPrompt: prompt,
-            apiResponse: response,
-          },
-        });
-      } catch (error) {
-        console.error("Failed to send message:", error);
-        // Still navigate to chat even if API fails
-        navigate("/chat", { state: { initialPrompt: prompt } });
-      }
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
     }
   };
 
@@ -87,6 +103,7 @@ const Index = () => {
                 <Textarea
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
+                  onKeyPress={handleKeyPress}
                   placeholder="Paste or type your prompt... (e.g., Email sarah.lee@acme.com the Q4 forecast...)"
                   className="w-full bg-transparent border-none text-gray-900 placeholder:text-gray-400 text-sm sm:text-base leading-relaxed resize-none focus:ring-0 focus:outline-none focus:border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 min-h-[60px] sm:min-h-[80px] max-h-[150px] sm:max-h-[200px]"
                 />
@@ -171,10 +188,10 @@ const Index = () => {
                   onClick={handleSend}
                   size="sm"
                   className="bg-black hover:bg-gray-800 text-white rounded-lg px-4 sm:px-6 py-2 h-8 sm:h-9 font-medium transition-colors shadow-sm w-full sm:w-auto text-sm sm:text-base"
-                  disabled={!prompt.trim()}
+                  disabled={!prompt.trim() || sendMessageMutation.isPending}
                 >
                   <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                  Send
+                  {sendMessageMutation.isPending ? "Sending..." : "Send"}
                 </Button>
               </div>
             </div>

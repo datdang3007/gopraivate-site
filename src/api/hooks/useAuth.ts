@@ -83,7 +83,7 @@ export const useRegister = () => {
           const verificationPayload = {
             token: token,
             ip: clientIP,
-            project_id: 'AIC'
+            project_id: 'PRI'
           };
 
           console.log("📦 [useRegister] Calling verify API with payload:", verificationPayload);

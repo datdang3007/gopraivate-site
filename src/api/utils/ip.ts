@@ -9,6 +9,6 @@ export const getClientIP = async (): Promise<string> => {
     return data.ip;
   } catch (error) {
     console.error('Failed to get client IP:', error);
-    return '0.0.0.0'; // fallback IP
+    return '192.168.1.100'; // fallback IP matching API spec
   }
 };

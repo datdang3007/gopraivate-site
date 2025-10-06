@@ -16,7 +16,7 @@ export const useSendMessage = () => {
     mutationKey: MESSAGE_KEYS.send,
     mutationFn: (data: SendMessageRequest) => MessageService.sendMessage(data),
     onSuccess: (response) => {
-      if (response.status === 200) {
+      if (response.status === 200 && response.data && response.data.includes('msg received successfully')) {
         toast({
           title: 'Message sent',
           description: 'Your message has been sent successfully!',

@@ -9,8 +9,11 @@ export class MessageService {
   static async sendMessage(request: SendMessageRequest): Promise<SendMessageResponse> {
     const response = await apiClient.post<SendMessageResponse>(
       '/api/v0/msg_id4040',
+      request,
       {
-        ...request,
+        headers: {
+          'Accept': 'application/json',
+        },
       }
     );
 
