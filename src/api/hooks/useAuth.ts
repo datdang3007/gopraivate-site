@@ -3,6 +3,7 @@ import { AuthService } from "../services/auth";
 import { LoginRequest, RegisterRequest, User } from "../types/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { apiClient } from "../config/axios";
 
 export const AUTH_KEYS = {
   user: ["auth", "user"] as const,
@@ -67,10 +68,9 @@ export const useRegister = () => {
         console.log("🔐 [useRegister] Extracted token:", token);
 
         try {
-          // Get client IP
-          const clientIP = await fetch('https://api.ipify.org?format=json')
-            .then(res => res.json())
-            .then(data => data.ip)
+          // Get client IP using axios
+          const clientIP = await apiClient.get('https://api.ipify.org?format=json')
+            .then(res => res.data.ip)
             .catch(() => '192.168.1.100');
 
           // Call verification API
@@ -82,38 +82,21 @@ export const useRegister = () => {
 
           console.log("📦 [useRegister] Calling verify API with payload:", verificationPayload);
 
-          const verifyResponse = await fetch(`${import.meta.env.VITE_CONTACT_API_ENDPOINT}/api/v1/auth/verify_id1010`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(verificationPayload)
+          const verifyResponse = await apiClient.post('/api/v1/auth/verify_id1010', verificationPayload);
+          
+          console.log("✅ [useRegister] Verification successful:", verifyResponse.data);
+
+          // Only show success message after verification is successful
+          toast({
+            title: "Registration successful",
+            description: "Your account has been created and verified successfully! Please sign in to continue.",
           });
 
-          if (verifyResponse.ok) {
-            const verifyData = await verifyResponse.json();
-            console.log("✅ [useRegister] Verification successful:", verifyData);
-
-            // Only show success message after verification is successful
-            toast({
-              title: "Registration successful",
-              description: "Your account has been created and verified successfully! Please sign in to continue.",
-            });
-
-            navigate("/login");
-          } else {
-            console.error("❌ [useRegister] Verification failed:", verifyResponse.status);
-            const errorData = await verifyResponse.json().catch(() => null);
-            console.error("❌ [useRegister] Verification error:", errorData);
-
-            toast({
-              title: "Registration failed",
-              description: "Account verification failed. Please try again.",
-              variant: "destructive",
-            });
-          }
-        } catch (error) {
+          navigate("/login");
+        } catch (error: any) {
           console.error("❌ [useRegister] Verification error:", error);
+          console.error("❌ [useRegister] Verification error response:", error.response?.data);
+          
           toast({
             title: "Registration failed", 
             description: "Account verification failed. Please try again.",
