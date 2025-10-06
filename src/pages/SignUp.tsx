@@ -39,8 +39,12 @@ const SignUp: React.FC = () => {
   const password = watch("password");
 
   const onSubmit = async (data: SignUpFormData) => {
+    console.log("🔥 [SignUp] Form submitted with data:", data);
+    
     // Validate reCAPTCHA
     const recaptchaValue = recaptchaRef.current?.getValue();
+    console.log("🔑 [SignUp] reCAPTCHA value:", recaptchaValue);
+    
     // if (!recaptchaValue) {
     //   toast({
     //     title: "Error",
@@ -49,6 +53,12 @@ const SignUp: React.FC = () => {
     //   });
     //   return;
     // }
+
+    console.log("🚀 [SignUp] Calling registerMutation with payload:", {
+      email: data.email,
+      password: data.password,
+      recaptchaToken: recaptchaValue || '',
+    });
 
     // Call registration API using React Query
     registerMutation.mutate(
@@ -59,6 +69,7 @@ const SignUp: React.FC = () => {
       },
       {
         onSettled: () => {
+          console.log("🏁 [SignUp] API call settled");
           // Reset reCAPTCHA after API call (success or error)
           recaptchaRef.current?.reset();
         },

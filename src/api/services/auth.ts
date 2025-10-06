@@ -29,7 +29,10 @@ export class AuthService {
    * Register new user
    */
   static async register(request: RegisterRequest): Promise<RegisterResponse> {
+    console.log("📧 [AuthService.register] Request received:", request);
+    
     const clientIP = request.ip || await getClientIP();
+    console.log("🌐 [AuthService.register] Client IP:", clientIP);
     
     const payload = {
       email: request.email,
@@ -37,14 +40,28 @@ export class AuthService {
       is_human: true,
       ip: clientIP,
       project_id: 'AIC',
+      recaptchaToken: request.recaptchaToken,
     };
-
-    const response = await apiClient.post<RegisterResponse>(
-      '/api/v1/auth/register_id1000',
-      payload
-    );
-
-    return response.data;
+    
+    console.log("📦 [AuthService.register] Final payload:", payload);
+    console.log("🔗 [AuthService.register] API endpoint:", '/api/v1/auth/register_id1000');
+    console.log("🌍 [AuthService.register] Base URL:", import.meta.env.VITE_CONTACT_API_ENDPOINT);
+    
+    try {
+      const response = await apiClient.post<RegisterResponse>(
+        '/api/v1/auth/register_id1000',
+        payload
+      );
+      
+      console.log("✅ [AuthService.register] Success response:", response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error("❌ [AuthService.register] Error occurred:", error);
+      console.error("❌ [AuthService.register] Error response:", error.response?.data);
+      console.error("❌ [AuthService.register] Error status:", error.response?.status);
+      console.error("❌ [AuthService.register] Error headers:", error.response?.headers);
+      throw error;
+    }
   }
 
   /**

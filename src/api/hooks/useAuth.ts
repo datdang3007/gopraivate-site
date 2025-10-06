@@ -56,9 +56,16 @@ export const useRegister = () => {
 
   return useMutation({
     mutationKey: AUTH_KEYS.register,
-    mutationFn: (data: RegisterRequest) => AuthService.register(data),
+    mutationFn: (data: RegisterRequest) => {
+      console.log("🎯 [useRegister] Mutation started with data:", data);
+      return AuthService.register(data);
+    },
     onSuccess: (response) => {
+      console.log("🎉 [useRegister] Success response:", response);
+      
       if (response.status === 200 && response.data.includes('Registration successful')) {
+        console.log("✅ [useRegister] Registration successful, navigating to login");
+        
         toast({
           title: 'Registration successful',
           description: 'Your account has been created successfully! Please sign in to continue.',
@@ -66,18 +73,27 @@ export const useRegister = () => {
         
         navigate('/login');
       } else {
-        throw new Error('Registration failed');
+        console.warn("⚠️ [useRegister] Unexpected response format:", response);
+        throw new Error('Registration failed - unexpected response format');
       }
     },
     onError: (error: any) => {
-      console.error('Registration error:', error);
+      console.error('💥 [useRegister] Registration error:', error);
+      console.error('💥 [useRegister] Error response data:', error.response?.data);
+      console.error('💥 [useRegister] Error status:', error.response?.status);
       
       let errorMessage = 'Failed to create account. Please try again.';
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
+      } else if (error.response?.data) {
+        errorMessage = typeof error.response.data === 'string' 
+          ? error.response.data 
+          : JSON.stringify(error.response.data);
       } else if (error.message) {
         errorMessage = error.message;
       }
+
+      console.error('💥 [useRegister] Final error message:', errorMessage);
 
       toast({
         title: 'Registration failed',
