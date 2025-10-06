@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { sendMessageDirect } from "@/utils/api";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +18,8 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Paperclip, Settings, Send } from "lucide-react";
+
+const sendMessageDirect = (formData, recaptchaValue) => {};
 
 const Index = () => {
   const [prompt, setPrompt] = useState("");
@@ -143,7 +144,9 @@ const Index = () => {
                         <SelectItem value="medium">
                           Privacy level: Medium
                         </SelectItem>
-                        <SelectItem value="high">Privacy level: High</SelectItem>
+                        <SelectItem value="high">
+                          Privacy level: High
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

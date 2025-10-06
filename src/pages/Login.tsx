@@ -1,15 +1,19 @@
-
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { loginAPI } from '@/utils/api';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { toast } from '@/hooks/use-toast';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Eye, EyeOff } from 'lucide-react';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Eye, EyeOff } from "lucide-react";
 
 interface LoginFormData {
   email: string;
@@ -32,21 +36,21 @@ const Login: React.FC = () => {
       // const response = await loginAPI(data.email, data.password);
 
       // if (response.status === 200 && response.data.includes("Login successful")) {
-        // Call local auth context login for session management
-        const success = await login(data.email, data.password);
-        if (success) {
-          toast({
-            title: "Login successful",
-            description: "Welcome back!",
-          });
-          navigate('/');
-        } else {
-          toast({
-            title: "Login failed",
-            description: "Invalid credentials. Please try again.",
-            variant: "destructive",
-          });
-        }
+      // Call local auth context login for session management
+      const success = await login(data.email, data.password);
+      if (success) {
+        toast({
+          title: "Login successful",
+          description: "Welcome back!",
+        });
+        navigate("/");
+      } else {
+        toast({
+          title: "Login failed",
+          description: "Invalid credentials. Please try again.",
+          variant: "destructive",
+        });
+      }
       // } else {
       //   toast({
       //     title: "Login failed",
@@ -55,7 +59,7 @@ const Login: React.FC = () => {
       //   });
       // }
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
       toast({
         title: "Error",
         description: "An error occurred during login. Please try again.",
@@ -82,11 +86,11 @@ const Login: React.FC = () => {
                   id="email"
                   type="email"
                   placeholder="Enter your email"
-                  {...register('email', {
-                    required: 'Email is required',
+                  {...register("email", {
+                    required: "Email is required",
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: 'Invalid email address',
+                      message: "Invalid email address",
                     },
                   })}
                 />
@@ -102,11 +106,11 @@ const Login: React.FC = () => {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
-                    {...register('password', {
-                      required: 'Password is required',
+                    {...register("password", {
+                      required: "Password is required",
                       minLength: {
                         value: 6,
-                        message: 'Password must be at least 6 characters',
+                        message: "Password must be at least 6 characters",
                       },
                     })}
                   />
@@ -123,24 +127,22 @@ const Login: React.FC = () => {
                   </button>
                 </div>
                 {errors.password && (
-                  <p className="text-sm text-red-600">{errors.password.message}</p>
+                  <p className="text-sm text-red-600">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
 
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Signing in...' : 'Sign in'}
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? "Signing in..." : "Sign in"}
               </Button>
             </form>
 
             <div className="mt-4 text-center">
               <p className="text-sm text-gray-600">
-                Don't have an account?{' '}
+                Don't have an account?{" "}
                 <button
-                  onClick={() => navigate('/signup')}
+                  onClick={() => navigate("/signup")}
                   className="font-medium text-blue-600 hover:text-blue-500 underline"
                 >
                   Sign up
