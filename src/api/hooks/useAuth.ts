@@ -22,7 +22,15 @@ export const useLogin = () => {
     mutationKey: AUTH_KEYS.login,
     mutationFn: (data: LoginRequest) => AuthService.login(data),
     onSuccess: (response, variables) => {
-      if (response.status === 200) {
+      console.log("🎉 [useLogin] Success response:", response);
+      
+      if (response.success && response.variables && response.variables.token) {
+        // Save token to localStorage
+        localStorage.setItem("authToken", response.variables.token);
+        localStorage.setItem("userEmail", variables.email);
+        
+        console.log("💾 [useLogin] Token saved:", response.variables.token);
+
         // Set user data in cache
         const user: User = { email: variables.email };
         queryClient.setQueryData(AUTH_KEYS.user, user);
@@ -90,7 +98,13 @@ export const useRegister = () => {
             description: "Your account has been created and verified successfully! Please sign in to continue.",
           });
 
-          navigate("/login");
+          // Navigate to login with pre-filled credentials
+          navigate("/login", {
+            state: {
+              email: response.variables.email,
+              password: data.password // from original registration data
+            }
+          });
         } catch (error: any) {
           console.error("❌ [useRegister] Verification error:", error);
           console.error("❌ [useRegister] Verification error response:", error.response?.data);

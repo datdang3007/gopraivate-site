@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useLogin } from "@/api/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -24,11 +24,35 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLogin();
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<LoginFormData>();
+
+  // Auto-fill and auto-login if coming from registration
+  useEffect(() => {
+    const state = location.state as { email?: string; password?: string } | null;
+    
+    if (state?.email && state?.password) {
+      console.log("🔄 [Login] Auto-filling credentials from registration");
+      
+      // Fill the form
+      setValue("email", state.email);
+      setValue("password", state.password);
+      
+      // Auto-login after a short delay
+      setTimeout(() => {
+        console.log("🚀 [Login] Auto-logging in...");
+        loginMutation.mutate({
+          email: state.email,
+          password: state.password,
+        });
+      }, 500);
+    }
+  }, [location.state, setValue, loginMutation]);
 
   const onSubmit = async (data: LoginFormData) => {
     loginMutation.mutate({

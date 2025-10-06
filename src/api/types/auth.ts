@@ -6,8 +6,15 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  status: number;
-  data: string;
+  statuscode: number;
+  success: boolean;
+  message: string;
+  variables?: {
+    token: string;
+  };
+  // Keep legacy fields for compatibility
+  status?: number;
+  data?: string;
   token?: string;
 }
 
