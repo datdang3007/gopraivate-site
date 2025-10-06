@@ -1,18 +1,24 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 
-// Common headers configuration
-export const commonHeaders = {
-  Accept: "application/json",
-  "Accept-Encoding": "gzip, deflate, br, zstd",
-  "Content-Type": "application/x-www-form-urlencoded",
-  Host: import.meta.env.VITE_API_HOST,
+/**
+ * Create axios instance with base configuration
+ */
+const createAxiosInstance = (): AxiosInstance => {
+  const instance = axios.create({
+    baseURL: import.meta.env.VITE_CONTACT_API_ENDPOINT,
+    timeout: 30000,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Host: import.meta.env.VITE_API_HOST,
+    },
+  });
+
+  return instance;
 };
 
-// Create axios instance with default config using common headers
-const api = axios.create({
-  baseURL: import.meta.env.VITE_CONTACT_API_ENDPOINT,
-  headers: commonHeaders,
-});
+// Create the main axios instance
+export const api: AxiosInstance = createAxiosInstance();
 
 // API call function with your structure
 export const sendMessage = async (formData: any, recaptchaValue: string) => {
@@ -40,15 +46,12 @@ export const sendMessageDirect = async (
 ) => {
   try {
     const endPoint = `${import.meta.env.VITE_CONTACT_API_ENDPOINT}/api/v0/msg_id4040`;
-    const response = await axios.post(
+    const response = await api.post(
       endPoint,
       JSON.stringify({
         ...formData,
         recaptchaToken: recaptchaValue,
       }),
-      {
-        headers: commonHeaders,
-      },
     );
 
     return response.data;
@@ -73,14 +76,9 @@ export const loginAPI = async (
       project_id: "AIC",
     };
 
-    const response = await axios.post(
+    const response = await api.post(
       `${import.meta.env.VITE_CONTACT_API_ENDPOINT}${endPoint}`,
       JSON.stringify(loginPayload),
-      {
-        headers: {
-          ...commonHeaders,
-        },
-      },
     );
 
     return response;
@@ -95,7 +93,7 @@ export const registerAPI = async (
   email: string,
   password: string,
   recaptchaToken: string,
-  ip: string = "171.250.4.37",
+  ip: string = "123.456.7.89",
 ) => {
   try {
     const endPoint = `/api/v1/auth/register_id1000`;
@@ -108,7 +106,7 @@ export const registerAPI = async (
       recaptchaToken,
     };
 
-    const response = await axios.post(
+    const response = await api.post(
       `${import.meta.env.VITE_CONTACT_API_ENDPOINT}${endPoint}`,
       registrationPayload,
     );
