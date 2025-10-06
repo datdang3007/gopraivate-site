@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/loading-button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -16,6 +16,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<{ email: string } | null>(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Check authentication state from localStorage
   useEffect(() => {
@@ -44,6 +45,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   const handleLogout = async () => {
+    setIsLoggingOut(true);
     try {
       const token = localStorage.getItem("authToken");
       
@@ -98,6 +100,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       });
 
       navigate("/login");
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
@@ -140,14 +144,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <span className="hidden sm:inline-block text-sm text-muted-foreground">
                   {user.email}
                 </span>
-                <Button
+                <LoadingButton
                   className="hidden lg:inline-block"
                   variant="outline"
                   size="sm"
+                  loading={isLoggingOut}
+                  loadingText="Logging out..."
                   onClick={handleLogout}
                 >
                   Logout
-                </Button>
+                </LoadingButton>
               </>
             ) : (
               <Button variant="outline" size="sm">
@@ -184,9 +190,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         {item.label}
                       </a>
                     ))}
-                    <Button size="sm" onClick={handleLogout}>
+                    <LoadingButton 
+                      size="sm" 
+                      loading={isLoggingOut}
+                      loadingText="Logging out..."
+                      onClick={handleLogout}
+                    >
                       Logout
-                    </Button>
+                    </LoadingButton>
                   </nav>
 
                   {user && (

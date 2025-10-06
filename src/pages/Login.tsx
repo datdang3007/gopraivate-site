@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useLogin } from "@/api/hooks/useAuth";
-import { Button } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/loading-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
@@ -136,13 +136,14 @@ const Login: React.FC = () => {
                 )}
               </div>
 
-              <Button
+              <LoadingButton
                 type="submit"
                 className="w-full"
-                disabled={loginMutation.isPending}
+                loading={loginMutation.isPending}
+                loadingText="Signing in..."
               >
-                {loginMutation.isPending ? "Signing in..." : "Sign in"}
-              </Button>
+                Sign in
+              </LoadingButton>
             </form>
 
             <div className="mt-4 text-center">

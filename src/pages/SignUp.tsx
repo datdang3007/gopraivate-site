@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useRegister } from "@/api/hooks/useAuth";
-import { Button } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/loading-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
@@ -193,15 +193,14 @@ const SignUp: React.FC = () => {
                 />
               </div> */}
 
-              <Button
+              <LoadingButton
                 type="submit"
                 className="w-full"
-                disabled={registerMutation.isPending}
+                loading={registerMutation.isPending}
+                loadingText="Creating account..."
               >
-                {registerMutation.isPending
-                  ? "Creating account..."
-                  : "Create account"}
-              </Button>
+                Create account
+              </LoadingButton>
             </form>
 
             <div className="mt-4 text-center">
