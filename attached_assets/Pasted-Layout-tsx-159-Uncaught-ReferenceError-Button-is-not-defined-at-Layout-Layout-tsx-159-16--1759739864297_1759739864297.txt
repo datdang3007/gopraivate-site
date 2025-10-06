@@ -1,0 +1,24 @@
+Layout.tsx:159 
+ Uncaught ReferenceError: Button is not defined
+    at Layout (Layout.tsx:159:16)
+react-dom.development.js:18704 
+ The above error occurred in the <Layout> component:
+
+    at Layout (https://c2762b1b-c23b-4de3-a821-974d1061ea25-00-2hu2fxh3d9ysr.pike.replit.dev/src/components/Layout.tsx?t=1759739856756:30:19)
+    at Index (https://c2762b1b-c23b-4de3-a821-974d1061ea25-00-2hu2fxh3d9ysr.pike.replit.dev/src/pages/Index.tsx?t=1759739856756:34:33)
+    at ProtectedRoute (https://c2762b1b-c23b-4de3-a821-974d1061ea25-00-2hu2fxh3d9ysr.pike.replit.dev/src/components/ProtectedRoute.tsx?t=1759739027908:23:27)
+    at RenderedRoute (https://c2762b1b-c23b-4de3-a821-974d1061ea25-00-2hu2fxh3d9ysr.pike.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=03dc6959:4088:5)
+    at Routes (https://c2762b1b-c23b-4de3-a821-974d1061ea25-00-2hu2fxh3d9ysr.pike.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=03dc6959:4558:5)
+    at AuthProvider (https://c2762b1b-c23b-4de3-a821-974d1061ea25-00-2hu2fxh3d9ysr.pike.replit.dev/src/contexts/AuthContext.tsx:34:32)
+    at Router (https://c2762b1b-c23b-4de3-a821-974d1061ea25-00-2hu2fxh3d9ysr.pike.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=03dc6959:4501:15)
+    at BrowserRouter (https://c2762b1b-c23b-4de3-a821-974d1061ea25-00-2hu2fxh3d9ysr.pike.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=03dc6959:5247:5)
+    at Provider (https://c2762b1b-c23b-4de3-a821-974d1061ea25-00-2hu2fxh3d9ysr.pike.replit.dev/node_modules/.vite/deps/chunk-SVEE2V6P.js?v=03dc6959:49:15)
+    at TooltipProvider (https://c2762b1b-c23b-4de3-a821-974d1061ea25-00-2hu2fxh3d9ysr.pike.replit.dev/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=03dc6959:58:5)
+    at QueryClientProvider (https://c2762b1b-c23b-4de3-a821-974d1061ea25-00-2hu2fxh3d9ysr.pike.replit.dev/node_modules/.vite/deps/@tanstack_react-query.js?v=03dc6959:3081:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+react-dom.development.js:26962 
+ Uncaught ReferenceError: Button is not defined
+    at Layout (Layout.tsx:159:16)
