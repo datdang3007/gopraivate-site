@@ -39,7 +39,22 @@ const Login: React.FC = () => {
 
   // Auto-fill and auto-login if coming from registration
   useEffect(() => {
-    const state = location.state as { email?: string; password?: string } | null;
+    const state = location.state as { 
+      email?: string; 
+      password?: string; 
+      redirectTo?: string; 
+      message?: string; 
+      promptToResend?: string;
+    } | null;
+    
+    // Show message if redirected from unauthorized access
+    if (state?.message) {
+      toast({
+        title: "Authentication Required",
+        description: state.message,
+        variant: "default",
+      });
+    }
     
     if (state?.email && state?.password && !loginMutation.isPending) {
       console.log("🔄 [Login] Auto-filling credentials from registration", {

@@ -21,14 +21,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route 
-              path="/" 
-              element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              } 
-            />
+            <Route path="/" element={<Index />} />
             <Route 
               path="/chat" 
               element={

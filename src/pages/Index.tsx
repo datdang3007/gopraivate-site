@@ -29,12 +29,26 @@ const Index = () => {
   const handleSend = async () => {
     if (!prompt.trim()) return;
 
+    // Check if user is authenticated
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.log("🔒 [Index] User not authenticated, redirecting to login");
+      navigate("/login", {
+        state: {
+          redirectTo: "/",
+          message: "Please login to send messages",
+          promptToResend: prompt
+        }
+      });
+      return;
+    }
+
     try {
       const clientIP = await getClientIP();
       const payload = {
         payload_b64: prompt,
         ip: clientIP,
-        project_id: "AIC",
+        project_id: "PRI",
       };
 
       console.log("📤 [Index] Sending message with payload:", payload);

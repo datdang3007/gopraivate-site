@@ -40,7 +40,12 @@ export const useLogin = () => {
           description: "Welcome back!",
         });
 
-        navigate("/");
+        // Check if there's a redirect URL or prompt to resend
+        const currentLocation = window.location;
+        const urlParams = new URLSearchParams(currentLocation.search);
+        const redirectTo = urlParams.get('redirectTo') || "/";
+        
+        navigate(redirectTo);
       } else {
         throw new Error("Invalid credentials");
       }
