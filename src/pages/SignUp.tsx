@@ -40,14 +40,14 @@ const SignUp: React.FC = () => {
   const onSubmit = async (data: SignUpFormData) => {
     // Validate reCAPTCHA
     const recaptchaValue = recaptchaRef.current?.getValue();
-    if (!recaptchaValue) {
-      toast({
-        title: "Error",
-        description: "Please complete the reCAPTCHA verification.",
-        variant: "destructive",
-      });
-      return;
-    }
+    // if (!recaptchaValue) {
+    //   toast({
+    //     title: "Error",
+    //     description: "Please complete the reCAPTCHA verification.",
+    //     variant: "destructive",
+    //   });
+    //   return;
+    // }
 
     // Call registration API using React Query
     registerMutation.mutate(
@@ -61,7 +61,7 @@ const SignUp: React.FC = () => {
           // Reset reCAPTCHA after API call (success or error)
           recaptchaRef.current?.reset();
         },
-      }
+      },
     );
   };
 
@@ -164,7 +164,7 @@ const SignUp: React.FC = () => {
                 )}
               </div>
 
-              <div className="space-y-2 flex justify-center">
+              {/* <div className="space-y-2 flex justify-center">
                 <ReCAPTCHA
                   ref={recaptchaRef}
                   sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
@@ -176,10 +176,16 @@ const SignUp: React.FC = () => {
                     recaptchaRef.current?.reset();
                   }}
                 />
-              </div>
+              </div> */}
 
-              <Button type="submit" className="w-full" disabled={registerMutation.isPending}>
-                {registerMutation.isPending ? "Creating account..." : "Create account"}
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={registerMutation.isPending}
+              >
+                {registerMutation.isPending
+                  ? "Creating account..."
+                  : "Create account"}
               </Button>
             </form>
 
