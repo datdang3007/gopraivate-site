@@ -86,6 +86,26 @@ const Login: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
+        {/* Logo and Back to Home */}
+        <div className="text-center space-y-4">
+          <div className="flex items-center justify-center">
+            <a className="flex items-center space-x-2" href="/">
+              <img
+                src="/gopraivate_v10.12.png"
+                alt="goprAIvate Logo"
+                className="h-8 w-8"
+              />
+              <span className="font-bold text-lg">goprAIvate</span>
+            </a>
+          </div>
+          <button
+            onClick={() => navigate("/")}
+            className="text-sm text-blue-600 hover:text-blue-500 underline"
+          >
+            ← Back to Home
+          </button>
+        </div>
+        
         <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl text-center">Sign in</CardTitle>
