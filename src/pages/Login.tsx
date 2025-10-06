@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -22,6 +23,7 @@ interface LoginFormData {
 const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const loginMutation = useLogin();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -100,7 +102,11 @@ const Login: React.FC = () => {
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={loginMutation.isPending}
+              >
                 {loginMutation.isPending ? "Signing in..." : "Sign in"}
               </Button>
             </form>
