@@ -1,3 +1,4 @@
+
 import axios from "axios";
 
 const api = axios.create({
@@ -9,6 +10,18 @@ const api = axios.create({
   },
   timeout: 30000,
 });
+
+// Function to get client IP address
+export const getClientIP = async (): Promise<string> => {
+  try {
+    const response = await fetch('https://api.ipify.org?format=json');
+    const data = await response.json();
+    return data.ip;
+  } catch (error) {
+    console.error("Failed to get client IP:", error);
+    return "0.0.0.0"; // fallback IP
+  }
+};
 
 export const sendMessage = async (formData: any, recaptchaValue: string) => {
   try {
@@ -26,13 +39,16 @@ export const sendMessage = async (formData: any, recaptchaValue: string) => {
 export const loginAPI = async (
   email: string,
   password: string,
-  ip = "192.168.1.100",
+  ip?: string,
 ) => {
   try {
+    // Get real client IP if not provided
+    const clientIP = ip || await getClientIP();
+    
     const response = await api.post("/api/v1/auth/login_id1020", {
       email,
       password,
-      ip,
+      ip: clientIP,
       project_id: "AIC",
     });
     return response.data;
@@ -45,15 +61,20 @@ export const loginAPI = async (
 export const registerAPI = async (
   email: string,
   password: string,
-  ip = "123.456.7.89",
+  recaptchaToken: string,
+  ip?: string,
 ) => {
   try {
+    // Get real client IP if not provided
+    const clientIP = ip || await getClientIP();
+    
     const response = await api.post("/api/v1/auth/register_id1000", {
       email,
       password,
       is_human: true,
-      ip,
+      ip: clientIP,
       project_id: "AIC",
+      recaptchaToken,
     });
     return response.data;
   } catch (error) {
