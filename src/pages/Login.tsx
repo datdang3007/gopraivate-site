@@ -25,6 +25,7 @@ const Login: React.FC = () => {
   const loginMutation = useLogin();
   const navigate = useNavigate();
   const location = useLocation();
+
   const {
     register,
     handleSubmit,
@@ -32,21 +33,21 @@ const Login: React.FC = () => {
     formState: { errors },
   } = useForm<LoginFormData>({
     defaultValues: {
-      email: '',
-      password: ''
-    }
+      email: "",
+      password: "",
+    },
   });
 
   // Auto-fill credentials if coming from registration
   useEffect(() => {
-    const state = location.state as { 
-      email?: string; 
-      password?: string; 
-      redirectTo?: string; 
-      message?: string; 
+    const state = location.state as {
+      email?: string;
+      password?: string;
+      redirectTo?: string;
+      message?: string;
       promptToResend?: string;
     } | null;
-    
+
     // Show message if redirected from unauthorized access
     if (state?.message) {
       toast({
@@ -55,22 +56,21 @@ const Login: React.FC = () => {
         variant: "default",
       });
     }
-    
+
     // Only auto-fill form, no auto-login
     if (state?.email && state?.password) {
       console.log("🔄 [Login] Auto-filling credentials from registration", {
         email: state.email,
-        hasPassword: !!state.password
+        hasPassword: !!state.password,
       });
-      
-      // Fill the form immediately
+
       setValue("email", state.email, { shouldValidate: true });
       setValue("password", state.password, { shouldValidate: true });
-      
-      // Show success message for auto-fill
+
       toast({
         title: "Registration Successful",
-        description: "Your credentials have been filled in. Please click 'Sign in' to continue.",
+        description:
+          "Your credentials have been filled in. Please click 'Sign in' to continue.",
         variant: "default",
       });
     }
@@ -86,35 +86,40 @@ const Login: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        {/* Logo and Back to Home */}
-        <div className="text-center space-y-4">
-          <div className="flex items-center justify-center">
-            <a className="flex items-center space-x-2" href="/">
-              <img
-                src="/gopraivate_v10.12.png"
-                alt="goprAIvate Logo"
-                className="h-8 w-8"
-              />
-              <span className="font-bold text-lg">goprAIvate</span>
-            </a>
-          </div>
-          <button
-            onClick={() => navigate("/")}
-            className="text-sm text-blue-600 hover:text-blue-500 underline"
-          >
-            ← Back to Home
-          </button>
-        </div>
-        
-        <Card>
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Sign in</CardTitle>
+        <Card className="shadow-lg">
+          <CardHeader className="space-y-4">
+            {/* Logo + Home link */}
+            <div className="text-center mb-4">
+              <div className="flex items-center justify-center">
+                <a
+                  href="/"
+                  className="flex flex-col items-center space-y-2 hover:scale-105 transition-transform"
+                >
+                  <img
+                    src="/gopraivate_v10.12.png"
+                    alt="goprAIvate Logo"
+                    className="h-32 w-32 rounded-full object-cover shadow-md border border-gray-200"
+                  />
+                </a>
+              </div>
+            </div>
+
+            {/* <button
+                onClick={() => navigate("/")}
+                className="text-sm text-blue-600 hover:text-blue-500 underline"
+              >
+                ← Back to Home
+              </button> */}
+
+            <CardTitle className="text-2xl text-center m-0">Sign in</CardTitle>
             <CardDescription className="text-center">
               Enter your email and password to access your account
             </CardDescription>
           </CardHeader>
+
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -134,6 +139,7 @@ const Login: React.FC = () => {
                 )}
               </div>
 
+              {/* Password */}
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
@@ -180,7 +186,7 @@ const Login: React.FC = () => {
 
             <div className="mt-4 text-center">
               <p className="text-sm text-gray-600">
-                Don't have an account?{" "}
+                Don’t have an account?{" "}
                 <button
                   onClick={() => navigate("/signup")}
                   className="font-medium text-blue-600 hover:text-blue-500 underline"
