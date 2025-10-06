@@ -1,3 +1,6 @@
+` tags.
+
+<replit_final_file>
 import axios, { AxiosInstance } from "axios";
 
 /**
@@ -20,32 +23,22 @@ const createAxiosInstance = (): AxiosInstance => {
 // Create the main axios instance
 export const api: AxiosInstance = createAxiosInstance();
 
+// Function to get client IP address
+export const getClientIP = async (): Promise<string> => {
+  try {
+    const response = await fetch('https://api.ipify.org?format=json');
+    const data = await response.json();
+    return data.ip;
+  } catch (error) {
+    console.error("Failed to get client IP:", error);
+    return "0.0.0.0"; // fallback IP
+  }
+};
+
 // API call function with your structure
 export const sendMessage = async (formData: any, recaptchaValue: string) => {
   try {
     const endPoint = `/api/v0/msg_id4040`;
-    const response = await api.post(
-      endPoint,
-      JSON.stringify({
-        ...formData,
-        recaptchaToken: recaptchaValue,
-      }),
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error("API call failed:", error);
-    throw error;
-  }
-};
-
-// Alternative function using axios directly with common headers
-export const sendMessageDirect = async (
-  formData: any,
-  recaptchaValue: string,
-) => {
-  try {
-    const endPoint = `${import.meta.env.VITE_CONTACT_API_ENDPOINT}/api/v0/msg_id4040`;
     const response = await api.post(
       endPoint,
       JSON.stringify({
@@ -70,7 +63,7 @@ export const loginAPI = async (
   try {
     // Get real client IP if not provided
     const clientIP = ip || await getClientIP();
-    
+
     const endPoint = `/api/v1/auth/login_id1020`;
     const loginPayload = {
       email,
@@ -91,18 +84,6 @@ export const loginAPI = async (
   }
 };
 
-// Function to get client IP address
-export const getClientIP = async (): Promise<string> => {
-  try {
-    const response = await fetch('https://api.ipify.org?format=json');
-    const data = await response.json();
-    return data.ip;
-  } catch (error) {
-    console.error("Failed to get client IP:", error);
-    return "0.0.0.0"; // fallback IP
-  }
-};
-
 // User Registration API function
 export const registerAPI = async (
   email: string,
@@ -113,14 +94,14 @@ export const registerAPI = async (
   try {
     // Get real client IP if not provided
     const clientIP = ip || await getClientIP();
-    
+
     const endPoint = `/api/v1/auth/register_id1000`;
     const registrationPayload = {
       email,
       password,
       is_human: true,
       ip: clientIP,
-      project_id: "PIC",
+      project_id: "AIC",
       recaptchaToken,
     };
 
@@ -136,22 +117,4 @@ export const registerAPI = async (
   }
 };
 
-// Generic API call function using common headers
-// export const apiCall = async (method: 'GET' | 'POST' | 'PUT' | 'DELETE', endpoint: string, data?: any) => {
-//   try {
-//     const fullUrl = `${import.meta.env.VITE_CONTACT_API_ENDPOINT}${endpoint}`;
-//     const config = {
-//       method,
-//       url: fullUrl,
-//       headers: commonHeaders,
-//       data: data ? JSON.stringify(data) : undefined,
-//     };
-
-//     const response = await axios(config);
-//     return response.data;
-//   } catch (error) {
-//     console.error('API call failed:', error);
-//     throw error;
-//   }
-// };
 export default api;

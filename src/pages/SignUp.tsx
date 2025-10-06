@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
-import { registerAPI } from "@/utils/api";
+import { useRegister } from "@/api/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,69 +27,42 @@ const SignUp: React.FC = () => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const registerMutation = useRegister();
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SignUpFormData>();
 
   const password = watch("password");
 
   const onSubmit = async (data: SignUpFormData) => {
-    try {
-      // Validate reCAPTCHA
-      const recaptchaValue = recaptchaRef.current?.getValue();
-      if (!recaptchaValue) {
-        toast({
-          title: "Error",
-          description: "Please complete the reCAPTCHA verification.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Call registration API
-      const response = await registerAPI(data.email, data.password, recaptchaValue);
-
-      if (response.status === 200 && response.data.includes("Registration successful")) {
-        toast({
-          title: "Registration successful",
-          description: "Your account has been created successfully! Please sign in to continue.",
-        });
-
-        // Reset reCAPTCHA
-        recaptchaRef.current?.reset();
-
-        // Redirect to login page
-        navigate("/login");
-      } else {
-        toast({
-          title: "Registration failed",
-          description: "Unable to create account. Please check your information and try again.",
-          variant: "destructive",
-        });
-        recaptchaRef.current?.reset();
-      }
-    } catch (error) {
-      console.error("Registration failed:", error);
-      // Reset reCAPTCHA on error
-      recaptchaRef.current?.reset();
-      
-      // Handle specific error messages
-      let errorMessage = "Failed to create account. Please try again.";
-      if (error.response?.data) {
-        errorMessage = error.response.data.message || errorMessage;
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-
+    // Validate reCAPTCHA
+    const recaptchaValue = recaptchaRef.current?.getValue();
+    if (!recaptchaValue) {
       toast({
-        title: "Registration failed",
-        description: errorMessage,
+        title: "Error",
+        description: "Please complete the reCAPTCHA verification.",
         variant: "destructive",
       });
+      return;
     }
+
+    // Call registration API using React Query
+    registerMutation.mutate(
+      {
+        email: data.email,
+        password: data.password,
+        recaptchaToken: recaptchaValue,
+      },
+      {
+        onSettled: () => {
+          // Reset reCAPTCHA after API call (success or error)
+          recaptchaRef.current?.reset();
+        },
+      }
+    );
   };
 
   return (
@@ -205,8 +178,8 @@ const SignUp: React.FC = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Creating account..." : "Create account"}
+              <Button type="submit" className="w-full" disabled={registerMutation.isPending}>
+                {registerMutation.isPending ? "Creating account..." : "Create account"}
               </Button>
             </form>
 
