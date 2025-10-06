@@ -1,14 +1,13 @@
-
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AuthService } from '../services/auth';
-import { LoginRequest, RegisterRequest, User } from '../types/auth';
-import { useNavigate } from 'react-router-dom';
-import { toast } from '@/hooks/use-toast';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AuthService } from "../services/auth";
+import { LoginRequest, RegisterRequest, User } from "../types/auth";
+import { useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
 export const AUTH_KEYS = {
-  user: ['auth', 'user'] as const,
-  login: ['auth', 'login'] as const,
-  register: ['auth', 'register'] as const,
+  user: ["auth", "user"] as const,
+  login: ["auth", "login"] as const,
+  register: ["auth", "register"] as const,
 };
 
 /**
@@ -26,23 +25,23 @@ export const useLogin = () => {
         // Set user data in cache
         const user: User = { email: variables.email };
         queryClient.setQueryData(AUTH_KEYS.user, user);
-        
+
         toast({
-          title: 'Login successful',
-          description: 'Welcome back!',
+          title: "Login successful",
+          description: "Welcome back!",
         });
-        
-        navigate('/');
+
+        navigate("/");
       } else {
-        throw new Error('Invalid credentials');
+        throw new Error("Invalid credentials");
       }
     },
     onError: (error) => {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       toast({
-        title: 'Login failed',
-        description: 'Please check your credentials and try again.',
-        variant: 'destructive',
+        title: "Login failed",
+        description: "Please check your credentials and try again.",
+        variant: "destructive",
       });
     },
   });
@@ -60,45 +59,52 @@ export const useRegister = () => {
       console.log("🎯 [useRegister] Mutation started with data:", data);
       return AuthService.register(data);
     },
-    onSuccess: (response) => {
+    onSuccess: (response: any) => {
       console.log("🎉 [useRegister] Success response:", response);
-      
-      if (response.status === 200 && response.data.includes('Registration successful')) {
-        console.log("✅ [useRegister] Registration successful, navigating to login");
-        
+
+      if (response.status === 200 && response.data.success) {
+        console.log(
+          "✅ [useRegister] Registration successful, navigating to login",
+        );
+
         toast({
-          title: 'Registration successful',
-          description: 'Your account has been created successfully! Please sign in to continue.',
+          title: "Registration successful",
+          description:
+            "Your account has been created successfully! Please sign in to continue.",
         });
-        
-        navigate('/login');
+
+        navigate("/login");
       } else {
         console.warn("⚠️ [useRegister] Unexpected response format:", response);
-        throw new Error('Registration failed - unexpected response format');
+        throw new Error("Registration failed - unexpected response format");
       }
     },
     onError: (error: any) => {
-      console.error('💥 [useRegister] Registration error:', error);
-      console.error('💥 [useRegister] Error response data:', error.response?.data);
-      console.error('💥 [useRegister] Error status:', error.response?.status);
-      
-      let errorMessage = 'Failed to create account. Please try again.';
+      console.error("💥 [useRegister] Registration error:", error);
+      console.error(
+        "💥 [useRegister] Error response data:",
+        error.response?.data,
+      );
+      console.error("💥 [useRegister] Error status:", error.response?.status);
+
+      let errorMessage = "Failed to create account. Please try again.";
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.response?.data) {
-        errorMessage = typeof error.response.data === 'string' 
-          ? error.response.data 
-          : JSON.stringify(error.response.data);
+        errorMessage =
+          typeof error.response.data === "string"
+            ? error.response.data
+            : JSON.stringify(error.response.data);
       } else if (error.message) {
         errorMessage = error.message;
       }
 
-      console.error('💥 [useRegister] Final error message:', errorMessage);
+      console.error("💥 [useRegister] Final error message:", errorMessage);
 
       toast({
-        title: 'Registration failed',
+        title: "Registration failed",
         description: errorMessage,
-        variant: 'destructive',
+        variant: "destructive",
       });
     },
   });
@@ -115,11 +121,11 @@ export const useLogout = () => {
     mutationFn: () => AuthService.logout(),
     onSuccess: () => {
       queryClient.clear();
-      navigate('/login');
-      
+      navigate("/login");
+
       toast({
-        title: 'Logged out',
-        description: 'You have been logged out successfully.',
+        title: "Logged out",
+        description: "You have been logged out successfully.",
       });
     },
   });
@@ -132,12 +138,12 @@ export const useCurrentUser = () => {
   return useQuery({
     queryKey: AUTH_KEYS.user,
     queryFn: () => {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       if (!token) return null;
-      
+
       // You can decode token or make API call to get user info
       // For now, return basic user info from localStorage
-      const email = localStorage.getItem('userEmail');
+      const email = localStorage.getItem("userEmail");
       return email ? { email } : null;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
