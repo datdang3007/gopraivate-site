@@ -68,7 +68,7 @@ export const useRegister = () => {
       console.log("🎯 [useRegister] Mutation started with data:", data);
       return AuthService.register(data);
     },
-    onSuccess: async (response: any) => {
+    onSuccess: async (response: any, originalData: RegisterRequest) => {
       console.log("🎉 [useRegister] Success response:", response);
 
       if (response.success && response.variables && response.variables.token) {
@@ -92,17 +92,21 @@ export const useRegister = () => {
           
           console.log("✅ [useRegister] Verification successful:", verifyResponse.data);
 
-          // Only show success message after verification is successful
           toast({
             title: "Registration successful",
-            description: "Your account has been created and verified successfully! Please sign in to continue.",
+            description: "Your account has been created and verified successfully! Redirecting to login...",
+          });
+
+          console.log("🚀 [useRegister] Navigating to login with credentials:", {
+            email: originalData.email,
+            hasPassword: !!originalData.password
           });
 
           // Navigate to login with pre-filled credentials
           navigate("/login", {
             state: {
-              email: response.variables.email,
-              password: data.password // from original registration data
+              email: originalData.email,
+              password: originalData.password
             }
           });
         } catch (error: any) {
