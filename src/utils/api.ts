@@ -65,14 +65,17 @@ export const sendMessageDirect = async (
 export const loginAPI = async (
   email: string,
   password: string,
-  ip: string = "192.168.1.100",
+  ip?: string,
 ) => {
   try {
+    // Get real client IP if not provided
+    const clientIP = ip || await getClientIP();
+    
     const endPoint = `/api/v1/auth/login_id1020`;
     const loginPayload = {
       email,
       password,
-      ip,
+      ip: clientIP,
       project_id: "AIC",
     };
 
@@ -88,20 +91,35 @@ export const loginAPI = async (
   }
 };
 
+// Function to get client IP address
+export const getClientIP = async (): Promise<string> => {
+  try {
+    const response = await fetch('https://api.ipify.org?format=json');
+    const data = await response.json();
+    return data.ip;
+  } catch (error) {
+    console.error("Failed to get client IP:", error);
+    return "0.0.0.0"; // fallback IP
+  }
+};
+
 // User Registration API function
 export const registerAPI = async (
   email: string,
   password: string,
   recaptchaToken: string,
-  ip: string = "123.456.7.89",
+  ip?: string,
 ) => {
   try {
+    // Get real client IP if not provided
+    const clientIP = ip || await getClientIP();
+    
     const endPoint = `/api/v1/auth/register_id1000`;
     const registrationPayload = {
       email,
       password,
       is_human: true,
-      ip,
+      ip: clientIP,
       project_id: "AIC",
       recaptchaToken,
     };
