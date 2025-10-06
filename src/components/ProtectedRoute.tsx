@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
 
 interface ProtectedRouteProps {
@@ -8,12 +7,20 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const token = localStorage.getItem("authToken");
+  const isAuthenticated = !!token;
+
+  console.log("🔒 [ProtectedRoute] Auth check:", {
+    hasToken: !!token,
+    isAuthenticated
+  });
 
   if (!isAuthenticated) {
+    console.log("🚫 [ProtectedRoute] Not authenticated, redirecting to login");
     return <Navigate to="/login" replace />;
   }
 
+  console.log("✅ [ProtectedRoute] Authenticated, allowing access");
   return <>{children}</>;
 };
 
