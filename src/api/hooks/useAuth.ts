@@ -68,12 +68,10 @@ export const useRegister = () => {
         console.log("🔐 [useRegister] Extracted token:", token);
 
         try {
-          // Get client IP using axios
           const clientIP = await apiClient.get('https://api.ipify.org?format=json')
             .then(res => res.data.ip)
             .catch(() => '192.168.1.100');
 
-          // Call verification API
           const verificationPayload = {
             token: token,
             ip: clientIP,
