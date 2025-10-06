@@ -21,6 +21,7 @@ export interface RegisterRequest {
 export interface RegisterResponse {
   status: number;
   data: string;
+  token?: string;
 }
 
 export interface User {

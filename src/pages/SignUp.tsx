@@ -68,6 +68,71 @@ const SignUp: React.FC = () => {
         recaptchaToken: recaptchaValue || '',
       },
       {
+        onSuccess: async (response) => {
+          console.log("✅ [SignUp] Registration successful:", response);
+          
+          // Call verification API after successful registration
+          if (response.token) {
+            try {
+              console.log("🔐 [SignUp] Calling verification API with token:", response.token);
+              
+              const clientIP = await fetch('https://api.ipify.org?format=json')
+                .then(res => res.json())
+                .then(data => data.ip)
+                .catch(() => '0.0.0.0');
+
+              const verificationPayload = {
+                token: response.token,
+                ip: clientIP,
+                project_id: 'AIC'
+              };
+
+              const verifyResponse = await fetch(`${import.meta.env.VITE_CONTACT_API_ENDPOINT}/api/v1/auth/verify_id1010`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(verificationPayload)
+              });
+
+              if (verifyResponse.ok) {
+                const verifyData = await verifyResponse.json();
+                console.log("✅ [SignUp] Verification successful:", verifyData);
+                
+                toast({
+                  title: "Success",
+                  description: "Account created and verified successfully!",
+                });
+                
+                // Redirect to login page
+                navigate("/login");
+              } else {
+                console.error("❌ [SignUp] Verification failed:", verifyResponse.status);
+                toast({
+                  title: "Warning",
+                  description: "Account created but verification failed. Please try logging in.",
+                  variant: "destructive",
+                });
+              }
+            } catch (error) {
+              console.error("❌ [SignUp] Verification error:", error);
+              toast({
+                title: "Warning",
+                description: "Account created but verification failed. Please try logging in.",
+                variant: "destructive",
+              });
+            }
+          } else {
+            toast({
+              title: "Success",
+              description: "Account created successfully!",
+            });
+            navigate("/login");
+          }
+        },
+        onError: (error) => {
+          console.error("❌ [SignUp] Registration failed:", error);
+        },
         onSettled: () => {
           console.log("🏁 [SignUp] API call settled");
           // Reset reCAPTCHA after API call (success or error)
