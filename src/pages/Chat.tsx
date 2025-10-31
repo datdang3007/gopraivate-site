@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
+import { useSendMessage } from "@/api/hooks/useMessage";
+import { getClientIP } from "@/api/utils/ip";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -35,6 +37,7 @@ const Chat = () => {
   const location = useLocation();
   const navigate = useNavigate(); // Initialize useNavigate
   const initialPrompt = location.state?.initialPrompt || "";
+  const sendMessageMutation = useSendMessage();
 
   const [prompt, setPrompt] = useState(initialPrompt);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -60,6 +63,20 @@ const Chat = () => {
   const handleSend = async () => {
     if (!prompt.trim()) return;
 
+    // Check if user is authenticated
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.log("🔒 [Chat] User not authenticated, redirecting to login");
+      navigate("/login", {
+        state: {
+          redirectTo: "/chat",
+          message: "Please login to continue chatting",
+          promptToResend: prompt,
+        },
+      });
+      return;
+    }
+
     const userMessage: Message = {
       id: Date.now().toString(),
       type: "user",
@@ -68,22 +85,61 @@ const Chat = () => {
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    const currentPrompt = prompt;
     setPrompt("");
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiMessage: Message = {
+    try {
+      const clientIP = await getClientIP();
+      const payload = {
+        payload_b64: currentPrompt,
+        ip: clientIP,
+        project_id: "AIC",
+      };
+
+      console.log("📤 [Chat] Sending message with payload:", payload);
+
+      sendMessageMutation.mutate(payload, {
+        onSuccess: (response) => {
+          console.log("✅ [Chat] Message sent successfully:", response);
+          
+          const aiMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            type: "ai",
+            content: response.data || "Message received successfully!",
+            timestamp: new Date(),
+            model: currentModel,
+          };
+          setMessages((prev) => [...prev, aiMessage]);
+          setIsLoading(false);
+        },
+        onError: (error) => {
+          console.error("❌ [Chat] Failed to send message:", error);
+          
+          const errorMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            type: "ai",
+            content: "Sorry, I encountered an error while processing your message. Please try again.",
+            timestamp: new Date(),
+            model: currentModel,
+          };
+          setMessages((prev) => [...prev, errorMessage]);
+          setIsLoading(false);
+        },
+      });
+    } catch (error) {
+      console.error("💥 [Chat] Error preparing message:", error);
+      
+      const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: "ai",
-        content:
-          "This is a simulated AI response. In a real implementation, this would be connected to your chosen AI model with privacy protection enabled.",
+        content: "Sorry, there was an error preparing your message. Please try again.",
         timestamp: new Date(),
-        model: currentModel, // Use the selected model
+        model: currentModel,
       };
-      setMessages((prev) => [...prev, aiMessage]);
+      setMessages((prev) => [...prev, errorMessage]);
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   const handleSendWithModelChange = (model: string) => {
