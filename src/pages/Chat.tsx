@@ -94,7 +94,7 @@ const Chat = () => {
       const payload = {
         payload_b64: currentPrompt,
         ip: clientIP,
-        project_id: "AIC",
+        project_id: "PRI",
       };
 
       console.log("📤 [Chat] Sending message with payload:", payload);

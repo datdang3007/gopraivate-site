@@ -48,7 +48,7 @@ const Index = () => {
       const payload = {
         payload_b64: prompt,
         ip: clientIP,
-        project_id: "AIC",
+        project_id: "PRI",
       };
 
       console.log("📤 [Index] Sending message with payload:", payload);

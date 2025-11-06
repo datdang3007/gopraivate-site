@@ -14,7 +14,7 @@ export class AuthService {
       email: request.email,
       password: request.password,
       ip: clientIP,
-      project_id: 'AIC',
+      project_id: 'PRI',
     };
 
     const response = await apiClient.post<LoginResponse>(
@@ -39,7 +39,7 @@ export class AuthService {
       password: request.password,
       is_human: true,
       ip: clientIP,
-      project_id: 'AIC',
+      project_id: 'PRI',
       recaptchaToken: request.recaptchaToken,
     };
     

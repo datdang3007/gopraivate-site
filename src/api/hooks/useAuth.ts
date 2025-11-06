@@ -23,12 +23,12 @@ export const useLogin = () => {
     mutationFn: (data: LoginRequest) => AuthService.login(data),
     onSuccess: (response, variables) => {
       console.log("🎉 [useLogin] Success response:", response);
-      
+
       if (response.success && response.variables && response.variables.token) {
         // Save token to localStorage
         localStorage.setItem("authToken", response.variables.token);
         localStorage.setItem("userEmail", variables.email);
-        
+
         console.log("💾 [useLogin] Token saved:", response.variables.token);
 
         // Set user data in cache
@@ -43,8 +43,8 @@ export const useLogin = () => {
         // Check if there's a redirect URL or prompt to resend
         const currentLocation = window.location;
         const urlParams = new URLSearchParams(currentLocation.search);
-        const redirectTo = urlParams.get('redirectTo') || "/";
-        
+        const redirectTo = urlParams.get("redirectTo") || "/";
+
         navigate(redirectTo);
       } else {
         throw new Error("Invalid credentials");
@@ -81,45 +81,62 @@ export const useRegister = () => {
         console.log("🔐 [useRegister] Extracted token:", token);
 
         try {
-          const clientIP = await apiClient.get('https://api.ipify.org?format=json')
-            .then(res => res.data.ip)
-            .catch(() => '192.168.1.100');
+          const clientIP = await apiClient
+            .get("https://api.ipify.org?format=json")
+            .then((res) => res.data.ip)
+            .catch(() => "192.168.1.100");
 
           const verificationPayload = {
             token: token,
             ip: clientIP,
-            project_id: 'AIC'
+            project_id: "PRI",
           };
 
-          console.log("📦 [useRegister] Calling verify API with payload:", verificationPayload);
+          console.log(
+            "📦 [useRegister] Calling verify API with payload:",
+            verificationPayload,
+          );
 
-          const verifyResponse = await apiClient.post('/api/v1/auth/verify_id1010', verificationPayload);
-          
-          console.log("✅ [useRegister] Verification successful:", verifyResponse.data);
+          const verifyResponse = await apiClient.post(
+            "/api/v1/auth/verify_id1010",
+            verificationPayload,
+          );
+
+          console.log(
+            "✅ [useRegister] Verification successful:",
+            verifyResponse.data,
+          );
 
           toast({
             title: "Registration successful",
-            description: "Your account has been created and verified successfully! Redirecting to login...",
+            description:
+              "Your account has been created and verified successfully! Redirecting to login...",
           });
 
-          console.log("🚀 [useRegister] Navigating to login with credentials:", {
-            email: originalData.email,
-            hasPassword: !!originalData.password
-          });
+          console.log(
+            "🚀 [useRegister] Navigating to login with credentials:",
+            {
+              email: originalData.email,
+              hasPassword: !!originalData.password,
+            },
+          );
 
           // Navigate to login with pre-filled credentials
           navigate("/login", {
             state: {
               email: originalData.email,
-              password: originalData.password
-            }
+              password: originalData.password,
+            },
           });
         } catch (error: any) {
           console.error("❌ [useRegister] Verification error:", error);
-          console.error("❌ [useRegister] Verification error response:", error.response?.data);
-          
+          console.error(
+            "❌ [useRegister] Verification error response:",
+            error.response?.data,
+          );
+
           toast({
-            title: "Registration failed", 
+            title: "Registration failed",
             description: "Account verification failed. Please try again.",
             variant: "destructive",
           });

@@ -64,7 +64,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       const logoutPayload = {
         token: token,
         ip: clientIP,
-        project_id: 'AIC'
+        project_id: 'PRI'
       };
 
       console.log("🚪 [Layout] Calling logout API with payload:", logoutPayload);
