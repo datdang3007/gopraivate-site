@@ -43,7 +43,9 @@ const SignUp: React.FC = () => {
 
     // Check if there's an email validation error
     if (emailValidationError) {
-      console.log("🚫 [SignUp] Form submission blocked due to email validation error");
+      console.log(
+        "🚫 [SignUp] Form submission blocked due to email validation error",
+      );
       return;
     }
 
@@ -77,17 +79,18 @@ const SignUp: React.FC = () => {
         recaptchaToken: recaptchaValue || "",
       },
       {
-        onError: (error: any) => {
-          console.error("❌ [SignUp] Registration failed:", error);
-          
+        onSuccess: (res) => {
+          console.log("🎉 [SignUp] API call successful with response:", res);
           // Check for specific "user exists already" error
-          if (error.response?.data?.success === false && 
-              error.response?.data?.message === "user exists already, reset password") {
-            setEmailValidationError("Account already exists, please reset password");
+          if (
+            res?.success === false &&
+            res?.message === "user exists already, reset password"
+          ) {
+            setEmailValidationError(
+              "Account already exists, please reset password",
+            );
             return; // Don't show toast for this specific error
           }
-          
-          // For other errors, let the useRegister hook handle the toast
         },
         onSettled: () => {
           console.log("🏁 [SignUp] API call settled");
