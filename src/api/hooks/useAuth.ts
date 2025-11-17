@@ -154,13 +154,6 @@ export const useRegister = () => {
       );
       console.error("💥 [useRegister] Error status:", error.response?.status);
 
-      // Skip toast for "user exists already" error - it will be handled in SignUp component
-      if (error.response?.data?.success === false && 
-          error.response?.data?.message === "user exists already, reset password") {
-        console.log("💥 [useRegister] User exists error - skipping toast");
-        return;
-      }
-
       let errorMessage = "Failed to create account. Please try again.";
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;

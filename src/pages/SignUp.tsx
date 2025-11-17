@@ -225,7 +225,7 @@ const SignUp: React.FC = () => {
                   </p>
                 )}
               </div>
-              {/* 
+              {/*
               <div className="space-y-2 flex justify-center">
                 <ReCAPTCHA
                   ref={recaptchaRef}
