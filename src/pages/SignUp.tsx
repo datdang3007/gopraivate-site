@@ -27,6 +27,7 @@ const SignUp: React.FC = () => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [emailValidationError, setEmailValidationError] = useState<string>("");
   const registerMutation = useRegister();
   const {
     register,
@@ -39,6 +40,15 @@ const SignUp: React.FC = () => {
 
   const onSubmit = async (data: SignUpFormData) => {
     console.log("🔥 [SignUp] Form submitted with data:", data);
+
+    // Check if there's an email validation error
+    if (emailValidationError) {
+      console.log("🚫 [SignUp] Form submission blocked due to email validation error");
+      return;
+    }
+
+    // Clear any previous email validation error
+    setEmailValidationError("");
 
     // Validate reCAPTCHA
     const recaptchaValue = recaptchaRef.current?.getValue();
@@ -67,8 +77,17 @@ const SignUp: React.FC = () => {
         recaptchaToken: recaptchaValue || "",
       },
       {
-        onError: (error) => {
+        onError: (error: any) => {
           console.error("❌ [SignUp] Registration failed:", error);
+          
+          // Check for specific "user exists already" error
+          if (error.response?.data?.success === false && 
+              error.response?.data?.message === "user exists already, reset password") {
+            setEmailValidationError("Account already exists, please reset password");
+            return; // Don't show toast for this specific error
+          }
+          
+          // For other errors, let the useRegister hook handle the toast
         },
         onSettled: () => {
           console.log("🏁 [SignUp] API call settled");
@@ -121,10 +140,20 @@ const SignUp: React.FC = () => {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                       message: "Invalid email address",
                     },
+                    onChange: () => {
+                      // Clear email validation error when user types
+                      if (emailValidationError) {
+                        setEmailValidationError("");
+                      }
+                    },
                   })}
+                  className={emailValidationError ? "border-red-500" : ""}
                 />
                 {errors.email && (
                   <p className="text-sm text-red-600">{errors.email.message}</p>
+                )}
+                {emailValidationError && (
+                  <p className="text-sm text-red-600">{emailValidationError}</p>
                 )}
               </div>
 
