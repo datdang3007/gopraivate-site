@@ -141,6 +141,14 @@ export const useRegister = () => {
             variant: "destructive",
           });
         }
+      } else if (
+        !response.success &&
+        response.message === "user exists already, reset password"
+      ) {
+        console.warn(
+          "⚠️ [useRegister] User already exists, reset password required",
+        );
+        return response;
       } else {
         console.warn("⚠️ [useRegister] No token found in response:", response);
         throw new Error("Registration failed - no token received");
