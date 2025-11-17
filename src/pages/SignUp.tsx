@@ -22,19 +22,11 @@ interface SignUpFormData {
   confirmPassword: string;
 }
 
-interface ApiErrorResponse {
-  success: boolean;
-  message: string;
-  statuscode: number;
-}
-
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [userExistsError, setUserExistsError] = useState<string | null>(null);
-  const [showResetPassword, setShowResetPassword] = useState(false);
   const registerMutation = useRegister();
   const {
     register,
@@ -44,16 +36,6 @@ const SignUp: React.FC = () => {
   } = useForm<SignUpFormData>();
 
   const password = watch("password");
-
-  const handleResetPassword = () => {
-    // Navigate to reset password page or show reset password modal
-    // For now, we'll just show a toast with instructions
-    toast({
-      title: "Password Reset",
-      description: "Please check your email for password reset instructions, or contact support if you need assistance.",
-      variant: "default",
-    });
-  };
 
   const onSubmit = async (data: SignUpFormData) => {
     console.log("🔥 [SignUp] Form submitted with data:", data);
@@ -77,10 +59,6 @@ const SignUp: React.FC = () => {
       recaptchaToken: recaptchaValue || "",
     });
 
-    // Reset previous error states
-    setUserExistsError(null);
-    setShowResetPassword(false);
-
     // Call registration API using React Query
     registerMutation.mutate(
       {
@@ -89,17 +67,8 @@ const SignUp: React.FC = () => {
         recaptchaToken: recaptchaValue || "",
       },
       {
-        onError: (error: any) => {
+        onError: (error) => {
           console.error("❌ [SignUp] Registration failed:", error);
-          
-          // Check if this is a "user exists" error
-          const errorResponse = error.response?.data as ApiErrorResponse;
-          if (errorResponse && 
-              !errorResponse.success && 
-              errorResponse.message === "user exists already, reset password") {
-            setUserExistsError("This email is already registered.");
-            setShowResetPassword(true);
-          }
         },
         onSettled: () => {
           console.log("🏁 [SignUp] API call settled");
@@ -153,29 +122,9 @@ const SignUp: React.FC = () => {
                       message: "Invalid email address",
                     },
                   })}
-                  className={userExistsError ? "border-red-500 focus-visible:ring-red-500" : ""}
                 />
                 {errors.email && (
                   <p className="text-sm text-red-600">{errors.email.message}</p>
-                )}
-                {userExistsError && (
-                  <div className="space-y-2">
-                    <p className="text-sm text-red-600">{userExistsError}</p>
-                    {showResetPassword && (
-                      <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3">
-                        <p className="text-sm text-yellow-800 mb-2">
-                          An account with this email already exists.
-                        </p>
-                        <button
-                          type="button"
-                          onClick={handleResetPassword}
-                          className="text-sm font-medium text-blue-600 hover:text-blue-500 underline"
-                        >
-                          Reset Password
-                        </button>
-                      </div>
-                    )}
-                  </div>
                 )}
               </div>
 
