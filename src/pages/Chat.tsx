@@ -162,16 +162,24 @@ const Chat = () => {
 
   // Helper function to convert history data to messages
   const loadMessagesFromData = (data: any[], page: number, pageSize: number): Message[] => {
-    // Get the most recent conversations first for display
-    const reversedData = [...data].reverse();
-    const startIndex = page * pageSize;
-    const endIndex = Math.min(startIndex + pageSize, reversedData.length);
-    const pageData = reversedData.slice(startIndex, endIndex);
+    // For initial load (page 0), get first elements; for pagination, get from the end
+    let pageData: any[];
+    
+    if (page === 0) {
+      // Initial load: get first 10 elements (oldest conversations)
+      pageData = data.slice(0, pageSize);
+    } else {
+      // Pagination: get older messages working backwards from already loaded content
+      const reversedData = [...data].reverse();
+      const startIndex = page * pageSize;
+      const endIndex = Math.min(startIndex + pageSize, reversedData.length);
+      pageData = reversedData.slice(startIndex, endIndex);
+    }
     
     const historyMessages: Message[] = [];
     
     pageData.forEach((item, index) => {
-      const globalIndex = startIndex + index;
+      const globalIndex = page * pageSize + index;
       const timestamp = new Date(item.updated_at || Date.now());
       
       // Add user question
