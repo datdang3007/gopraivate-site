@@ -67,11 +67,12 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    // Only scroll to bottom if it's not a history load operation
-    if (!isLoadingMore) {
+    // Only scroll to bottom if it's not a history load operation and we have messages
+    // Also avoid scrolling on initial load when history is being loaded
+    if (!isLoadingMore && messages.length > 0 && historyLoaded && !isLoadingHistory) {
       scrollToBottom();
     }
-  }, [messages, isLoadingMore]);
+  }, [messages, isLoadingMore, historyLoaded, isLoadingHistory]);
 
   // Handle scroll to load more history
   useEffect(() => {
