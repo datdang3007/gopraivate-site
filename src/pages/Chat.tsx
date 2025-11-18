@@ -95,21 +95,31 @@ const Chat = () => {
             if (response.JSONraw) {
               const parsedData = JSON.parse(response.JSONraw);
               if (Array.isArray(parsedData)) {
-                parsedData.forEach((item, index) => {
-                  if (item.chat_input) {
+                // Sort by updated_at to maintain chronological order
+                const sortedData = parsedData.sort((a, b) => 
+                  new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime()
+                );
+
+                sortedData.forEach((item, index) => {
+                  const timestamp = new Date(item.updated_at || Date.now());
+                  
+                  // Add user question
+                  if (item.user_input) {
                     historyMessages.push({
                       id: `history-user-${index}`,
                       type: "user",
-                      content: item.chat_input,
-                      timestamp: new Date(item.timestamp || Date.now()),
+                      content: item.user_input,
+                      timestamp: timestamp,
                     });
                   }
+                  
+                  // Add agent response
                   if (item.chat_output) {
                     historyMessages.push({
                       id: `history-ai-${index}`,
                       type: "ai",
                       content: item.chat_output,
-                      timestamp: new Date(item.timestamp || Date.now()),
+                      timestamp: new Date(timestamp.getTime() + 1000), // Add 1 second to ensure proper order
                       model: currentModel,
                     });
                   }
