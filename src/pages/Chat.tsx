@@ -40,7 +40,11 @@ const Chat = () => {
   const initialPrompt = location.state?.initialPrompt || "";
   const sendMessageMutation = useSendMessage();
   const chatHistoryMutation = useChatHistory();
-  const { models, isLoading: isLoadingModels, isUsingFallback } = useAIModelsWithFallback();
+  const {
+    models,
+    isLoading: isLoadingModels,
+    isUsingFallback,
+  } = useAIModelsWithFallback();
 
   const [prompt, setPrompt] = useState(initialPrompt);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -49,18 +53,6 @@ const Chat = () => {
   const [historyLoaded, setHistoryLoaded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [currentModel, setCurrentModel] = useState("chatgpt"); // State to manage current model
-
-  // Load chat history when component mounts
-  useEffect(() => {
-    loadChatHistory();
-  }, []);
-
-  // Auto-send initial prompt after history is loaded
-  useEffect(() => {
-    if (initialPrompt && historyLoaded) {
-      handleSend();
-    }
-  }, [historyLoaded, initialPrompt]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -79,7 +71,7 @@ const Chat = () => {
     }
 
     setIsLoadingHistory(true);
-    
+
     try {
       const clientIP = await getClientIP();
       const payload = {
@@ -96,9 +88,9 @@ const Chat = () => {
       chatHistoryMutation.mutate(payload, {
         onSuccess: (response) => {
           console.log("✅ [Chat] Chat history loaded successfully:", response);
-          
+
           const historyMessages: Message[] = [];
-          
+
           try {
             if (response.JSONraw) {
               const parsedData = JSON.parse(response.JSONraw);
@@ -125,9 +117,12 @@ const Chat = () => {
               }
             }
           } catch (error) {
-            console.error("❌ [Chat] Failed to parse chat history JSONraw:", error);
+            console.error(
+              "❌ [Chat] Failed to parse chat history JSONraw:",
+              error,
+            );
           }
-          
+
           setMessages(historyMessages);
           setHistoryLoaded(true);
           setIsLoadingHistory(false);
@@ -191,20 +186,24 @@ const Chat = () => {
       sendMessageMutation.mutate(payload, {
         onSuccess: (response) => {
           console.log("✅ [Chat] Message sent successfully:", response);
-          
+
           let aiContent = "Message received successfully!";
-          
+
           try {
             if (response.JSONraw) {
               const parsedData = JSON.parse(response.JSONraw);
-              if (Array.isArray(parsedData) && parsedData.length > 0 && parsedData[0].chat_output) {
+              if (
+                Array.isArray(parsedData) &&
+                parsedData.length > 0 &&
+                parsedData[0].chat_output
+              ) {
                 aiContent = parsedData[0].chat_output;
               }
             }
           } catch (error) {
             console.error("❌ [Chat] Failed to parse JSONraw:", error);
           }
-          
+
           const aiMessage: Message = {
             id: (Date.now() + 1).toString(),
             type: "ai",
@@ -217,11 +216,12 @@ const Chat = () => {
         },
         onError: (error) => {
           console.error("❌ [Chat] Failed to send message:", error);
-          
+
           const errorMessage: Message = {
             id: (Date.now() + 1).toString(),
             type: "ai",
-            content: "Sorry, I encountered an error while processing your message. Please try again.",
+            content:
+              "Sorry, I encountered an error while processing your message. Please try again.",
             timestamp: new Date(),
             model: currentModel,
           };
@@ -231,11 +231,12 @@ const Chat = () => {
       });
     } catch (error) {
       console.error("💥 [Chat] Error preparing message:", error);
-      
+
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: "ai",
-        content: "Sorry, there was an error preparing your message. Please try again.",
+        content:
+          "Sorry, there was an error preparing your message. Please try again.",
         timestamp: new Date(),
         model: currentModel,
       };
@@ -256,6 +257,18 @@ const Chat = () => {
     }
   };
 
+  // Load chat history when component mounts
+  useEffect(() => {
+    loadChatHistory();
+  }, []);
+
+  // Auto-send initial prompt after history is loaded
+  useEffect(() => {
+    if (initialPrompt && historyLoaded) {
+      handleSend();
+    }
+  }, [historyLoaded, initialPrompt]);
+
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       {/* Chat Header */}
@@ -268,7 +281,9 @@ const Chat = () => {
               className="h-8 w-8"
             />
             <div>
-              <h1 className="text-lg font-semibold text-gray-900">goprAIvate Chat</h1>
+              <h1 className="text-lg font-semibold text-gray-900">
+                goprAIvate Chat
+              </h1>
               <p className="text-sm text-gray-500">Private AI conversation</p>
             </div>
           </div>
@@ -278,16 +293,22 @@ const Chat = () => {
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               <span className="text-sm text-gray-700 font-medium">
-                {models.find(model => model.name === currentModel)?.displayName || "ChatGPT"}
+                {models.find((model) => model.name === currentModel)
+                  ?.displayName || "ChatGPT"}
               </span>
               {isUsingFallback && (
-                <span className="text-xs text-yellow-600" title="Using fallback models">⚠</span>
+                <span
+                  className="text-xs text-yellow-600"
+                  title="Using fallback models"
+                >
+                  ⚠
+                </span>
               )}
             </div>
 
             {/* Home Button */}
             <Button
-              onClick={() => navigate('/')}
+              onClick={() => navigate("/")}
               variant="ghost"
               size="sm"
               className="p-2 hover:bg-gray-100 rounded-lg h-9 w-9 transition-colors"
@@ -509,7 +530,11 @@ const Chat = () => {
                 {/* Show model selector on tablet and up */}
                 <div className="hidden md:flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <Select value={currentModel} onValueChange={setCurrentModel} disabled={isLoadingModels}>
+                  <Select
+                    value={currentModel}
+                    onValueChange={setCurrentModel}
+                    disabled={isLoadingModels}
+                  >
                     <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
                       <SelectValue />
                     </SelectTrigger>
@@ -522,7 +547,12 @@ const Chat = () => {
                     </SelectContent>
                   </Select>
                   {isUsingFallback && (
-                    <span className="text-xs text-yellow-600 ml-1" title="Using fallback models">⚠</span>
+                    <span
+                      className="text-xs text-yellow-600 ml-1"
+                      title="Using fallback models"
+                    >
+                      ⚠
+                    </span>
                   )}
                 </div>
 
