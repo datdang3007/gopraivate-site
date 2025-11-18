@@ -25,11 +25,13 @@ export const useLogin = () => {
       console.log("🎉 [useLogin] Success response:", response);
 
       if (response.success && response.variables && response.variables.token) {
-        // Save token to localStorage
+        // Save token and user_id to localStorage
         localStorage.setItem("authToken", response.variables.token);
         localStorage.setItem("userEmail", variables.email);
+        localStorage.setItem("userId", response.variables.user_id);
 
         console.log("💾 [useLogin] Token saved:", response.variables.token);
+        console.log("💾 [useLogin] User ID saved:", response.variables.user_id);
 
         // Set user data in cache
         const user: User = { email: variables.email };
