@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
-import { useSendMessage } from "@/api/hooks/useMessage";
+import { useSendMessage, useChatHistory } from "@/api/hooks/useMessage";
 import { useAIModelsWithFallback } from "@/api/hooks/useAIModels";
 import { getClientIP } from "@/api/utils/ip";
 import { Button } from "@/components/ui/button";
@@ -39,20 +39,28 @@ const Chat = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const initialPrompt = location.state?.initialPrompt || "";
   const sendMessageMutation = useSendMessage();
+  const chatHistoryMutation = useChatHistory();
   const { models, isLoading: isLoadingModels, isUsingFallback } = useAIModelsWithFallback();
 
   const [prompt, setPrompt] = useState(initialPrompt);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [currentModel, setCurrentModel] = useState("chatgpt"); // State to manage current model
 
-  // Auto-send initial prompt if provided
+  // Load chat history when component mounts
   useEffect(() => {
-    if (initialPrompt) {
+    loadChatHistory();
+  }, []);
+
+  // Auto-send initial prompt after history is loaded
+  useEffect(() => {
+    if (initialPrompt && historyLoaded) {
       handleSend();
     }
-  }, []);
+  }, [historyLoaded, initialPrompt]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -61,6 +69,81 @@ const Chat = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const loadChatHistory = async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.log("🔒 [Chat] User not authenticated, skipping history load");
+      setHistoryLoaded(true);
+      return;
+    }
+
+    setIsLoadingHistory(true);
+    
+    try {
+      const clientIP = await getClientIP();
+      const payload = {
+        token: token,
+        user_id: localStorage.getItem("userId") || "anonymous_user",
+        ip: clientIP,
+        project_id: "AIC",
+        agent_id: "b91fe95eef4b4296ab1ba04f445ecb16",
+        language: "en",
+      };
+
+      console.log("📤 [Chat] Loading chat history with payload:", payload);
+
+      chatHistoryMutation.mutate(payload, {
+        onSuccess: (response) => {
+          console.log("✅ [Chat] Chat history loaded successfully:", response);
+          
+          const historyMessages: Message[] = [];
+          
+          try {
+            if (response.JSONraw) {
+              const parsedData = JSON.parse(response.JSONraw);
+              if (Array.isArray(parsedData)) {
+                parsedData.forEach((item, index) => {
+                  if (item.chat_input) {
+                    historyMessages.push({
+                      id: `history-user-${index}`,
+                      type: "user",
+                      content: item.chat_input,
+                      timestamp: new Date(item.timestamp || Date.now()),
+                    });
+                  }
+                  if (item.chat_output) {
+                    historyMessages.push({
+                      id: `history-ai-${index}`,
+                      type: "ai",
+                      content: item.chat_output,
+                      timestamp: new Date(item.timestamp || Date.now()),
+                      model: currentModel,
+                    });
+                  }
+                });
+              }
+            }
+          } catch (error) {
+            console.error("❌ [Chat] Failed to parse chat history JSONraw:", error);
+          }
+          
+          setMessages(historyMessages);
+          setHistoryLoaded(true);
+          setIsLoadingHistory(false);
+        },
+        onError: (error) => {
+          console.error("❌ [Chat] Failed to load chat history:", error);
+          setHistoryLoaded(true);
+          setIsLoadingHistory(false);
+        },
+      });
+    } catch (error) {
+      console.error("💥 [Chat] Error preparing chat history request:", error);
+      setHistoryLoaded(true);
+      setIsLoadingHistory(false);
+    }
+  };
 
   const handleSend = async () => {
     if (!prompt.trim()) return;
@@ -218,7 +301,27 @@ const Chat = () => {
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto px-4 py-4 lg:px-6">
         <div className="max-w-4xl mx-auto space-y-6">
-          {messages.length === 0 ? (
+          {isLoadingHistory ? (
+            <div className="text-center py-12">
+              <div className="mb-6">
+                <Bot className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                  Loading chat history...
+                </h2>
+                <div className="flex space-x-2 justify-center">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div
+                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                    style={{ animationDelay: "0.1s" }}
+                  ></div>
+                  <div
+                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                    style={{ animationDelay: "0.2s" }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          ) : messages.length === 0 ? (
             <div className="text-center py-12">
               <div className="mb-6">
                 <Bot className="w-12 h-12 text-gray-400 mx-auto mb-4" />

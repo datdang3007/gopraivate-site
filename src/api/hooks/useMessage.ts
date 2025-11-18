@@ -1,11 +1,12 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { MessageService } from '../services/message';
-import { SendMessageRequest } from '../types/message';
+import { SendMessageRequest, ChatHistoryRequest } from '../types/message';
 import { toast } from '@/hooks/use-toast';
 
 export const MESSAGE_KEYS = {
   send: ['message', 'send'] as const,
+  history: ['message', 'history'] as const,
 };
 
 /**
@@ -33,6 +34,30 @@ export const useSendMessage = () => {
 
       toast({
         title: 'Send message failed',
+        description: errorMessage,
+        variant: 'destructive',
+      });
+    },
+  });
+};
+
+/**
+ * Get chat history mutation hook
+ */
+export const useChatHistory = () => {
+  return useMutation({
+    mutationKey: MESSAGE_KEYS.history,
+    mutationFn: (data: ChatHistoryRequest) => MessageService.getChatHistory(data),
+    onError: (error: any) => {
+      console.error('Get chat history error:', error);
+      
+      let errorMessage = 'Failed to load chat history. Please try again.';
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      toast({
+        title: 'Load chat history failed',
         description: errorMessage,
         variant: 'destructive',
       });
