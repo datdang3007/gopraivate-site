@@ -52,15 +52,42 @@ const Chat = () => {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [historyLoaded, setHistoryLoaded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const [currentModel, setCurrentModel] = useState("chatgpt"); // State to manage current model
+  
+  // Pagination states
+  const [allHistoryData, setAllHistoryData] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMoreHistory, setHasMoreHistory] = useState(true);
+  const messagesPerPage = 10;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    // Only scroll to bottom if it's not a history load operation
+    if (!isLoadingMore) {
+      scrollToBottom();
+    }
+  }, [messages, isLoadingMore]);
+
+  // Handle scroll to load more history
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      // Check if user scrolled to the top
+      if (container.scrollTop <= 100 && hasMoreHistory && !isLoadingMore && historyLoaded) {
+        loadMoreHistory();
+      }
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [hasMoreHistory, isLoadingMore, historyLoaded, currentPage]);
 
   const loadChatHistory = async () => {
     const token = localStorage.getItem("authToken");
@@ -89,41 +116,25 @@ const Chat = () => {
         onSuccess: (response) => {
           console.log("✅ [Chat] Chat history loaded successfully:", response);
 
-          const historyMessages: Message[] = [];
-
           try {
             if (response.JSONraw) {
               const parsedData = JSON.parse(response.JSONraw);
               if (Array.isArray(parsedData)) {
-                // Sort by updated_at to maintain chronological order
+                // Sort by updated_at to maintain chronological order (oldest first)
                 const sortedData = parsedData.sort((a, b) => 
                   new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime()
                 );
 
-                sortedData.forEach((item, index) => {
-                  const timestamp = new Date(item.updated_at || Date.now());
-                  
-                  // Add user question
-                  if (item.user_input) {
-                    historyMessages.push({
-                      id: `history-user-${index}`,
-                      type: "user",
-                      content: item.user_input,
-                      timestamp: timestamp,
-                    });
-                  }
-                  
-                  // Add agent response
-                  if (item.chat_output) {
-                    historyMessages.push({
-                      id: `history-ai-${index}`,
-                      type: "ai",
-                      content: item.chat_output,
-                      timestamp: new Date(timestamp.getTime() + 1000), // Add 1 second to ensure proper order
-                      model: currentModel,
-                    });
-                  }
-                });
+                // Store all history data for pagination
+                setAllHistoryData(sortedData);
+                
+                // Load initial messages (last 10 conversations)
+                const initialMessages = loadMessagesFromData(sortedData, 0, messagesPerPage);
+                setMessages(initialMessages);
+                
+                // Check if there's more history to load
+                setHasMoreHistory(sortedData.length > messagesPerPage);
+                setCurrentPage(0);
               }
             }
           } catch (error) {
@@ -133,7 +144,6 @@ const Chat = () => {
             );
           }
 
-          setMessages(historyMessages);
           setHistoryLoaded(true);
           setIsLoadingHistory(false);
         },
@@ -148,6 +158,84 @@ const Chat = () => {
       setHistoryLoaded(true);
       setIsLoadingHistory(false);
     }
+  };
+
+  // Helper function to convert history data to messages
+  const loadMessagesFromData = (data: any[], page: number, pageSize: number): Message[] => {
+    // Get the most recent conversations first for display
+    const reversedData = [...data].reverse();
+    const startIndex = page * pageSize;
+    const endIndex = Math.min(startIndex + pageSize, reversedData.length);
+    const pageData = reversedData.slice(startIndex, endIndex);
+    
+    const historyMessages: Message[] = [];
+    
+    pageData.forEach((item, index) => {
+      const globalIndex = startIndex + index;
+      const timestamp = new Date(item.updated_at || Date.now());
+      
+      // Add user question
+      if (item.user_input) {
+        historyMessages.push({
+          id: `history-user-${globalIndex}`,
+          type: "user",
+          content: item.user_input,
+          timestamp: timestamp,
+        });
+      }
+      
+      // Add agent response
+      if (item.chat_output) {
+        historyMessages.push({
+          id: `history-ai-${globalIndex}`,
+          type: "ai",
+          content: item.chat_output,
+          timestamp: new Date(timestamp.getTime() + 1000), // Add 1 second to ensure proper order
+          model: currentModel,
+        });
+      }
+    });
+    
+    // Sort messages by timestamp to maintain chronological order
+    return historyMessages.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+  };
+
+  // Load more history messages
+  const loadMoreHistory = () => {
+    if (isLoadingMore || !hasMoreHistory || allHistoryData.length === 0) return;
+
+    setIsLoadingMore(true);
+    
+    // Store current scroll position
+    const container = messagesContainerRef.current;
+    const scrollHeight = container?.scrollHeight || 0;
+
+    setTimeout(() => {
+      const nextPage = currentPage + 1;
+      const newMessages = loadMessagesFromData(allHistoryData, nextPage, messagesPerPage);
+      
+      if (newMessages.length > 0) {
+        // Prepend new messages to existing ones (older messages go on top)
+        setMessages(prevMessages => [...newMessages, ...prevMessages]);
+        setCurrentPage(nextPage);
+        
+        // Check if there's more to load
+        const totalLoaded = (nextPage + 1) * messagesPerPage;
+        setHasMoreHistory(totalLoaded < allHistoryData.length);
+
+        // Restore scroll position after new content is added
+        setTimeout(() => {
+          if (container) {
+            const newScrollHeight = container.scrollHeight;
+            container.scrollTop = newScrollHeight - scrollHeight;
+          }
+        }, 100);
+      } else {
+        setHasMoreHistory(false);
+      }
+      
+      setIsLoadingMore(false);
+    }, 500); // Small delay to show loading state
   };
 
   const handleSend = async () => {
@@ -330,8 +418,35 @@ const Chat = () => {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 lg:px-6">
+      <div 
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto px-4 py-4 lg:px-6"
+      >
         <div className="max-w-4xl mx-auto space-y-6">
+          {/* Load More History Indicator */}
+          {isLoadingMore && (
+            <div className="text-center py-4">
+              <div className="flex space-x-2 justify-center items-center">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                <div
+                  className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.1s" }}
+                ></div>
+                <div
+                  className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.2s" }}
+                ></div>
+                <span className="text-sm text-gray-500 ml-2">Loading more history...</span>
+              </div>
+            </div>
+          )}
+
+          {/* Show "Scroll up for more" hint */}
+          {hasMoreHistory && !isLoadingHistory && messages.length > 0 && (
+            <div className="text-center py-2">
+              <p className="text-xs text-gray-400">Scroll up to load more history</p>
+            </div>
+          )}
           {isLoadingHistory ? (
             <div className="text-center py-12">
               <div className="mb-6">
