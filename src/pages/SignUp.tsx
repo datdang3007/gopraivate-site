@@ -250,20 +250,6 @@ const SignUp: React.FC = () => {
               </LoadingButton>
             </form>
 
-            {/* Reset Password Button - Only show when there's email validation error */}
-            <div className="mt-4 text-center">
-              <button
-                type="button"
-                className="w-full px-4 py-2 bg-orange-600 text-white font-medium rounded-md hover:bg-orange-700 transition-colors"
-                onClick={() => {
-                  console.log("Reset password clicked - no action yet");
-                  // TODO: Implement reset password functionality
-                }}
-              >
-                Reset Password
-              </button>
-            </div>
-
             <div className="mt-4 text-center">
               <p className="text-sm text-gray-600">
                 Already have an account?{" "}
@@ -272,6 +258,12 @@ const SignUp: React.FC = () => {
                   className="font-medium text-blue-600 hover:text-blue-500 underline"
                 >
                   Sign in
+                </button>
+              </p>
+              <p className="text-sm text-gray-600 mt-2">
+                Forgot your password?{" "}
+                <button className="font-medium text-blue-600 hover:text-blue-500 underline">
+                  Reset password
                 </button>
               </p>
             </div>

@@ -135,20 +135,7 @@ const Login: React.FC = () => {
                   })}
                 />
                 {errors.email && (
-                  <div>
-                    <p className="text-sm text-red-600">
-                      {errors.email.message}
-                    </p>
-                    {errors.email.message ===
-                      "Account already exists, please reset password" && (
-                      <button
-                        onClick={() => navigate("/reset-password")}
-                        className="text-sm text-blue-600 hover:text-blue-500 underline"
-                      >
-                        Reset Password
-                      </button>
-                    )}
-                  </div>
+                  <p className="text-sm text-red-600">{errors.email.message}</p>
                 )}
               </div>
 
@@ -205,6 +192,12 @@ const Login: React.FC = () => {
                   className="font-medium text-blue-600 hover:text-blue-500 underline"
                 >
                   Sign up
+                </button>
+              </p>
+              <p className="text-sm text-gray-600 mt-2">
+                Forgot your password?{" "}
+                <button className="font-medium text-blue-600 hover:text-blue-500 underline">
+                  Reset password
                 </button>
               </p>
             </div>
