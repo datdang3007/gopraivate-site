@@ -1,4 +1,3 @@
-
 export interface SendMessageRequest {
   token: string;
   user_id: string;
@@ -10,7 +9,20 @@ export interface SendMessageRequest {
 }
 
 export interface SendMessageResponse {
-  status: number;
-  data: string;
-  message?: string;
+  success: boolean;
+  message: string;
+  variables: Record<string, any>;
+  agents: Record<string, any>;
+  misc: string;
+  statuscode: number;
+  JSONraw: string;
+  JSONrawagents: string;
+  imageBytes: any;
+}
+
+export interface ChatOutputData {
+  agent_id: string;
+  project_id: string;
+  user_id: string;
+  chat_output: string;
 }

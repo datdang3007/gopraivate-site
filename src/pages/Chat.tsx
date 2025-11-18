@@ -109,10 +109,23 @@ const Chat = () => {
         onSuccess: (response) => {
           console.log("✅ [Chat] Message sent successfully:", response);
           
+          let aiContent = "Message received successfully!";
+          
+          try {
+            if (response.JSONraw) {
+              const parsedData = JSON.parse(response.JSONraw);
+              if (Array.isArray(parsedData) && parsedData.length > 0 && parsedData[0].chat_output) {
+                aiContent = parsedData[0].chat_output;
+              }
+            }
+          } catch (error) {
+            console.error("❌ [Chat] Failed to parse JSONraw:", error);
+          }
+          
           const aiMessage: Message = {
             id: (Date.now() + 1).toString(),
             type: "ai",
-            content: response.data || "Message received successfully!",
+            content: aiContent,
             timestamp: new Date(),
             model: currentModel,
           };
