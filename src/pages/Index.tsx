@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSendMessage } from "@/api/hooks/useMessage";
+import { useAIModelsWithFallback } from "@/api/hooks/useAIModels";
 import { getClientIP } from "@/api/utils/ip";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -23,8 +24,10 @@ import { Paperclip, Settings, Send } from "lucide-react";
 
 const Index = () => {
   const [prompt, setPrompt] = useState("");
+  const [selectedModel, setSelectedModel] = useState("chatgpt");
   const navigate = useNavigate();
   const sendMessageMutation = useSendMessage();
+  const { models, isLoading: isLoadingModels, isUsingFallback } = useAIModelsWithFallback();
 
   const handleSend = async () => {
     if (!prompt.trim()) return;
@@ -138,16 +141,21 @@ const Index = () => {
                     {/* Model Selector - Compact on mobile */}
                     <div className="flex items-center gap-1 sm:gap-2">
                       <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
-                      <Select defaultValue="chatgpt">
+                      <Select value={selectedModel} onValueChange={setSelectedModel} disabled={isLoadingModels}>
                         <SelectTrigger className="border-none bg-transparent text-xs sm:text-sm text-gray-700 h-7 sm:h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-1 sm:px-2 transition-colors min-w-[60px] sm:min-w-[80px]">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="chatgpt">ChatGPT</SelectItem>
-                          <SelectItem value="claude">Claude</SelectItem>
-                          <SelectItem value="gemini">Gemini</SelectItem>
+                          {models.map((model) => (
+                            <SelectItem key={model.id} value={model.name}>
+                              {model.displayName}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
+                      {isUsingFallback && (
+                        <span className="text-xs text-yellow-600 ml-1" title="Using fallback models">⚠</span>
+                      )}
                     </div>
                   </div>
 

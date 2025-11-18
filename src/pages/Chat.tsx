@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
 import { useSendMessage } from "@/api/hooks/useMessage";
+import { useAIModelsWithFallback } from "@/api/hooks/useAIModels";
 import { getClientIP } from "@/api/utils/ip";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +39,7 @@ const Chat = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const initialPrompt = location.state?.initialPrompt || "";
   const sendMessageMutation = useSendMessage();
+  const { models, isLoading: isLoadingModels, isUsingFallback } = useAIModelsWithFallback();
 
   const [prompt, setPrompt] = useState(initialPrompt);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -176,10 +178,11 @@ const Chat = () => {
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               <span className="text-sm text-gray-700 font-medium">
-                {currentModel === "chatgpt" ? "ChatGPT" : 
-                 currentModel === "claude" ? "Claude" : 
-                 currentModel === "gemini" ? "Gemini" : "ChatGPT"}
+                {models.find(model => model.name === currentModel)?.displayName || "ChatGPT"}
               </span>
+              {isUsingFallback && (
+                <span className="text-xs text-yellow-600" title="Using fallback models">⚠</span>
+              )}
             </div>
 
             {/* Home Button */}
@@ -386,16 +389,21 @@ const Chat = () => {
                 {/* Show model selector on tablet and up */}
                 <div className="hidden md:flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <Select defaultValue={currentModel} onValueChange={setCurrentModel}>
+                  <Select value={currentModel} onValueChange={setCurrentModel} disabled={isLoadingModels}>
                     <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="chatgpt">ChatGPT</SelectItem>
-                      <SelectItem value="claude">Claude</SelectItem>
-                      <SelectItem value="gemini">Gemini</SelectItem>
+                      {models.map((model) => (
+                        <SelectItem key={model.id} value={model.name}>
+                          {model.displayName}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
+                  {isUsingFallback && (
+                    <span className="text-xs text-yellow-600 ml-1" title="Using fallback models">⚠</span>
+                  )}
                 </div>
 
                 <div className="hidden lg:block">
