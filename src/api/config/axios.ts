@@ -8,7 +8,7 @@ import axios, {
 // Create axios instance with base configuration
 const createAxiosInstance = (): AxiosInstance => {
   const instance = axios.create({
-    // baseURL: import.meta.env.VITE_CONTACT_API_ENDPOINT || "",
+    baseURL: import.meta.env.VITE_CONTACT_API_ENDPOINT || "",
     withCredentials: false,
     timeout: 30000,
     headers: {

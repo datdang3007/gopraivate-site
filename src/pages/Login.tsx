@@ -135,7 +135,20 @@ const Login: React.FC = () => {
                   })}
                 />
                 {errors.email && (
-                  <p className="text-sm text-red-600">{errors.email.message}</p>
+                  <div>
+                    <p className="text-sm text-red-600">
+                      {errors.email.message}
+                    </p>
+                    {errors.email.message ===
+                      "Account already exists, please reset password" && (
+                      <button
+                        onClick={() => navigate("/reset-password")}
+                        className="text-sm text-blue-600 hover:text-blue-500 underline"
+                      >
+                        Reset Password
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
 
