@@ -94,9 +94,13 @@ const Chat = () => {
     try {
       const clientIP = await getClientIP();
       const payload = {
-        payload_b64: currentPrompt,
+        token: token,
+        user_id: localStorage.getItem("userId") || "anonymous_user",
         ip: clientIP,
-        project_id: "PRI",
+        project_id: "AIC",
+        agent_id: "b91fe95eef4b4296ab1ba04f445ecb16",
+        user_input: currentPrompt,
+        language: "en",
       };
 
       console.log("📤 [Chat] Sending message with payload:", payload);
