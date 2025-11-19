@@ -73,19 +73,30 @@ const Index = () => {
             state: {
               initialPrompt: prompt,
               apiResponse: response,
+              selectedModel: selectedModel,
             },
           });
         },
         onError: (error) => {
           console.error("❌ [Index] Failed to send message:", error);
           // Still navigate to chat even if API fails
-          navigate("/chat", { state: { initialPrompt: prompt } });
+          navigate("/chat", { 
+            state: { 
+              initialPrompt: prompt,
+              selectedModel: selectedModel,
+            } 
+          });
         },
       });
     } catch (error) {
       console.error("💥 [Index] Error preparing message:", error);
       // Still navigate to chat even if preparation fails
-      navigate("/chat", { state: { initialPrompt: prompt } });
+      navigate("/chat", { 
+        state: { 
+          initialPrompt: prompt,
+          selectedModel: selectedModel,
+        } 
+      });
     }
   };
 

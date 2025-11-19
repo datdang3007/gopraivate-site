@@ -40,6 +40,7 @@ const Chat = () => {
   const location = useLocation();
   const navigate = useNavigate(); // Initialize useNavigate
   const initialPrompt = location.state?.initialPrompt || "";
+  const selectedModelFromIndex = location.state?.selectedModel || "10"; // Get selected model from Index
   const sendMessageMutation = useSendMessage();
   const chatHistoryMutation = useChatHistory();
   const {
@@ -56,7 +57,7 @@ const Chat = () => {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [historyLoaded, setHistoryLoaded] = useState(false);
-  const [currentModel, setCurrentModel] = useState("10"); // State to manage current model (ChatGPT 5.0)
+  const [currentModel, setCurrentModel] = useState(selectedModelFromIndex); // Use selected model from Index
 
   // Refs for scroll management
   const messagesEndRef = useRef<HTMLDivElement>(null);
