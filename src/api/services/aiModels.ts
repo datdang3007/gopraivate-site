@@ -1,6 +1,6 @@
 
 import { apiClient } from '../config/axios';
-import { GetAIModelsResponse } from '../types/aiModels';
+import { GetAIModelsResponse, AIModel, AIModelRaw } from '../types/aiModels';
 
 export interface GetAIModelsPayload {
   token: string;
@@ -12,7 +12,7 @@ export class AIModelsService {
   /**
    * Get list of available AI models
    */
-  static async getAIModels(payload: GetAIModelsPayload): Promise<GetAIModelsResponse> {
+  static async getAIModels(payload: GetAIModelsPayload): Promise<{ data: AIModel[]; success: boolean }> {
     const response = await apiClient.post<GetAIModelsResponse>(
       '/api/v1/ailist_id4050',
       payload,
@@ -23,6 +23,28 @@ export class AIModelsService {
       }
     );
 
-    return response.data;
+    const apiResponse = response.data;
+    
+    // Parse JSONraw to get the actual AI models data
+    let models: AIModel[] = [];
+    
+    try {
+      if (apiResponse.JSONraw) {
+        const rawModels: AIModelRaw[] = JSON.parse(apiResponse.JSONraw);
+        models = rawModels.map(rawModel => ({
+          id: rawModel.AI_id.toString(),
+          name: rawModel.AI_id.toString(),
+          displayName: rawModel.AI_print_name,
+          isActive: true
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to parse JSONraw:', error);
+    }
+
+    return {
+      data: models,
+      success: apiResponse.success
+    };
   }
 }

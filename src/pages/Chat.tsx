@@ -51,7 +51,7 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [historyLoaded, setHistoryLoaded] = useState(false);
-  const [currentModel, setCurrentModel] = useState("chatgpt"); // State to manage current model
+  const [currentModel, setCurrentModel] = useState("10"); // State to manage current model (ChatGPT 5.0)
 
   const loadChatHistory = async () => {
     const token = localStorage.getItem("authToken");
@@ -308,7 +308,7 @@ const Chat = () => {
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               <span className="text-sm text-gray-700 font-medium">
                 {models.find((model) => model.name === currentModel)
-                  ?.displayName || "ChatGPT"}
+                  ?.displayName || "ChatGPT 5.0"}
               </span>
               {isUsingFallback && (
                 <span

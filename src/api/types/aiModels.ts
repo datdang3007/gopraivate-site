@@ -7,6 +7,11 @@ export interface AIModel {
   isActive?: boolean;
 }
 
+export interface AIModelRaw {
+  AI_id: number;
+  AI_print_name: string;
+}
+
 export interface GetAIModelsPayload {
   token: string;
   ip: string;
@@ -14,7 +19,16 @@ export interface GetAIModelsPayload {
 }
 
 export interface GetAIModelsResponse {
-  data: AIModel[];
   success: boolean;
-  message?: string;
+  message: string;
+  variables: {
+    AI_id: number;
+    AI_print_name: string;
+  };
+  agents: {};
+  misc: string;
+  statuscode: number;
+  JSONraw: string;
+  JSONrawagents: string;
+  imageBytes: null;
 }

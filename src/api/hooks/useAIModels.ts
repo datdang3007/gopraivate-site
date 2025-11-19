@@ -31,9 +31,10 @@ export const useAIModelsWithFallback = () => {
 
   // Fallback data nếu API không thành công
   const fallbackModels: AIModel[] = [
-    { id: "chatgpt", name: "chatgpt", displayName: "ChatGPT" },
-    { id: "claude", name: "claude", displayName: "Claude" },
-    { id: "gemini", name: "gemini", displayName: "Gemini" },
+    { id: "10", name: "10", displayName: "ChatGPT 5.0" },
+    { id: "20", name: "20", displayName: "Llama 4.1" },
+    { id: "30", name: "30", displayName: "Llama 3.3" },
+    { id: "40", name: "40", displayName: "Claude" },
   ];
 
   return {

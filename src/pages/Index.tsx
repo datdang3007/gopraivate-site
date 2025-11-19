@@ -24,7 +24,7 @@ import { Paperclip, Settings, Send } from "lucide-react";
 
 const Index = () => {
   const [prompt, setPrompt] = useState("");
-  const [selectedModel, setSelectedModel] = useState("chatgpt");
+  const [selectedModel, setSelectedModel] = useState("10"); // ChatGPT 5.0
   const navigate = useNavigate();
   const sendMessageMutation = useSendMessage();
   const {
