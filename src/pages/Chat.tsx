@@ -55,6 +55,7 @@ const Chat = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [historyLoaded, setHistoryLoaded] = useState(false);
   const [currentModel, setCurrentModel] = useState("10"); // State to manage current model (ChatGPT 5.0)
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true); // Control auto-scroll behavior
   
   // Refs for scroll management
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -78,6 +79,10 @@ const Chat = () => {
     // Check if scrolled to top and there are more messages to load
     if (container.scrollTop === 0 && displayedMessageCount < allMessages.length) {
       setIsLoadingMore(true);
+      setShouldAutoScroll(false); // Disable auto-scroll during load more
+      
+      // Store current scroll height before loading more messages
+      const previousScrollHeight = container.scrollHeight;
       
       // Simulate loading delay for better UX
       setTimeout(() => {
@@ -87,8 +92,10 @@ const Chat = () => {
         
         // Maintain scroll position after loading more messages
         setTimeout(() => {
-          const newScrollTop = container.scrollHeight - container.clientHeight - (container.scrollHeight - container.scrollTop);
-          container.scrollTop = Math.max(200, newScrollTop); // Keep some offset from top
+          const newScrollHeight = container.scrollHeight;
+          const scrollDifference = newScrollHeight - previousScrollHeight;
+          container.scrollTop = scrollDifference + 100; // Keep some offset from top
+          setShouldAutoScroll(true); // Re-enable auto-scroll after load more is complete
         }, 0);
       }, 300);
     }
@@ -232,6 +239,7 @@ const Chat = () => {
     const currentPrompt = prompt;
     setPrompt("");
     setIsLoading(true);
+    setShouldAutoScroll(true); // Ensure auto-scroll is enabled for new messages
     
     // Auto-scroll when sending message
     setTimeout(() => scrollToBottom(), 100);
@@ -280,6 +288,7 @@ const Chat = () => {
           };
           setAllMessages((prev) => [...prev, aiMessage]);
           setIsLoading(false);
+          setShouldAutoScroll(true); // Ensure auto-scroll is enabled for AI responses
           
           // Auto-scroll when receiving AI response
           setTimeout(() => scrollToBottom(), 100);
@@ -297,6 +306,7 @@ const Chat = () => {
           };
           setAllMessages((prev) => [...prev, errorMessage]);
           setIsLoading(false);
+          setShouldAutoScroll(true); // Ensure auto-scroll is enabled for error messages
         },
       });
     } catch (error) {
@@ -312,6 +322,7 @@ const Chat = () => {
       };
       setAllMessages((prev) => [...prev, errorMessage]);
       setIsLoading(false);
+      setShouldAutoScroll(true); // Ensure auto-scroll is enabled for error messages
     }
   };
 
@@ -339,12 +350,12 @@ const Chat = () => {
     }
   }, [historyLoaded, initialPrompt]);
 
-  // Auto-scroll to bottom when messages change or component mounts
+  // Auto-scroll to bottom when messages change or component mounts (only if shouldAutoScroll is true)
   useEffect(() => {
-    if (messages.length > 0) {
+    if (messages.length > 0 && shouldAutoScroll) {
       scrollToBottomImmediate();
     }
-  }, [messages.length]);
+  }, [messages.length, shouldAutoScroll]);
 
   // Add scroll event listener for infinite scroll
   useEffect(() => {
