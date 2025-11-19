@@ -1,22 +1,21 @@
-
-import { useQuery } from '@tanstack/react-query';
-import { AIModelsService } from '../services/aiModels';
-import { AIModel } from '../types/aiModels';
-import { getClientIP } from '../utils/ip';
+import { useQuery } from "@tanstack/react-query";
+import { AIModelsService } from "../services/aiModels";
+import { AIModel } from "../types/aiModels";
+import { getClientIP } from "../utils/ip";
 
 export const useAIModels = () => {
   return useQuery({
-    queryKey: ['aiModels'],
+    queryKey: ["aiModels"],
     queryFn: async () => {
-      const token = localStorage.getItem("authToken") || "46a53a1bb9864938a241d0deebae008d2f9b842dbd7a4dfa93dc425197279737";
+      const token = localStorage.getItem("authToken") || "";
       const clientIP = await getClientIP();
-      
+
       const payload = {
         token: token,
         ip: clientIP,
-        project_id: "PRI"
+        project_id: "PRI",
       };
-      
+
       return AIModelsService.getAIModels(payload);
     },
     select: (response) => response.data,
@@ -29,14 +28,14 @@ export const useAIModels = () => {
 
 export const useAIModelsWithFallback = () => {
   const { data, isLoading, error } = useAIModels();
-  
+
   // Fallback data nếu API không thành công
   const fallbackModels: AIModel[] = [
-    { id: 'chatgpt', name: 'chatgpt', displayName: 'ChatGPT' },
-    { id: 'claude', name: 'claude', displayName: 'Claude' },
-    { id: 'gemini', name: 'gemini', displayName: 'Gemini' },
+    { id: "chatgpt", name: "chatgpt", displayName: "ChatGPT" },
+    { id: "claude", name: "claude", displayName: "Claude" },
+    { id: "gemini", name: "gemini", displayName: "Gemini" },
   ];
-  
+
   return {
     models: data && data.length > 0 ? data : fallbackModels,
     isLoading,
