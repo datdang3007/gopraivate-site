@@ -441,7 +441,9 @@ const Chat = () => {
                     </span>
                     {message.model && (
                       <span>
-                        • {models.find((model) => model.name === message.model)?.displayName || message.model}
+                        •{" "}
+                        {models.find((model) => model.name === message.model)
+                          ?.displayName || message.model}
                       </span>
                     )}
                   </div>
