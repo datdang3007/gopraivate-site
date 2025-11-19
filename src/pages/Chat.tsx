@@ -85,8 +85,10 @@ const Chat = () => {
               const parsedData = JSON.parse(response.JSONraw);
               if (Array.isArray(parsedData)) {
                 // Sort by updated_at to maintain chronological order (oldest first)
-                const sortedData = parsedData.sort((a, b) => 
-                  new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime()
+                const sortedData = parsedData.sort(
+                  (a, b) =>
+                    new Date(a.updated_at).getTime() -
+                    new Date(b.updated_at).getTime(),
                 );
 
                 // Load all messages at once
@@ -120,10 +122,10 @@ const Chat = () => {
   // Helper function to convert history data to messages
   const loadMessagesFromData = (data: any[]): Message[] => {
     const historyMessages: Message[] = [];
-    
+
     data.forEach((item, index) => {
       const timestamp = new Date(item.updated_at || Date.now());
-      
+
       // Add user question
       if (item.user_input) {
         historyMessages.push({
@@ -133,7 +135,7 @@ const Chat = () => {
           timestamp: timestamp,
         });
       }
-      
+
       // Add agent response
       if (item.chat_output) {
         historyMessages.push({
@@ -145,9 +147,11 @@ const Chat = () => {
         });
       }
     });
-    
+
     // Sort messages by timestamp to maintain chronological order
-    return historyMessages.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+    return historyMessages.sort(
+      (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
+    );
   };
 
   const handleSend = async () => {
@@ -519,7 +523,7 @@ const Chat = () => {
                 onChange={(e) => setPrompt(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Type your message... (your privacy is protected)"
-                className="w-full bg-transparent border-none text-gray-900 placeholder:text-gray-400 text-sm leading-relaxed resize-none focus:ring-0 focus:outline-none focus:border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 min-h-[60px] max-h-[120px]"
+                className="w-full rounded-none bg-transparent border-none text-gray-900 placeholder:text-gray-400 text-sm leading-relaxed resize-none focus:ring-0 focus:outline-none focus:border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 min-h-[60px] max-h-[120px]"
               />
             </div>
 
@@ -554,14 +558,6 @@ const Chat = () => {
                       ))}
                     </SelectContent>
                   </Select>
-                  {isUsingFallback && (
-                    <span
-                      className="text-xs text-yellow-600 ml-1"
-                      title="Using fallback models"
-                    >
-                      ⚠
-                    </span>
-                  )}
                 </div>
 
                 <div className="hidden lg:block">

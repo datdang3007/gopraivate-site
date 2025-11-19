@@ -27,7 +27,11 @@ const Index = () => {
   const [selectedModel, setSelectedModel] = useState("chatgpt");
   const navigate = useNavigate();
   const sendMessageMutation = useSendMessage();
-  const { models, isLoading: isLoadingModels, isUsingFallback } = useAIModelsWithFallback();
+  const {
+    models,
+    isLoading: isLoadingModels,
+    isUsingFallback,
+  } = useAIModelsWithFallback();
 
   const handleSend = async () => {
     if (!prompt.trim()) return;
@@ -123,7 +127,7 @@ const Index = () => {
                   onChange={(e) => setPrompt(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Paste or type your prompt... (e.g., Email sarah.lee@acme.com the Q4 forecast...)"
-                  className="w-full bg-transparent border-none text-gray-900 placeholder:text-gray-400 text-sm sm:text-base leading-relaxed resize-none focus:ring-0 focus:outline-none focus:border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 min-h-[60px] sm:min-h-[80px] max-h-[150px] sm:max-h-[200px]"
+                  className="w-full rounded-none bg-transparent border-none text-gray-900 placeholder:text-gray-400 text-sm sm:text-base leading-relaxed resize-none focus:ring-0 focus:outline-none focus:border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 min-h-[60px] sm:min-h-[80px] max-h-[150px] sm:max-h-[200px]"
                 />
               </div>
 
@@ -145,7 +149,11 @@ const Index = () => {
                     {/* Model Selector - Compact on mobile */}
                     <div className="flex items-center gap-1 sm:gap-2">
                       <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
-                      <Select value={selectedModel} onValueChange={setSelectedModel} disabled={isLoadingModels}>
+                      <Select
+                        value={selectedModel}
+                        onValueChange={setSelectedModel}
+                        disabled={isLoadingModels}
+                      >
                         <SelectTrigger className="border-none bg-transparent text-xs sm:text-sm text-gray-700 h-7 sm:h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-1 sm:px-2 transition-colors min-w-[60px] sm:min-w-[80px]">
                           <SelectValue />
                         </SelectTrigger>
@@ -157,9 +165,6 @@ const Index = () => {
                           ))}
                         </SelectContent>
                       </Select>
-                      {isUsingFallback && (
-                        <span className="text-xs text-yellow-600 ml-1" title="Using fallback models">⚠</span>
-                      )}
                     </div>
                   </div>
 
