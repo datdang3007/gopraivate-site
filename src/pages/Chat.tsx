@@ -439,7 +439,11 @@ const Chat = () => {
                         minute: "2-digit",
                       })}
                     </span>
-                    {message.model && <span>• {message.model}</span>}
+                    {message.model && (
+                      <span>
+                        • {models.find((model) => model.name === message.model)?.displayName || message.model}
+                      </span>
+                    )}
                   </div>
 
                   {message.type === "ai" && (
