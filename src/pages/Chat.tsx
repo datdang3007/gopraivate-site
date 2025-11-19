@@ -41,6 +41,7 @@ const Chat = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const initialPrompt = location.state?.initialPrompt || "";
   const selectedModelFromIndex = location.state?.selectedModel || "10"; // Get selected model from Index
+  const selectedPrivacyFromIndex = location.state?.selectedPrivacy || "medium"; // Get selected privacy from Index
   const sendMessageMutation = useSendMessage();
   const chatHistoryMutation = useChatHistory();
   const {
@@ -58,6 +59,7 @@ const Chat = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [historyLoaded, setHistoryLoaded] = useState(false);
   const [currentModel, setCurrentModel] = useState(selectedModelFromIndex); // Use selected model from Index
+  const [currentPrivacy, setCurrentPrivacy] = useState(selectedPrivacyFromIndex); // Use selected privacy from Index
 
   // Refs for scroll management
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -696,7 +698,7 @@ const Chat = () => {
                 </div>
 
                 <div className="hidden lg:block">
-                  <Select defaultValue="medium">
+                  <Select value={currentPrivacy} onValueChange={setCurrentPrivacy}>
                     <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
                       <SelectValue />
                     </SelectTrigger>

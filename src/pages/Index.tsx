@@ -25,6 +25,7 @@ import { Paperclip, Settings, Send } from "lucide-react";
 const Index = () => {
   const [prompt, setPrompt] = useState("");
   const [selectedModel, setSelectedModel] = useState("10"); // ChatGPT 5.0
+  const [selectedPrivacy, setSelectedPrivacy] = useState("medium"); // Privacy level
   const navigate = useNavigate();
   const sendMessageMutation = useSendMessage();
   const {
@@ -74,6 +75,7 @@ const Index = () => {
               initialPrompt: prompt,
               apiResponse: response,
               selectedModel: selectedModel,
+              selectedPrivacy: selectedPrivacy,
             },
           });
         },
@@ -84,6 +86,7 @@ const Index = () => {
             state: { 
               initialPrompt: prompt,
               selectedModel: selectedModel,
+              selectedPrivacy: selectedPrivacy,
             } 
           });
         },
@@ -95,6 +98,7 @@ const Index = () => {
         state: { 
           initialPrompt: prompt,
           selectedModel: selectedModel,
+          selectedPrivacy: selectedPrivacy,
         } 
       });
     }
@@ -191,7 +195,7 @@ const Index = () => {
                     </Button>
 
                     {/* Privacy Level Selector */}
-                    <Select defaultValue="medium">
+                    <Select value={selectedPrivacy} onValueChange={setSelectedPrivacy}>
                       <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
                         <SelectValue />
                       </SelectTrigger>
@@ -209,7 +213,7 @@ const Index = () => {
 
                   {/* Mobile: Compact Privacy Selector */}
                   <div className="sm:hidden">
-                    <Select defaultValue="medium">
+                    <Select value={selectedPrivacy} onValueChange={setSelectedPrivacy}>
                       <SelectTrigger className="border-none bg-transparent text-xs text-gray-700 h-7 p-0 focus:ring-0 hover:bg-gray-200 rounded px-1 transition-colors min-w-[50px]">
                         <SelectValue placeholder="Privacy" />
                       </SelectTrigger>
