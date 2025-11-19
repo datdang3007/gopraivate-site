@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
 import { useSendMessage, useChatHistory } from "@/api/hooks/useMessage";
 import { useAIModelsWithFallback } from "@/api/hooks/useAIModels";
@@ -48,10 +48,59 @@ const Chat = () => {
 
   const [prompt, setPrompt] = useState(initialPrompt);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [allMessages, setAllMessages] = useState<Message[]>([]); // Store all messages
+  const [displayedMessageCount, setDisplayedMessageCount] = useState(10); // Number of messages to display
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [historyLoaded, setHistoryLoaded] = useState(false);
   const [currentModel, setCurrentModel] = useState("10"); // State to manage current model (ChatGPT 5.0)
+  
+  // Refs for scroll management
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to bottom function
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  // Scroll to bottom immediately (without smooth animation)
+  const scrollToBottomImmediate = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+  }, []);
+
+  // Handle scroll event to load more messages
+  const handleScroll = useCallback(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+
+    // Check if scrolled to top and there are more messages to load
+    if (container.scrollTop === 0 && displayedMessageCount < allMessages.length) {
+      setIsLoadingMore(true);
+      
+      // Simulate loading delay for better UX
+      setTimeout(() => {
+        const newCount = Math.min(displayedMessageCount + 10, allMessages.length);
+        setDisplayedMessageCount(newCount);
+        setIsLoadingMore(false);
+        
+        // Maintain scroll position after loading more messages
+        setTimeout(() => {
+          const newScrollTop = container.scrollHeight - container.clientHeight - (container.scrollHeight - container.scrollTop);
+          container.scrollTop = Math.max(200, newScrollTop); // Keep some offset from top
+        }, 0);
+      }, 300);
+    }
+  }, [displayedMessageCount, allMessages.length]);
+
+  // Update displayed messages when displayedMessageCount or allMessages change
+  useEffect(() => {
+    if (allMessages.length > 0) {
+      const startIndex = Math.max(0, allMessages.length - displayedMessageCount);
+      setMessages(allMessages.slice(startIndex));
+    }
+  }, [allMessages, displayedMessageCount]);
 
   const loadChatHistory = async () => {
     const token = localStorage.getItem("authToken");
@@ -93,7 +142,8 @@ const Chat = () => {
 
                 // Load all messages at once
                 const historyMessages = loadMessagesFromData(sortedData);
-                setMessages(historyMessages);
+                setAllMessages(historyMessages);
+                setDisplayedMessageCount(Math.min(10, historyMessages.length));
               }
             }
           } catch (error) {
@@ -178,10 +228,13 @@ const Chat = () => {
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    setAllMessages((prev) => [...prev, userMessage]);
     const currentPrompt = prompt;
     setPrompt("");
     setIsLoading(true);
+    
+    // Auto-scroll when sending message
+    setTimeout(() => scrollToBottom(), 100);
 
     try {
       const clientIP = await getClientIP();
@@ -225,8 +278,11 @@ const Chat = () => {
             timestamp: new Date(),
             model: currentModel,
           };
-          setMessages((prev) => [...prev, aiMessage]);
+          setAllMessages((prev) => [...prev, aiMessage]);
           setIsLoading(false);
+          
+          // Auto-scroll when receiving AI response
+          setTimeout(() => scrollToBottom(), 100);
         },
         onError: (error) => {
           console.error("❌ [Chat] Failed to send message:", error);
@@ -239,7 +295,7 @@ const Chat = () => {
             timestamp: new Date(),
             model: currentModel,
           };
-          setMessages((prev) => [...prev, errorMessage]);
+          setAllMessages((prev) => [...prev, errorMessage]);
           setIsLoading(false);
         },
       });
@@ -254,7 +310,7 @@ const Chat = () => {
         timestamp: new Date(),
         model: currentModel,
       };
-      setMessages((prev) => [...prev, errorMessage]);
+      setAllMessages((prev) => [...prev, errorMessage]);
       setIsLoading(false);
     }
   };
@@ -282,6 +338,22 @@ const Chat = () => {
       handleSend();
     }
   }, [historyLoaded, initialPrompt]);
+
+  // Auto-scroll to bottom when messages change or component mounts
+  useEffect(() => {
+    if (messages.length > 0) {
+      scrollToBottomImmediate();
+    }
+  }, [messages.length]);
+
+  // Add scroll event listener for infinite scroll
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
@@ -334,8 +406,37 @@ const Chat = () => {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 lg:px-6">
+      <div 
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto px-4 py-4 lg:px-6"
+      >
         <div className="max-w-4xl mx-auto space-y-6">
+          {/* Load More Indicator */}
+          {isLoadingMore && (
+            <div className="text-center py-4">
+              <div className="flex space-x-2 justify-center">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                <div
+                  className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.1s" }}
+                ></div>
+                <div
+                  className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.2s" }}
+                ></div>
+              </div>
+              <p className="text-xs text-gray-500 mt-2">Loading more messages...</p>
+            </div>
+          )}
+          
+          {/* Show indicator when there are more messages to load */}
+          {!isLoadingMore && displayedMessageCount < allMessages.length && messages.length > 0 && (
+            <div className="text-center py-2">
+              <p className="text-xs text-gray-500">
+                Scroll up to load {Math.min(10, allMessages.length - displayedMessageCount)} more messages
+              </p>
+            </div>
+          )}
           {isLoadingHistory ? (
             <div className="text-center py-12">
               <div className="mb-6">
@@ -515,6 +616,9 @@ const Chat = () => {
               </div>
             </div>
           )}
+          
+          {/* Scroll anchor */}
+          <div ref={messagesEndRef} />
         </div>
       </div>
 
