@@ -7,6 +7,12 @@ export interface AIModel {
   isActive?: boolean;
 }
 
+export interface GetAIModelsPayload {
+  token: string;
+  ip: string;
+  project_id: string;
+}
+
 export interface GetAIModelsResponse {
   data: AIModel[];
   success: boolean;

@@ -2,11 +2,23 @@
 import { useQuery } from '@tanstack/react-query';
 import { AIModelsService } from '../services/aiModels';
 import { AIModel } from '../types/aiModels';
+import { getClientIP } from '../utils/ip';
 
 export const useAIModels = () => {
   return useQuery({
     queryKey: ['aiModels'],
-    queryFn: AIModelsService.getAIModels,
+    queryFn: async () => {
+      const token = localStorage.getItem("authToken") || "46a53a1bb9864938a241d0deebae008d2f9b842dbd7a4dfa93dc425197279737";
+      const clientIP = await getClientIP();
+      
+      const payload = {
+        token: token,
+        ip: clientIP,
+        project_id: "PRI"
+      };
+      
+      return AIModelsService.getAIModels(payload);
+    },
     select: (response) => response.data,
     staleTime: 5 * 60 * 1000, // 5 minutes
     cacheTime: 10 * 60 * 1000, // 10 minutes
