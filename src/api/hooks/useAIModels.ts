@@ -13,7 +13,7 @@ export const useAIModels = () => {
       const payload = {
         token: token,
         ip: clientIP,
-        project_id: "PRI",
+        project_id: import.meta.env.VITE_PROJECT_ID || "",
       };
 
       return AIModelsService.getAIModels(payload);

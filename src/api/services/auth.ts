@@ -14,7 +14,7 @@ export class AuthService {
       email: request.email,
       password: request.password,
       ip: clientIP,
-      project_id: 'PRI',
+      project_id: import.meta.env.VITE_PROJECT_ID || "",
     };
 
     const response = await apiClient.post<LoginResponse>(
@@ -39,7 +39,7 @@ export class AuthService {
       password: request.password,
       is_human: true,
       ip: clientIP,
-      project_id: 'PRI',
+      project_id: import.meta.env.VITE_PROJECT_ID || "",
       recaptchaToken: request.recaptchaToken,
     };
     

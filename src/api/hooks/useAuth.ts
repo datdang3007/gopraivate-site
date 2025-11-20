@@ -91,7 +91,7 @@ export const useRegister = () => {
           const verificationPayload = {
             token: token,
             ip: clientIP,
-            project_id: "PRI",
+            project_id: import.meta.env.VITE_PROJECT_ID || "",
           };
 
           console.log(

@@ -65,7 +65,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       const logoutPayload = {
         token: token,
         ip: clientIP,
-        project_id: "PRI",
+        project_id: import.meta.env.VITE_PROJECT_ID || "",
       };
 
       console.log(

@@ -141,7 +141,7 @@ const Chat = () => {
         token: token,
         user_id: localStorage.getItem("userId") || "anonymous_user",
         ip: clientIP,
-        project_id: "PRI",
+        project_id: import.meta.env.VITE_PROJECT_ID || "",
         agent_id: "b91fe95eef4b4296ab1ba04f445ecb16",
         language: "en",
       };
@@ -265,7 +265,7 @@ const Chat = () => {
         token: token,
         user_id: localStorage.getItem("userId") || "anonymous_user",
         ip: clientIP,
-        project_id: "PRI",
+        project_id: import.meta.env.VITE_PROJECT_ID || "",
         agent_id: "b91fe95eef4b4296ab1ba04f445ecb16",
         user_input: currentPrompt,
         language: "en",
