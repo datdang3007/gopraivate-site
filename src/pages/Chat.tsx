@@ -269,6 +269,7 @@ const Chat = () => {
         agent_id: "b91fe95eef4b4296ab1ba04f445ecb16",
         user_input: currentPrompt,
         language: "en",
+        ai_id: currentModel,
       };
 
       console.log("📤 [Chat] Sending message with payload:", payload);

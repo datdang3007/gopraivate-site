@@ -6,6 +6,7 @@ export interface SendMessageRequest {
   agent_id: string;
   user_input: string;
   language: string;
+  ai_id: string;
 }
 
 export interface SendMessageResponse {
