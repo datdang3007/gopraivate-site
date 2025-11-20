@@ -61,7 +61,7 @@ const Index = () => {
         agent_id: "b91fe95eef4b4296ab1ba04f445ecb16",
         user_input: prompt,
         language: "en",
-        ai_id: selectedModel,
+        ai_id: Number(selectedModel) || undefined,
       };
 
       console.log("📤 [Index] Sending message with payload:", payload);
