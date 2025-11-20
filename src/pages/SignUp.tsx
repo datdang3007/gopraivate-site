@@ -113,7 +113,7 @@ const SignUp: React.FC = () => {
                   className="flex flex-col items-center space-y-2 hover:scale-105 transition-transform"
                 >
                   <img
-                    src="/gopraivate_v10.12.png"
+                    src="/gopraivate_v10.13.png"
                     alt="goprAIvate Logo"
                     className="h-32 w-32 rounded-full object-cover shadow-md border border-gray-200"
                   />

@@ -59,7 +59,9 @@ const Chat = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [historyLoaded, setHistoryLoaded] = useState(false);
   const [currentModel, setCurrentModel] = useState(selectedModelFromIndex); // Use selected model from Index
-  const [currentPrivacy, setCurrentPrivacy] = useState(selectedPrivacyFromIndex); // Use selected privacy from Index
+  const [currentPrivacy, setCurrentPrivacy] = useState(
+    selectedPrivacyFromIndex,
+  ); // Use selected privacy from Index
 
   // Refs for scroll management
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -383,9 +385,9 @@ const Chat = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <img
-              src="/gopraivate_v10.12.png"
+              src="/gopraivate_v10.13.png"
               alt="goprAIvate Logo"
-              className="h-8 w-8"
+              className="h-8 w-8 object-cover rounded-full"
             />
             <div>
               <h1 className="text-lg font-semibold text-gray-900">
@@ -698,7 +700,10 @@ const Chat = () => {
                 </div>
 
                 <div className="hidden lg:block">
-                  <Select value={currentPrivacy} onValueChange={setCurrentPrivacy}>
+                  <Select
+                    value={currentPrivacy}
+                    onValueChange={setCurrentPrivacy}
+                  >
                     <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
                       <SelectValue />
                     </SelectTrigger>

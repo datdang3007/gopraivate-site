@@ -82,24 +82,24 @@ const Index = () => {
         onError: (error) => {
           console.error("❌ [Index] Failed to send message:", error);
           // Still navigate to chat even if API fails
-          navigate("/chat", { 
-            state: { 
+          navigate("/chat", {
+            state: {
               initialPrompt: prompt,
               selectedModel: selectedModel,
               selectedPrivacy: selectedPrivacy,
-            } 
+            },
           });
         },
       });
     } catch (error) {
       console.error("💥 [Index] Error preparing message:", error);
       // Still navigate to chat even if preparation fails
-      navigate("/chat", { 
-        state: { 
+      navigate("/chat", {
+        state: {
           initialPrompt: prompt,
           selectedModel: selectedModel,
           selectedPrivacy: selectedPrivacy,
-        } 
+        },
       });
     }
   };
@@ -121,9 +121,9 @@ const Index = () => {
             <div className="text-center mb-12">
               <div className="flex items-center justify-center mb-6">
                 <img
-                  src="/gopraivate_v10.12.png"
+                  src="/gopraivate_v10.13.png"
                   alt="goprAIvate Logo"
-                  className="h-12 w-12 mr-4"
+                  className="h-12 w-12 mr-4 object-cover rounded-full"
                 />
                 <h1 className="text-5xl font-bold text-gray-900">goprAIvate</h1>
               </div>
@@ -195,7 +195,10 @@ const Index = () => {
                     </Button>
 
                     {/* Privacy Level Selector */}
-                    <Select value={selectedPrivacy} onValueChange={setSelectedPrivacy}>
+                    <Select
+                      value={selectedPrivacy}
+                      onValueChange={setSelectedPrivacy}
+                    >
                       <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
                         <SelectValue />
                       </SelectTrigger>
@@ -213,7 +216,10 @@ const Index = () => {
 
                   {/* Mobile: Compact Privacy Selector */}
                   <div className="sm:hidden">
-                    <Select value={selectedPrivacy} onValueChange={setSelectedPrivacy}>
+                    <Select
+                      value={selectedPrivacy}
+                      onValueChange={setSelectedPrivacy}
+                    >
                       <SelectTrigger className="border-none bg-transparent text-xs text-gray-700 h-7 p-0 focus:ring-0 hover:bg-gray-200 rounded px-1 transition-colors min-w-[50px]">
                         <SelectValue placeholder="Privacy" />
                       </SelectTrigger>
@@ -541,7 +547,7 @@ const Index = () => {
                 {/* Workflow Diagram */}
                 <div className="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden">
                   <img
-                    src="/how_it_works_v01.png"
+                    src="/how_it_works_v02.png"
                     alt="How it works diagram"
                     className="w-full h-auto"
                   />

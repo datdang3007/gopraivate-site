@@ -57,19 +57,26 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       }
 
       // Get client IP
-      const clientIP = await apiClient.get('https://api.ipify.org?format=json')
-        .then(res => res.data.ip)
-        .catch(() => '192.168.1.100');
+      const clientIP = await apiClient
+        .get("https://api.ipify.org?format=json")
+        .then((res) => res.data.ip)
+        .catch(() => "192.168.1.100");
 
       const logoutPayload = {
         token: token,
         ip: clientIP,
-        project_id: 'PRI'
+        project_id: "PRI",
       };
 
-      console.log("🚪 [Layout] Calling logout API with payload:", logoutPayload);
+      console.log(
+        "🚪 [Layout] Calling logout API with payload:",
+        logoutPayload,
+      );
 
-      const response = await apiClient.post('/api/v1/auth/AuthLogout_ID1030', logoutPayload);
+      const response = await apiClient.post(
+        "/api/v1/auth/AuthLogout_ID1030",
+        logoutPayload,
+      );
 
       console.log("✅ [Layout] Logout successful:", response.data);
 
@@ -110,12 +117,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Full Screen Loading Overlay for Logout */}
-      <LoadingOverlay 
+      <LoadingOverlay
         visible={isLoggingOut}
         message="Logging out..."
         backdrop={true}
       />
-      
+
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center">
@@ -123,9 +130,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div className="flex items-center">
             <a className="flex items-center space-x-2" href="/">
               <img
-                src="/gopraivate_v10.12.png"
+                src="/gopraivate_v10.13.png"
                 alt="goprAIvate Logo"
-                className="h-8 w-8"
+                className="h-8 w-8 object-cover rounded-full"
               />
               <span className="font-bold text-lg">goprAIvate</span>
             </a>
@@ -181,9 +188,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <div className="flex flex-col space-y-4 mt-8">
                   <div className="flex items-center space-x-2 mb-6">
                     <img
-                      src="/gopraivate_v10.12.png"
+                      src="/gopraivate_v10.13.png"
                       alt="goprAIvate Logo"
-                      className="h-8 w-8"
+                      className="h-8 w-8 object-cover rounded-full"
                     />
                     <span className="font-bold text-lg">goprAIvate</span>
                   </div>
@@ -233,9 +240,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <div className="flex flex-col items-start">
               <div className="flex items-center space-x-2 mb-4">
                 <img
-                  src="/gopraivate_v10.12.png"
+                  src="/gopraivate_v10.13.png"
                   alt="goprAIvate Logo"
-                  className="h-8 w-8"
+                  className="h-8 w-8 object-cover rounded-full"
                 />
                 <span className="font-bold text-lg">goprAIvate</span>
               </div>
