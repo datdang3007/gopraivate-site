@@ -7,6 +7,7 @@ export interface SendMessageRequest {
   user_input: string;
   language: string;
   ai_id?: number;
+  security_level?: number;
 }
 
 export interface SendMessageResponse {

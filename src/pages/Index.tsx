@@ -53,6 +53,13 @@ const Index = () => {
 
     try {
       const clientIP = await getClientIP();
+      
+      // Map privacy level to security_level number
+      let securityLevel: number | undefined = undefined;
+      if (selectedPrivacy === "low") securityLevel = 1;
+      else if (selectedPrivacy === "medium") securityLevel = 2;
+      else if (selectedPrivacy === "high") securityLevel = 3;
+      
       const payload = {
         token: token,
         user_id: localStorage.getItem("userId") || "anonymous_user",
@@ -62,6 +69,7 @@ const Index = () => {
         user_input: prompt,
         language: "en",
         ai_id: Number(selectedModel) || undefined,
+        security_level: securityLevel,
       };
 
       console.log("📤 [Index] Sending message with payload:", payload);
