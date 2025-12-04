@@ -53,13 +53,13 @@ const Index = () => {
 
     try {
       const clientIP = await getClientIP();
-      
+
       // Map privacy level to security_level number
       let securityLevel: number | undefined = undefined;
       if (selectedPrivacy === "low") securityLevel = 1;
       else if (selectedPrivacy === "medium") securityLevel = 2;
       else if (selectedPrivacy === "high") securityLevel = 3;
-      
+
       const payload = {
         token: token,
         user_id: localStorage.getItem("userId") || "anonymous_user",
@@ -74,42 +74,23 @@ const Index = () => {
 
       console.log("📤 [Index] Sending message with payload:", payload);
 
-      // Call API
+      // Call API first, then navigate to chat without initialPrompt
       sendMessageMutation.mutate(payload, {
         onSuccess: (response) => {
           console.log("✅ [Index] Message sent successfully:", response);
-          // Navigate to chat page with the prompt and response
-          navigate("/chat", {
-            state: {
-              initialPrompt: prompt,
-              apiResponse: response,
-              selectedModel: selectedModel,
-              selectedPrivacy: selectedPrivacy,
-            },
-          });
+          // Navigate to chat page without initialPrompt - just go to chat
+          navigate("/chat");
         },
         onError: (error) => {
           console.error("❌ [Index] Failed to send message:", error);
           // Still navigate to chat even if API fails
-          navigate("/chat", {
-            state: {
-              initialPrompt: prompt,
-              selectedModel: selectedModel,
-              selectedPrivacy: selectedPrivacy,
-            },
-          });
+          navigate("/chat");
         },
       });
     } catch (error) {
       console.error("💥 [Index] Error preparing message:", error);
       // Still navigate to chat even if preparation fails
-      navigate("/chat", {
-        state: {
-          initialPrompt: prompt,
-          selectedModel: selectedModel,
-          selectedPrivacy: selectedPrivacy,
-        },
-      });
+      navigate("/chat");
     }
   };
 

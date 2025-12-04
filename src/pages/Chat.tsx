@@ -364,14 +364,7 @@ const Chat = () => {
     loadChatHistory();
   }, []);
 
-  // Auto-send initial prompt after history is loaded (only once)
-  useEffect(() => {
-    if (initialPrompt && historyLoaded) {
-      handleSend();
-      // Clear the location state to prevent re-sending on page refresh
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-  }, [historyLoaded, initialPrompt, navigate, location.pathname]);
+  // No auto-send logic needed - user messages are sent from Index.tsx
 
   // Auto-scroll to bottom when messages change or component mounts
   useEffect(() => {
