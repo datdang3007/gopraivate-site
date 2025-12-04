@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSendMessage, useChatHistory } from "@/api/hooks/useMessage";
 import { useAIModelsWithFallback } from "@/api/hooks/useAIModels";
 import { getClientIP } from "@/api/utils/ip";
@@ -364,12 +364,14 @@ const Chat = () => {
     loadChatHistory();
   }, []);
 
-  // Auto-send initial prompt after history is loaded
+  // Auto-send initial prompt after history is loaded (only once)
   useEffect(() => {
     if (initialPrompt && historyLoaded) {
       handleSend();
+      // Clear the location state to prevent re-sending on page refresh
+      navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [historyLoaded, initialPrompt]);
+  }, [historyLoaded, initialPrompt, navigate, location.pathname]);
 
   // Auto-scroll to bottom when messages change or component mounts
   useEffect(() => {
