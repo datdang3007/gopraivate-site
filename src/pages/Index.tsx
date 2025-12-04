@@ -32,7 +32,7 @@ const Index = () => {
     models,
     isLoading: isLoadingModels,
     isUsingFallback,
-  } = useAIModelsWithFallback();
+  } = useAIModelsWithFallback(true); // Skip auto redirect on 401
 
   const handleSend = async () => {
     if (!prompt.trim()) return;

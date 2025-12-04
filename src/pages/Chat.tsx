@@ -48,7 +48,7 @@ const Chat = () => {
     models,
     isLoading: isLoadingModels,
     isUsingFallback,
-  } = useAIModelsWithFallback();
+  } = useAIModelsWithFallback(false); // Allow auto redirect on 401
 
   const [prompt, setPrompt] = useState(initialPrompt);
   const [messages, setMessages] = useState<Message[]>([]);

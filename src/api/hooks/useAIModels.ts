@@ -3,9 +3,9 @@ import { AIModelsService } from "../services/aiModels";
 import { AIModel } from "../types/aiModels";
 import { getClientIP } from "../utils/ip";
 
-export const useAIModels = () => {
+export const useAIModels = (skipAutoRedirect = false) => {
   return useQuery({
-    queryKey: ["aiModels"],
+    queryKey: ["aiModels", skipAutoRedirect],
     queryFn: async () => {
       const token = localStorage.getItem("authToken") || "";
       const clientIP = await getClientIP();
@@ -16,7 +16,7 @@ export const useAIModels = () => {
         project_id: import.meta.env.VITE_PROJECT_ID || "",
       };
 
-      return AIModelsService.getAIModels(payload);
+      return AIModelsService.getAIModels(payload, skipAutoRedirect);
     },
     select: (response) => response.data,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -26,8 +26,8 @@ export const useAIModels = () => {
   });
 };
 
-export const useAIModelsWithFallback = () => {
-  const { data, isLoading, error } = useAIModels();
+export const useAIModelsWithFallback = (skipAutoRedirect = false) => {
+  const { data, isLoading, error } = useAIModels(skipAutoRedirect);
 
   // Fallback data nếu API không thành công
   const fallbackModels: AIModel[] = [

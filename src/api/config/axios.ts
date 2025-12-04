@@ -51,8 +51,13 @@ const createAxiosInstance = (): AxiosInstance => {
 
       // Handle 401 unauthorized
       if (error.response?.status === 401) {
-        localStorage.removeItem("authToken");
-        window.location.href = "/login";
+        // Check if skip auto redirect is set
+        const skipAutoRedirect = error.config?.headers?.['X-Skip-Auto-Redirect'];
+        
+        if (!skipAutoRedirect) {
+          localStorage.removeItem("authToken");
+          window.location.href = "/login";
+        }
       }
 
       return Promise.reject(error);

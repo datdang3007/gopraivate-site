@@ -12,13 +12,14 @@ export class AIModelsService {
   /**
    * Get list of available AI models
    */
-  static async getAIModels(payload: GetAIModelsPayload): Promise<{ data: AIModel[]; success: boolean }> {
+  static async getAIModels(payload: GetAIModelsPayload, skipAutoRedirect = false): Promise<{ data: AIModel[]; success: boolean }> {
     const response = await apiClient.post<GetAIModelsResponse>(
       '/api/v1/ailist_id4050',
       payload,
       {
         headers: {
           'Accept': 'application/json',
+          ...(skipAutoRedirect && { 'X-Skip-Auto-Redirect': 'true' }),
         },
       }
     );
