@@ -12,7 +12,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Mock AI responses with various markdown formats
 const mockResponses = [
@@ -193,18 +198,18 @@ const Demo = () => {
         id: "unique_message_id",
         type: "ai",
         content: "Your markdown content here...",
-        timestamp: "2025-01-20T10:30:00Z"
-      }
+        timestamp: "2025-01-20T10:30:00Z",
+      },
     },
     {
-      title: "Markdown Text Formatting", 
+      title: "Markdown Text Formatting",
       description: "How to format text with markdown",
       json: {
         content: `**Bold text** for emphasis
 *Italic text* for finesse
 > **Important**: Blockquotes for highlights
-Regular paragraph text here.`
-      }
+Regular paragraph text here.`,
+      },
     },
     {
       title: "Code Blocks",
@@ -219,8 +224,8 @@ function greetUser(name) {
 }
 \`\`\`
 
-Inline code: \`const result = getData();\``
-      }
+Inline code: \`const result = getData();\``,
+      },
     },
     {
       title: "Tables",
@@ -230,8 +235,8 @@ Inline code: \`const result = getData();\``
 |---------|------------|---------|--------|
 | **PII Redaction** | ✅ Yes | ❌ No | ❌ No |
 | **IP Masking** | ✅ Yes | ❌ No | ❌ No |
-| **Zero Logging** | ✅ Yes | ❌ No | ❌ No |`
-      }
+| **Zero Logging** | ✅ Yes | ❌ No | ❌ No |`,
+      },
     },
     {
       title: "Lists and Headers",
@@ -248,9 +253,9 @@ Inline code: \`const result = getData();\``
 ### Benefits:
 - Privacy-first approach
 - Vendor independence
-- Full compliance`
-      }
-    }
+- Full compliance`,
+      },
+    },
   ];
 
   const copyToClipboard = async (text: string, index: number) => {
@@ -259,7 +264,7 @@ Inline code: \`const result = getData();\``
       setCopiedIndex(index);
       setTimeout(() => setCopiedIndex(null), 2000);
     } catch (err) {
-      console.error('Failed to copy:', err);
+      console.error("Failed to copy:", err);
     }
   };
 
@@ -298,19 +303,23 @@ Inline code: \`const result = getData();\``
                         <Info className="w-4 h-4 text-blue-600" />
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                    <DialogContent className="max-w-4xl max-h-[80vh] overflow-x-hidden overflow-y-auto">
                       <DialogHeader>
                         <DialogTitle className="text-xl font-bold text-gray-900">
                           🔧 JSON Response Guidelines for Backend
                         </DialogTitle>
                         <DialogDescription className="text-gray-600">
-                          Guidelines về cách format JSON response để frontend render đúng markdown
+                          Guidelines về cách format JSON response để frontend
+                          render đúng markdown
                         </DialogDescription>
                       </DialogHeader>
-                      
-                      <div className="space-y-6 mt-4">
+
+                      <div className="space-y-6 mt-4 max-w-3xl mx-auto">
                         {jsonGuidelines.map((guideline, index) => (
-                          <Card key={index} className="p-4 border border-gray-200">
+                          <Card
+                            key={index}
+                            className="p-4 border border-gray-200"
+                          >
                             <div className="flex items-start justify-between mb-3">
                               <div>
                                 <h3 className="font-semibold text-gray-900 mb-1">
@@ -323,7 +332,9 @@ Inline code: \`const result = getData();\``
                               <Button
                                 size="sm"
                                 variant="ghost"
-                                onClick={() => copyToClipboard(guideline.json, index)}
+                                onClick={() =>
+                                  copyToClipboard(guideline.json, index)
+                                }
                                 className="h-8 w-8 p-0 hover:bg-gray-100"
                               >
                                 {copiedIndex === index ? (
@@ -333,35 +344,57 @@ Inline code: \`const result = getData();\``
                                 )}
                               </Button>
                             </div>
-                            
+
                             <div className="bg-gray-900 rounded-lg p-3 overflow-x-auto">
                               <pre className="text-sm text-gray-100">
-                                <code>{JSON.stringify(guideline.json, null, 2)}</code>
+                                <code>
+                                  {JSON.stringify(guideline.json, null, 2)}
+                                </code>
                               </pre>
                             </div>
-                            
+
                             {guideline.json.content && (
                               <div className="mt-3 p-3 bg-gray-50 rounded-lg border">
                                 <div className="text-xs text-gray-600 mb-2 font-medium">
                                   👁️ Preview khi render:
                                 </div>
-                                <MessageRenderer content={guideline.json.content} />
+                                <MessageRenderer
+                                  content={guideline.json.content}
+                                />
                               </div>
                             )}
                           </Card>
                         ))}
-                        
+
                         <Card className="p-4 bg-blue-50 border-blue-200">
                           <h3 className="font-semibold text-blue-900 mb-2">
                             📋 Key Points for Backend:
                           </h3>
                           <ul className="text-sm text-blue-800 space-y-1">
-                            <li>• <strong>type:</strong> Always set to "ai" for AI responses</li>
-                            <li>• <strong>content:</strong> Use raw markdown text, không cần escape</li>
-                            <li>• <strong>Code blocks:</strong> Use triple backticks với language identifier</li>
-                            <li>• <strong>Tables:</strong> Standard markdown table format</li>
-                            <li>• <strong>Lists:</strong> Use - for bullets, numbers for ordered</li>
-                            <li>• <strong>Emphasis:</strong> **bold**, *italic*, &gt; blockquotes</li>
+                            <li>
+                              • <strong>type:</strong> Always set to "ai" for AI
+                              responses
+                            </li>
+                            <li>
+                              • <strong>content:</strong> Use raw markdown text,
+                              không cần escape
+                            </li>
+                            <li>
+                              • <strong>Code blocks:</strong> Use triple
+                              backticks với language identifier
+                            </li>
+                            <li>
+                              • <strong>Tables:</strong> Standard markdown table
+                              format
+                            </li>
+                            <li>
+                              • <strong>Lists:</strong> Use - for bullets,
+                              numbers for ordered
+                            </li>
+                            <li>
+                              • <strong>Emphasis:</strong> **bold**, *italic*,
+                              &gt; blockquotes
+                            </li>
                           </ul>
                         </Card>
                       </div>
@@ -373,7 +406,7 @@ Inline code: \`const result = getData();\``
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            
+
             <Button
               onClick={() => navigate("/")}
               variant="ghost"
