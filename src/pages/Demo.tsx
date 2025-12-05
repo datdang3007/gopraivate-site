@@ -361,7 +361,7 @@ Inline code: \`const result = getData();\``
                             <li>• <strong>Code blocks:</strong> Use triple backticks với language identifier</li>
                             <li>• <strong>Tables:</strong> Standard markdown table format</li>
                             <li>• <strong>Lists:</strong> Use - for bullets, numbers for ordered</li>
-                            <li>• <strong>Emphasis:</strong> **bold**, *italic*, > blockquotes</li>
+                            <li>• <strong>Emphasis:</strong> **bold**, *italic*, &gt; blockquotes</li>
                           </ul>
                         </Card>
                       </div>
