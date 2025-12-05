@@ -14,14 +14,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Paperclip,
   Settings,
   Send,
@@ -31,8 +23,7 @@ import {
   RotateCcw,
   User,
   Bot,
-  Home,
-  Info, // Import Info icon for format guide
+  Home, // Import Home icon
 } from "lucide-react";
 
 interface Message {
@@ -71,7 +62,6 @@ const Chat = () => {
   const [currentPrivacy, setCurrentPrivacy] = useState(
     selectedPrivacyFromIndex,
   ); // Use selected privacy from Index
-  const [showFormatGuide, setShowFormatGuide] = useState(false);
 
   // Refs for scroll management
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -428,138 +418,6 @@ const Chat = () => {
                 </span>
               )}
             </div>
-
-            {/* Format Guide Button */}
-            <Dialog open={showFormatGuide} onOpenChange={setShowFormatGuide}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="p-2 hover:bg-gray-100 rounded-lg h-9 w-9 transition-colors"
-                  title="Response Format Guide"
-                >
-                  <Info className="w-4 h-4 text-gray-600" />
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle className="text-xl font-bold text-gray-900">
-                    📋 Backend Response Format Guide
-                  </DialogTitle>
-                  <DialogDescription className="text-gray-600">
-                    Hướng dẫn format JSON response để hiển thị đúng các định dạng markdown
-                  </DialogDescription>
-                </DialogHeader>
-                
-                <div className="space-y-6 text-sm">
-                  {/* Basic Text Formatting */}
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-3">🔤 Basic Text Formatting</h3>
-                    <div className="bg-gray-50 p-4 rounded-lg space-y-2">
-                      <div><code>**Bold text**</code> → <strong>Bold text</strong></div>
-                      <div><code>*Italic text*</code> → <em>Italic text</em></div>
-                      <div><code>`Inline code`</code> → <code className="bg-gray-100 px-1 py-0.5 rounded">Inline code</code></div>
-                    </div>
-                  </div>
-
-                  {/* Headers */}
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-3">📑 Headers</h3>
-                    <div className="bg-gray-50 p-4 rounded-lg space-y-2">
-                      <div><code># Heading 1</code> → <span className="text-xl font-bold">Heading 1</span></div>
-                      <div><code>## Heading 2</code> → <span className="text-lg font-semibold">Heading 2</span></div>
-                      <div><code>### Heading 3</code> → <span className="text-base font-semibold">Heading 3</span></div>
-                    </div>
-                  </div>
-
-                  {/* Code Blocks */}
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-3">💻 Code Blocks</h3>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <div className="mb-2">Backend Response:</div>
-                      <pre className="bg-gray-900 text-gray-100 p-3 rounded text-xs overflow-x-auto">
-{`"chat_output": "Here's a Python example:\\n\\n\`\`\`python\\nprint('Hello World')\\nfor i in range(5):\\n    print(i)\\n\`\`\`"`}
-                      </pre>
-                      <div className="mt-2 text-gray-600">→ Sẽ render thành code block với syntax highlighting</div>
-                    </div>
-                  </div>
-
-                  {/* Lists */}
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-3">📝 Lists</h3>
-                    <div className="bg-gray-50 p-4 rounded-lg space-y-3">
-                      <div>
-                        <div className="font-medium">Unordered List:</div>
-                        <div><code>- Item 1\\n- Item 2\\n- Item 3</code></div>
-                      </div>
-                      <div>
-                        <div className="font-medium">Ordered List:</div>
-                        <div><code>1. First item\\n2. Second item\\n3. Third item</code></div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Tables */}
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-3">📊 Tables</h3>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <div className="mb-2">Backend Response:</div>
-                      <pre className="bg-gray-900 text-gray-100 p-3 rounded text-xs overflow-x-auto">
-{`"chat_output": "| Feature | Status |\\n|---------|--------|\\n| **PII Redaction** | ✅ Yes |\\n| **IP Masking** | ✅ Yes |\\n| **Zero Logging** | ✅ Yes |"`}
-                      </pre>
-                      <div className="mt-2 text-gray-600">→ Sẽ render thành styled table với Table components</div>
-                    </div>
-                  </div>
-
-                  {/* Blockquotes */}
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-3">💬 Blockquotes</h3>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <div><code>&gt; Important note here</code></div>
-                      <div className="mt-2 border-l-4 border-gray-300 pl-4 py-2 bg-gray-100 italic text-gray-700">
-                        → Important note here
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Links */}
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-3">🔗 Links</h3>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <div><code>[Link text](https://example.com)</code></div>
-                      <div className="mt-2">→ <a href="#" className="text-blue-600 underline">Link text</a></div>
-                    </div>
-                  </div>
-
-                  {/* JSON Example */}
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-3">🔧 Complete JSON Response Example</h3>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <pre className="bg-gray-900 text-gray-100 p-4 rounded text-xs overflow-x-auto">
-{`{
-  "success": true,
-  "JSONraw": "[{\\"chat_output\\": \\"# Security Features\\n\\nHere are our **key security features**:\\n\\n1. **PII Redaction** - Automatic removal\\n2. *IP Masking* - Hide location\\n3. Zero Data Retention\\n\\n> **Important**: All data is processed securely\\n\\n## Code Example:\\n\\n\`\`\`python\\ndef secure_chat(message):\\n    return redact_pii(message)\\n\`\`\`\\n\\n| Feature | Status |\\n|---------|--------|\\n| Encryption | ✅ |\\n| Monitoring | ✅ |\\"}]"
-}`}
-                      </pre>
-                    </div>
-                  </div>
-
-                  {/* Best Practices */}
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-3">✅ Best Practices</h3>
-                    <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                      <ul className="space-y-2 text-blue-800">
-                        <li>• Sử dụng <code>\\n</code> để xuống dòng</li>
-                        <li>• Escape quotes: <code>\\"</code> trong JSON</li>
-                        <li>• Tables cần có header row với <code>|---|</code></li>
-                        <li>• Code blocks cần specify language: <code>```python</code></li>
-                        <li>• Links sẽ tự động mở tab mới</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
 
             {/* Home Button */}
             <Button
