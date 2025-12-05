@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -11,93 +10,92 @@ const mockResponses = [
   {
     id: "1",
     type: "ai" as const,
-    content: `# Chào mừng bạn đến với goprAIvate!
+    content: `# Welcome to goprAIvate!
 
-Tôi có thể giúp bạn với nhiều định dạng văn bản khác nhau:
+I can assist you with various text formats:
 
-## Định dạng cơ bản
-- **Chữ in đậm** để nhấn mạnh
-- *Chữ in nghiêng* cho sự tinh tế  
-- \`inline code\` cho các từ khóa kỹ thuật
+## Basic Formatting
+- **Bold text** to emphasize
+- *Italic text* for finesse
 
 ## Code blocks
-\`\`\`javascript
+\u0060\u0060\u0060javascript
 function greetUser(name) {
   console.log(\`Hello, \${name}! Welcome to goprAIvate.\`);
   return \`Privacy-first AI at your service\`;
 }
-\`\`\`
+\u0060\u0060\u0060
 
-> **Lưu ý quan trọng**: Tất cả dữ liệu của bạn được bảo vệ với công nghệ PII redaction và IP masking.
+> **Important Note**: All your data is protected with PII redaction and IP masking technology.
 
-### Danh sách tính năng:
-1. **Automatic PII Redaction** - Loại bỏ thông tin cá nhân
-2. **IP & Location Shielding** - Ẩn địa chỉ IP và vị trí  
-3. **Zero Data Retention** - Không lưu trữ dữ liệu
-4. **Provider Independence** - Không bị ràng buộc nhà cung cấp
+### Feature List:
+1. **Automatic PII Redaction** - Removes personal information
+2. **IP & Location Shielding** - Hides IP and location  
+3. **Zero Data Retention** - No data storage
+4. **Provider Independence** - No vendor lock-in
 
-Bạn có câu hỏi gì khác không?`,
+Do you have any other questions?`,
     timestamp: new Date(),
   },
   {
-    id: "2", 
+    id: "2",
     type: "user" as const,
-    content: "Bạn có thể tạo bảng so sánh các tính năng bảo mật không?",
+    content: "Can you create a comparison table of security features?",
     timestamp: new Date(),
   },
   {
     id: "3",
-    type: "ai" as const, 
-    content: `Tất nhiên! Đây là bảng so sánh các tính năng bảo mật:
+    type: "ai" as const,
+    content: `Certainly! Here is a comparison table of security features:
 
-| Tính năng | goprAIvate | ChatGPT | Claude | Llama |
+| Feature | goprAIvate | ChatGPT | Claude | Llama |
 |-----------|------------|---------|--------|-------|
-| **PII Redaction** | ✅ Tự động | ❌ Không | ❌ Không | ❌ Không |
-| **IP Masking** | ✅ Có | ❌ Không | ❌ Không | ❌ Không |
-| **Zero Logging** | ✅ Có | ❌ Không | ❌ Không | ❌ Không |
-| **GDPR Compliant** | ✅ Có | ⚠️ Một phần | ⚠️ Một phần | ⚠️ Một phần |
-| **On-premise Option** | ✅ Có | ❌ Không | ❌ Không | ✅ Có |
+| **PII Redaction** | ✅ Automatic | ❌ No | ❌ No | ❌ No |
+| **IP Masking** | ✅ Yes | ❌ No | ❌ No | ❌ No |
+| **Zero Logging** | ✅ Yes | ❌ No | ❌ No | ❌ No |
+| **GDPR Compliant** | ✅ Yes | ⚠️ Partial | ⚠️ Partial | ⚠️ Partial |
+| **On-premise Option** | ✅ Yes | ❌ No | ❌ No | ✅ Yes |
 
-## Các mức độ bảo mật:
+## Security Levels:
 
-### 🔴 High Security (Cao)
-- Redact tất cả PII
-- Mask IP hoàn toàn
-- Không lưu metadata
+### 🔴 High Security
+- Redact all PII
+- Full IP masking
+- No metadata retention
 
-### 🟡 Medium Security (Trung bình)  
-- Redact PII cơ bản
+### 🟡 Medium Security  
+- Basic PII redaction
 - Partial IP masking
 - Minimal logging
 
-### 🟢 Low Security (Thấp)
+### 🟢 Low Security
 - Basic filtering
 - Standard routing
 - Regular logging
 
 ---
 
-*Bảng này được cập nhật vào tháng 1/2025*`,
+*This table is updated as of January 2025*`,
     timestamp: new Date(),
   },
   {
     id: "4",
     type: "user" as const,
-    content: "Tuyệt vời! Bạn có thể giải thích code Python để kết nối API không?",
+    content: "Great! Can you explain Python code for connecting to an API?",
     timestamp: new Date(),
   },
   {
-    id: "5", 
+    id: "5",
     type: "ai" as const,
-    content: `Tất nhiên! Đây là cách kết nối với goprAIvate API:
+    content: `Absolutely! Here is how to connect to the goprAIvate API:
 
-## 1. Cài đặt thư viện
-\`\`\`bash
+## 1. Install libraries
+\u0060\u0060\u0060bash
 pip install requests python-dotenv
-\`\`\`
+\u0060\u0060\u0060
 
-## 2. Code Python cơ bản
-\`\`\`python
+## 2. Basic Python Code
+\u0060\u0060\u0060python
 import requests
 import os
 from dotenv import load_dotenv
@@ -105,18 +103,18 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-class GoprAIvateClient:
+class GoprAIvateClient {
     def __init__(self):
         self.api_url = "https://api.gopraivate.com/v1/chat"
         self.token = os.getenv("GOPRAIVATE_TOKEN")
         
-    def send_message(self, message, privacy_level="medium"):
+    def send_message(self, message, privacy_level="medium") {
         """
-        Gửi tin nhắn đến goprAIvate API
+        Send a message to goprAIvate API
         
         Args:
-            message (str): Nội dung tin nhắn
-            privacy_level (str): Mức độ bảo mật (low/medium/high)
+            message (str): Message content
+            privacy_level (str): Security level (low/medium/high)
         """
         headers = {
             "Authorization": f"Bearer {self.token}",
@@ -129,45 +127,48 @@ class GoprAIvateClient:
             "ai_id": 10  # ChatGPT 5.0
         }
         
-        try:
-            response = requests.post(
-                self.api_url, 
-                json=payload, 
-                headers=headers,
-                timeout=30
-            )
-            response.raise_for_status()
-            return response.json()
-            
-        except requests.RequestException as e:
+        try {
+          response = requests.post(
+              self.api_url, 
+              json=payload, 
+              headers=headers,
+              timeout=30
+          )
+          response.raise_for_status()
+          return response.json()
+          
+        } except requests.RequestException as e {
             print(f"❌ Error: {e}")
             return None
+        }
     
-    def _map_privacy_level(self, level):
+    def _map_privacy_level(self, level) {
         mapping = {"low": 1, "medium": 2, "high": 3}
         return mapping.get(level, 2)
+    }
 
-# Sử dụng
+# Usage
 client = GoprAIvateClient()
 result = client.send_message(
-    "Tôi tên là John và email là john@acme.com. Viết email cho Sarah.", 
+    "My name is John and my email is john@acme.com. Please write an email to Sarah.", 
     privacy_level="high"
 )
 
-if result:
+if result {
     print("✅ Response:", result.get('chat_output'))
-\`\`\`
+}
+\u0060\u0060\u0060
 
-> **Lưu ý**: Trong ví dụ trên, thông tin PII như "John" và "john@acme.com" sẽ được tự động redact trước khi gửi đến AI model.
+> **Note**: In the example above, PII such as "John" and "john@acme.com" will be automatically redacted before being sent to the AI model.
 
-### 3. File .env
-\`\`\`env
+### 3. .env File
+\u0060\u0060\u0060env
 GOPRAIVATE_TOKEN=your_api_token_here
-\`\`\`
+\u0060\u0060\u0060
 
-**Kết quả mong đợi**: AI sẽ nhận được tin nhắn đã được sanitize như *"Tôi tên là <NAME> và email là <EMAIL>. Viết email cho <NAME>."*`,
+**Expected Result**: The AI will receive a sanitized message like *"My name is <NAME> and my email is <EMAIL>. Please write an email to <NAME>."*`,
     timestamp: new Date(),
-  }
+  },
 ];
 
 const Demo = () => {
@@ -189,7 +190,9 @@ const Demo = () => {
               <h1 className="text-lg font-semibold text-gray-900">
                 Demo: Markdown Rendering
               </h1>
-              <p className="text-sm text-gray-500">Testing message formatting</p>
+              <p className="text-sm text-gray-500">
+                Testing message formatting
+              </p>
             </div>
           </div>
 
@@ -284,9 +287,11 @@ const Demo = () => {
                   Demo Markdown Rendering
                 </h3>
                 <p className="text-sm text-blue-800 leading-relaxed">
-                  Trang này demo việc hiển thị AI responses với đầy đủ định dạng Markdown: 
-                  <strong> in đậm</strong>, <em>in nghiêng</em>, bảng, code blocks, blockquotes, và nhiều hơn nữa.
-                  Tất cả được render tự động từ plain text responses.
+                  This page demonstrates rendering AI responses with full
+                  Markdown formatting:
+                  <strong> bold</strong>, <em>italic</em>, tables, code blocks,
+                  blockquotes, and more. All are auto-rendered from plain text
+                  responses.
                 </p>
               </div>
             </div>
