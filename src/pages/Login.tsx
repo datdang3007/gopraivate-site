@@ -48,6 +48,11 @@ const Login: React.FC = () => {
       promptToResend?: string;
     } | null;
 
+    // If user manually navigated to login (not redirected from chat), clear any saved prompt
+    if (!state?.promptToResend) {
+      localStorage.removeItem("pendingChatPrompt");
+    }
+
     // Show message if redirected from unauthorized access
     if (state?.message) {
       toast({

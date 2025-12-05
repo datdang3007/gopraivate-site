@@ -47,7 +47,8 @@ export const useLogin = () => {
         const urlParams = new URLSearchParams(currentLocation.search);
         const redirectTo = urlParams.get("redirectTo") || "/";
 
-        navigate(redirectTo);
+        // Always redirect to index page to restore saved prompt
+        navigate("/");
       } else {
         throw new Error("Invalid credentials");
       }

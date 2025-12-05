@@ -41,6 +41,8 @@ const Index = () => {
     const token = localStorage.getItem("authToken");
     if (!token) {
       console.log("🔒 [Index] User not authenticated, redirecting to login");
+      // Save the current prompt to localStorage
+      localStorage.setItem("pendingChatPrompt", prompt);
       navigate("/login", {
         state: {
           redirectTo: "/",
@@ -100,6 +102,19 @@ const Index = () => {
       handleSend();
     }
   };
+
+  // Restore saved prompt after login
+  useEffect(() => {
+    const savedPrompt = localStorage.getItem("pendingChatPrompt");
+    const token = localStorage.getItem("authToken");
+    
+    if (savedPrompt && token && !prompt) {
+      console.log("🔄 [Index] Restoring saved prompt after login:", savedPrompt);
+      setPrompt(savedPrompt);
+      // Clear the saved prompt after restoring
+      localStorage.removeItem("pendingChatPrompt");
+    }
+  }, []);
 
   return (
     <Layout>
