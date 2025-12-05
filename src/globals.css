@@ -1,6 +1,8 @@
 @tailwind base;
-@tailwind components;
+@tailwind components; 
 @tailwind utilities;
+
+@import './styles/highlight.css';
 
 @layer base {
   :root {

@@ -1,0 +1,44 @@
+
+/* Highlight.js syntax highlighting styles */
+.hljs {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-title {
+  color: #f59e0b;
+}
+
+.hljs-string,
+.hljs-attr {
+  color: #10b981;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-built_in {
+  color: #3b82f6;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+  color: #ef4444;
+}
+
+.hljs-function,
+.hljs-class {
+  color: #8b5cf6;
+}

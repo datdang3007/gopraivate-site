@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Chat from "./pages/Chat";
+import Demo from "./pages/Demo";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import NotFound from "./pages/NotFound";
@@ -30,6 +31,7 @@ const App = () => (
                 </ProtectedRoute>
               } 
             />
+            <Route path="/demo" element={<Demo />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
