@@ -309,8 +309,7 @@ Inline code: \`const result = getData();\``,
                           🔧 JSON Response Guidelines for Backend
                         </DialogTitle>
                         <DialogDescription className="text-gray-600">
-                          Guidelines về cách format JSON response để frontend
-                          render đúng markdown
+                          Guidelines on how to format JSON responses for proper markdown rendering in frontend
                         </DialogDescription>
                       </DialogHeader>
 
@@ -356,7 +355,7 @@ Inline code: \`const result = getData();\``,
                             {guideline.json.content && (
                               <div className="mt-3 p-3 bg-gray-50 rounded-lg border">
                                 <div className="text-xs text-gray-600 mb-2 font-medium">
-                                  👁️ Preview khi render:
+                                  👁️ Render Preview:
                                 </div>
                                 <MessageRenderer
                                   content={guideline.json.content}
@@ -377,11 +376,11 @@ Inline code: \`const result = getData();\``,
                             </li>
                             <li>
                               • <strong>content:</strong> Use raw markdown text,
-                              không cần escape
+                              no need to escape
                             </li>
                             <li>
                               • <strong>Code blocks:</strong> Use triple
-                              backticks với language identifier
+                              backticks with language identifier
                             </li>
                             <li>
                               • <strong>Tables:</strong> Standard markdown table
