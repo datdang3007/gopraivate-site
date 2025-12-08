@@ -1,0 +1,156 @@
+1. Cài đặt Dependencies
+npm install @react-oauth/google sonner @tanstack/react-query
+2. Cấu hình Google OAuth
+Bước 1: Tạo file config Google
+// src/config/google.ts
+export const GOOGLE_CONFIG = {
+  CLIENT_ID: 'your-google-client-id-here'
+}
+Bước 2: Wrap App với GoogleOAuthProvider
+// src/main.tsx hoặc App.tsx
+import { GoogleOAuthProvider } from '@react-oauth/google'
+import { GOOGLE_CONFIG } from './config/google'
+<GoogleOAuthProvider clientId={GOOGLE_CONFIG.CLIENT_ID}>
+  <App />
+</GoogleOAuthProvider>
+3. Tạo Hook useGoogleAuth
+// src/hooks/useGoogleAuth.ts
+import { useGoogleLogin } from '@react-oauth/google'
+import { toast } from 'sonner'
+interface GoogleUser {
+  email: string
+  name: string
+  picture: string
+  sub: string
+}
+export const useGoogleAuth = () => {
+  const { handleLoginSuccess } = useLoginSuccess()
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        // Lấy thông tin user từ Google API
+        const userInfoResponse = await fetch(
+          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenResponse.access_token}`,
+          {
+            headers: {
+              Authorization: `Bearer ${tokenResponse.access_token}`,
+              Accept: 'application/json'
+            }
+          }
+        )
+        if (userInfoResponse.ok) {
+          const userInfo: GoogleUser = await userInfoResponse.json()
+          
+          // Chuẩn bị payload cho backend
+          const loginPayload = {
+            email: userInfo.email,
+            password: 'GOOGLE_AUTH',
+            source: 'google',
+            source_token: {
+              access_token: tokenResponse.access_token,
+              token_type: tokenResponse.token_type,
+              expires_in: tokenResponse.expires_in,
+              scope: tokenResponse.scope,
+              user_info: userInfo
+            }
+          }
+          // Gửi đến backend API
+          const response = await AuthService.login(loginPayload)
+          
+          if (response.success && response.variables?.token) {
+            await handleLoginSuccess({
+              token: response.variables.token,
+              userId: response.variables.user_id,
+              email: userInfo.email,
+              userInfo
+            })
+          }
+        }
+      } catch (error: any) {
+        toast.error(error.message || 'Google login failed')
+      }
+    },
+    onError: (error) => {
+      toast.error('Google login failed. Please try again.')
+    },
+    flow: 'implicit'
+  })
+  return {
+    mutate: googleLogin,
+    isPending: false
+  }
+}
+4. Tạo Hook xử lý thành công
+// src/hooks/useLoginSuccess.ts
+import { useNavigate } from 'react-router-dom'
+export interface LoginSuccessData {
+  token: string
+  userId: string
+  email: string
+  userInfo?: any
+}
+export const useLoginSuccess = () => {
+  const navigate = useNavigate()
+  const handleLoginSuccess = async (data: LoginSuccessData) => {
+    const { token, userId, email, userInfo } = data
+    // Lưu vào localStorage
+    localStorage.setItem('authToken', token)
+    localStorage.setItem('userEmail', email)
+    localStorage.setItem('userId', userId)
+    // Redirect đến trang chính
+    navigate('/', { replace: true })
+    
+    console.log('✅ Đăng nhập Google thành công!')
+  }
+  return { handleLoginSuccess }
+}
+5. Tạo Auth Service
+// src/services/auth.ts
+export class AuthService {
+  static async login(request: any) {
+    const response = await fetch('/api/v1/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(request)
+    })
+    
+    return await response.json()
+  }
+}
+6. Sử dụng trong Component
+// Component Login
+import { FcGoogle } from 'react-icons/fc'
+import { useGoogleAuth } from './hooks/useGoogleAuth'
+const LoginForm = () => {
+  const googleAuth = useGoogleAuth()
+  const handleGoogleLogin = () => {
+    googleAuth.mutate()
+  }
+  return (
+    <button
+      onClick={handleGoogleLogin}
+      disabled={googleAuth.isPending}
+      className="w-full flex items-center gap-4 py-3 bg-white border rounded-lg"
+    >
+      <FcGoogle className="w-5 h-5" />
+      <span>
+        {googleAuth.isPending ? 'Đang đăng nhập...' : 'Đăng nhập với Google'}
+      </span>
+    </button>
+  )
+}
+7. Backend Requirements
+Backend cần hỗ trợ:
+
+Endpoint /api/v1/auth/login
+Nhận payload với source: 'google' và source_token
+Xác thực token Google và tạo session cho user
+Trả về token, user_id trong response
+8. Lưu ý quan trọng
+Google Client ID: Cần tạo OAuth 2.0 credentials trên Google Cloud Console
+Domain whitelist: Thêm domain của bạn vào authorized origins
+Error handling: Xử lý các trường hợp lỗi network, invalid token
+Security: Verify Google token ở backend trước khi tạo session
+Fallback: Có phương án đăng nhập khác nếu Google fail
