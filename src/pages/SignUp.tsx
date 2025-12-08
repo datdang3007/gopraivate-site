@@ -15,6 +15,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
+import { useGoogleAuth } from "@/hooks/useGoogleAuth";
+import { Button } from "@/components/ui/button";
 
 interface SignUpFormData {
   email: string;
@@ -29,6 +32,7 @@ const SignUp: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [emailValidationError, setEmailValidationError] = useState<string>("");
   const registerMutation = useRegister();
+  const googleAuth = useGoogleAuth();
   const {
     register,
     handleSubmit,
