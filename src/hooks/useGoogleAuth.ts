@@ -8,8 +8,11 @@ import { getClientIP } from '@/api/utils/ip';
 interface GoogleUser {
   email: string;
   name: string;
+  given_name?: string;
+  family_name?: string;
   picture: string;
   sub: string;
+  verified_email?: boolean;
 }
 
 export const useGoogleAuth = () => {
@@ -40,7 +43,7 @@ export const useGoogleAuth = () => {
           
           const clientIP = await getClientIP();
           
-          // Chuẩn bị payload cho backend - sử dụng format tương tự AuthService.login
+          // Chuẩn bị payload cho backend theo format yêu cầu
           const loginPayload = {
             email: userInfo.email,
             password: 'GOOGLE_AUTH',
@@ -49,10 +52,18 @@ export const useGoogleAuth = () => {
             source: 'google',
             source_token: {
               access_token: tokenResponse.access_token,
-              token_type: tokenResponse.token_type,
+              token_type: tokenResponse.token_type || 'Bearer',
               expires_in: tokenResponse.expires_in,
               scope: tokenResponse.scope,
-              user_info: userInfo
+              user_info: {
+                id: userInfo.sub,
+                email: userInfo.email,
+                verified_email: true,
+                name: userInfo.name,
+                given_name: userInfo.given_name || userInfo.name?.split(' ')[0] || '',
+                family_name: userInfo.family_name || userInfo.name?.split(' ').slice(1).join(' ') || '',
+                picture: userInfo.picture
+              }
             }
           };
 

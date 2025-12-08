@@ -10,12 +10,18 @@ export class AuthService {
   static async login(request: LoginRequest): Promise<LoginResponse> {
     const clientIP = request.ip || await getClientIP();
     
-    const payload = {
+    const payload: any = {
       email: request.email,
       password: request.password,
       ip: clientIP,
-      project_id: import.meta.env.VITE_PROJECT_ID || "",
+      project_id: request.project_id || import.meta.env.VITE_PROJECT_ID || "",
     };
+
+    // Thêm thông tin Google auth nếu có
+    if (request.source === 'google' && request.source_token) {
+      payload.source = request.source;
+      payload.source_token = request.source_token;
+    }
 
     const response = await apiClient.post<LoginResponse>(
       '/api/v1/auth/login_id1020',
