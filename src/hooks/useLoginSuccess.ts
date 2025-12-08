@@ -32,8 +32,8 @@ export const useLoginSuccess = () => {
     }
 
     toast({
-      title: "Đăng nhập thành công",
-      description: "Chào mừng bạn quay trở lại!",
+      heading: "Login Successful",
+      description: "Welcome back!",
     });
 
     // Always redirect to index page

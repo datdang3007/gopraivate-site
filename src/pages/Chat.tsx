@@ -262,13 +262,13 @@ const Chat = () => {
 
     try {
       const clientIP = await getClientIP();
-      
+
       // Map privacy level to security_level number
       let securityLevel: number | undefined = undefined;
       if (currentPrivacy === "low") securityLevel = 1;
       else if (currentPrivacy === "medium") securityLevel = 2;
       else if (currentPrivacy === "high") securityLevel = 3;
-      
+
       const payload = {
         token: token,
         user_id: localStorage.getItem("userId") || "anonymous_user",
@@ -279,6 +279,7 @@ const Chat = () => {
         language: "en",
         ai_id: Number(currentModel) || undefined,
         security_level: securityLevel,
+        payload_b64: currentPrompt,
       };
 
       console.log("📤 [Chat] Sending message with payload:", payload);
@@ -564,7 +565,7 @@ const Chat = () => {
                       </p>
                     ) : (
                       <div className="text-sm leading-relaxed">
-                        <MessageRenderer 
+                        <MessageRenderer
                           content={message.content}
                           fallback={
                             <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-900">

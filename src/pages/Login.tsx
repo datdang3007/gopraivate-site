@@ -218,7 +218,7 @@ const Login: React.FC = () => {
                 disabled={googleAuth.isPending}
               >
                 <FcGoogle className="mr-2 h-4 w-4" />
-                {googleAuth.isPending ? 'Đang đăng nhập...' : 'Đăng nhập với Google'}
+                {googleAuth.isPending ? 'Signing in...' : 'Sign in with Google'}
               </Button>
             </div>
 

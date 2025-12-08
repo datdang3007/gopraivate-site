@@ -72,6 +72,7 @@ const Index = () => {
         language: "en",
         ai_id: Number(selectedModel) || undefined,
         security_level: securityLevel,
+        payload_b64: prompt,
       };
 
       console.log("📤 [Index] Sending message with payload:", payload);
@@ -107,9 +108,12 @@ const Index = () => {
   useEffect(() => {
     const savedPrompt = localStorage.getItem("pendingChatPrompt");
     const token = localStorage.getItem("authToken");
-    
+
     if (savedPrompt && token && !prompt) {
-      console.log("🔄 [Index] Restoring saved prompt after login:", savedPrompt);
+      console.log(
+        "🔄 [Index] Restoring saved prompt after login:",
+        savedPrompt,
+      );
       setPrompt(savedPrompt);
       // Clear the saved prompt after restoring
       localStorage.removeItem("pendingChatPrompt");

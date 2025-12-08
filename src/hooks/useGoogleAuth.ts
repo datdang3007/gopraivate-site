@@ -90,8 +90,8 @@ export const useGoogleAuth = () => {
       } catch (error: any) {
         console.error('❌ [useGoogleAuth] Error:', error);
         toast({
-          title: "Đăng nhập Google thất bại",
-          description: error.message || 'Vui lòng thử lại.',
+          title: "Google login error",
+          description: error.message ? error.message : 'Please try again.',
           variant: "destructive",
         });
       }
@@ -99,8 +99,8 @@ export const useGoogleAuth = () => {
     onError: (error) => {
       console.error('❌ [useGoogleAuth] Google login error:', error);
       toast({
-        title: "Đăng nhập Google thất bại",
-        description: 'Vui lòng thử lại.',
+        title: "Google login failed",
+        description: 'Please try again.',
         variant: "destructive",
       });
     },
