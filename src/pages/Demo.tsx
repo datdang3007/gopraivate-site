@@ -33,12 +33,12 @@ I can assist you with various text formats:
 - *Italic text* for finesse
 
 ## Code blocks
-\u0060\u0060\u0060javascript
+\`\`\`javascript
 function greetUser(name) {
   console.log(\`Hello, \${name}! Welcome to goprAIvate.\`);
   return \`Privacy-first AI at your service\`;
 }
-\u0060\u0060\u0060
+\`\`\`
 
 > **Important Note**: All your data is protected with PII redaction and IP masking technology.
 
@@ -104,12 +104,12 @@ Do you have any other questions?`,
     content: `Absolutely! Here is how to connect to the goprAIvate API:
 
 ## 1. Install libraries
-\u0060\u0060\u0060bash
+\`\`\`bash
 pip install requests python-dotenv
-\u0060\u0060\u0060
+\`\`\`
 
 ## 2. Basic Python Code
-\u0060\u0060\u0060python
+\`\`\`python
 import requests
 import os
 from dotenv import load_dotenv
@@ -121,26 +121,26 @@ class GoprAIvateClient {
     def __init__(self):
         self.api_url = "https://api.gopraivate.com/v1/chat"
         self.token = os.getenv("GOPRAIVATE_TOKEN")
-        
+
     def send_message(self, message, privacy_level="medium") {
-        """
-        Send a message to goprAIvate API
-        
-        Args:
-            message (str): Message content
-            privacy_level (str): Security level (low/medium/high)
-        """
+        /**
+         * Send a message to goprAIvate API
+         *
+         * Args:
+         *     message (str): Message content
+         *     privacy_level (str): Security level (low/medium/high)
+         */
         headers = {
             "Authorization": f"Bearer {self.token}",
             "Content-Type": "application/json"
         }
-        
+
         payload = {
             "user_input": message,
             "security_level": self._map_privacy_level(privacy_level),
-            "ai_id": 10  # ChatGPT 5.0
+            "ai_id": 10  // ChatGPT 5.0
         }
-        
+
         try {
           response = requests.post(
               self.api_url, 
@@ -150,35 +150,37 @@ class GoprAIvateClient {
           )
           response.raise_for_status()
           return response.json()
-          
-        } except requests.RequestException as e {
-            print(f"❌ Error: {e}")
+
+        } catch requests.RequestException as e {
+            console.error(f"❌ Error: {e}")
             return None
         }
-    
-    def _map_privacy_level(self, level) {
-        mapping = {"low": 1, "medium": 2, "high": 3}
-        return mapping.get(level, 2)
     }
 
-# Usage
-client = GoprAIvateClient()
-result = client.send_message(
+    def _map_privacy_level(self, level) {
+        const mapping = {"low": 1, "medium": 2, "high": 3}
+        return mapping.get(level, 2)
+    }
+}
+
+// Usage
+const client = new GoprAIvateClient();
+const result = client.send_message(
     "My name is John and my email is john@acme.com. Please write an email to Sarah.", 
     privacy_level="high"
-)
+);
 
-if result {
-    print("✅ Response:", result.get('chat_output'))
+if (result) {
+    console.log("✅ Response:", result.get('chat_output'))
 }
-\u0060\u0060\u0060
+\`\`\`
 
 > **Note**: In the example above, PII such as "John" and "john@acme.com" will be automatically redacted before being sent to the AI model.
 
 ### 3. .env File
-\u0060\u0060\u0060env
+\`\`\`env
 GOPRAIVATE_TOKEN=your_api_token_here
-\u0060\u0060\u0060
+\`\`\`
 
 **Expected Result**: The AI will receive a sanitized message like *"My name is <NAME> and my email is <EMAIL>. Please write an email to <NAME>."*`,
     timestamp: new Date(),
@@ -265,6 +267,20 @@ Inline code: \`const result = getData();\``,
       setTimeout(() => setCopiedIndex(null), 2000);
     } catch (err) {
       console.error("Failed to copy:", err);
+    }
+  };
+
+  const renderMessageContent = (message: { type: string; content: string }) => {
+    try {
+      if (message.type === "ai") {
+        return <MessageRenderer content={message.content} />;
+      } else {
+        return <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>;
+      }
+    } catch (error) {
+      console.error("Error rendering message:", error);
+      // Fallback to original rendering if MessageRenderer fails
+      return <p className="text-sm leading-relaxed whitespace-pre-wrap">Error rendering message. Please try again.</p>;
     }
   };
 
@@ -449,13 +465,7 @@ Inline code: \`const result = getData();\``,
                       : "bg-white border border-gray-200"
                   }`}
                 >
-                  {message.type === "user" ? (
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap text-white">
-                      {message.content}
-                    </p>
-                  ) : (
-                    <MessageRenderer content={message.content} />
-                  )}
+                  {renderMessageContent(message)}
                 </div>
 
                 <div

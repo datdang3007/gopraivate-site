@@ -16,12 +16,14 @@ import {
 interface MessageRendererProps {
   content: string;
   className?: string;
+  fallback?: React.ReactNode;
 }
 
-const MessageRenderer: React.FC<MessageRendererProps> = ({ content, className }) => {
-  return (
-    <div className={cn("prose prose-sm max-w-none", className)}>
-      <ReactMarkdown
+const MessageRenderer: React.FC<MessageRendererProps> = ({ content, className, fallback }) => {
+  try {
+    return (
+      <div className={cn("prose prose-sm max-w-none", className)}>
+        <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
         components={{
@@ -120,10 +122,18 @@ const MessageRenderer: React.FC<MessageRendererProps> = ({ content, className })
           hr: () => <hr className="border-gray-300 my-6" />,
         }}
       >
+          {content}
+        </ReactMarkdown>
+      </div>
+    );
+  } catch (error) {
+    console.warn('MessageRenderer failed to render markdown:', error);
+    return fallback || (
+      <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-900">
         {content}
-      </ReactMarkdown>
-    </div>
-  );
+      </p>
+    );
+  }
 };
 
 export default MessageRenderer;

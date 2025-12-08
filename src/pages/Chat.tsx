@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import MessageRenderer from "@/components/MessageRenderer";
 import {
   Paperclip,
   Settings,
@@ -557,9 +558,22 @@ const Chat = () => {
                         : "bg-white border border-gray-200"
                     }`}
                   >
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                      {message.content}
-                    </p>
+                    {message.type === "user" ? (
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                        {message.content}
+                      </p>
+                    ) : (
+                      <div className="text-sm leading-relaxed">
+                        <MessageRenderer 
+                          content={message.content}
+                          fallback={
+                            <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-900">
+                              {message.content}
+                            </p>
+                          }
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div
