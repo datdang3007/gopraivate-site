@@ -309,7 +309,8 @@ Inline code: \`const result = getData();\``,
                           🔧 JSON Response Guidelines for Backend
                         </DialogTitle>
                         <DialogDescription className="text-gray-600">
-                          Guidelines on how to format JSON responses for proper markdown rendering in frontend
+                          Guidelines on how to format JSON responses for proper
+                          markdown rendering in frontend
                         </DialogDescription>
                       </DialogHeader>
 
