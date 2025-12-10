@@ -330,16 +330,46 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <h3 className="font-semibold text-sm">Legal</h3>
                 <nav className="flex flex-col space-y-2">
                   <a
-                    href="#"
+                    href="/privacy"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Privacy Policy
                   </a>
                   <a
-                    href="#"
+                    href="/terms"
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Terms of Service
+                  </a>
+                  <a
+                    href="/cookies"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Cookies Policy
+                  </a>
+                </nav>
+              </div>
+
+              <div className="flex flex-col space-y-3">
+                <h3 className="font-semibold text-sm">Help</h3>
+                <nav className="flex flex-col space-y-2">
+                  <a
+                    href="/faq"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    FAQ
+                  </a>
+                  <a
+                    href="/support"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Support
+                  </a>
+                  <a
+                    href="/safety"
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    Safety
                   </a>
                 </nav>
               </div>

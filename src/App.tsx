@@ -10,6 +10,13 @@ import Chat from "./pages/Chat";
 import Demo from "./pages/Demo";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import TermsOfService from "./pages/TermsOfService";
+import Privacy from "./pages/Privacy";
+import Cookies from "./pages/Cookies";
+import About from "./pages/About";
+import FAQ from "./pages/FAQ";
+import Support from "./pages/Support";
+import Safety from "./pages/Safety";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +41,13 @@ const App = () => (
             <Route path="/demo" element={<Demo />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/cookies" element={<Cookies />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/safety" element={<Safety />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
