@@ -59,14 +59,29 @@ const Chat = () => {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [historyLoaded, setHistoryLoaded] = useState(false);
-  const [currentModel, setCurrentModel] = useState(selectedModelFromIndex); // Use selected model from Index
-  const [currentPrivacy, setCurrentPrivacy] = useState(
-    selectedPrivacyFromIndex,
-  ); // Use selected privacy from Index
+  // Load from localStorage, fallback to Index props, then defaults
+  const [currentModel, setCurrentModel] = useState(() => {
+    return localStorage.getItem("preferredModel") || selectedModelFromIndex || "10";
+  });
+  const [currentPrivacy, setCurrentPrivacy] = useState(() => {
+    return localStorage.getItem("preferredPrivacy") || selectedPrivacyFromIndex || "medium";
+  });
 
   // Refs for scroll management
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+
+  // Save model to localStorage when changed
+  const handleModelChange = (model: string) => {
+    setCurrentModel(model);
+    localStorage.setItem("preferredModel", model);
+  };
+
+  // Save privacy to localStorage when changed
+  const handlePrivacyChange = (privacy: string) => {
+    setCurrentPrivacy(privacy);
+    localStorage.setItem("preferredPrivacy", privacy);
+  };
 
   // Scroll to bottom function
   const scrollToBottom = useCallback(() => {
@@ -703,7 +718,7 @@ const Chat = () => {
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <Select
                     value={currentModel}
-                    onValueChange={setCurrentModel}
+                    onValueChange={handleModelChange}
                     disabled={isLoadingModels}
                   >
                     <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
@@ -722,7 +737,7 @@ const Chat = () => {
                 <div className="hidden lg:block">
                   <Select
                     value={currentPrivacy}
-                    onValueChange={setCurrentPrivacy}
+                    onValueChange={handlePrivacyChange}
                   >
                     <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
                       <SelectValue />

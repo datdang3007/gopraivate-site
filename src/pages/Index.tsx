@@ -34,6 +34,30 @@ const Index = () => {
     isUsingFallback,
   } = useAIModelsWithFallback(true); // Skip auto redirect on 401
 
+  // Load initial model and privacy settings from localStorage
+  useEffect(() => {
+    const savedModel = localStorage.getItem("selectedModel");
+    const savedPrivacy = localStorage.getItem("selectedPrivacy");
+    if (savedModel) {
+      setSelectedModel(savedModel);
+    }
+    if (savedPrivacy) {
+      setSelectedPrivacy(savedPrivacy);
+    }
+  }, []);
+
+  // Handler for model changes, saves to localStorage
+  const handleModelChange = (modelValue: string) => {
+    setSelectedModel(modelValue);
+    localStorage.setItem("selectedModel", modelValue);
+  };
+
+  // Handler for privacy changes, saves to localStorage
+  const handlePrivacyChange = (privacyValue: string) => {
+    setSelectedPrivacy(privacyValue);
+    localStorage.setItem("selectedPrivacy", privacyValue);
+  };
+
   const handleSend = async () => {
     if (!prompt.trim()) return;
 
@@ -177,7 +201,7 @@ const Index = () => {
                       <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
                       <Select
                         value={selectedModel}
-                        onValueChange={setSelectedModel}
+                        onValueChange={handleModelChange}
                         disabled={isLoadingModels}
                       >
                         <SelectTrigger className="border-none bg-transparent text-xs sm:text-sm text-gray-700 h-7 sm:h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-1 sm:px-2 transition-colors min-w-[60px] sm:min-w-[80px]">
@@ -208,7 +232,7 @@ const Index = () => {
                     {/* Privacy Level Selector */}
                     <Select
                       value={selectedPrivacy}
-                      onValueChange={setSelectedPrivacy}
+                      onValueChange={handlePrivacyChange}
                     >
                       <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
                         <SelectValue />
@@ -229,7 +253,7 @@ const Index = () => {
                   <div className="sm:hidden">
                     <Select
                       value={selectedPrivacy}
-                      onValueChange={setSelectedPrivacy}
+                      onValueChange={handlePrivacyChange}
                     >
                       <SelectTrigger className="border-none bg-transparent text-xs text-gray-700 h-7 p-0 focus:ring-0 hover:bg-gray-200 rounded px-1 transition-colors min-w-[50px]">
                         <SelectValue placeholder="Privacy" />
