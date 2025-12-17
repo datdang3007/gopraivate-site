@@ -394,17 +394,27 @@ const Chat = () => {
     if (!isLoadingHistory && allMessages.length > 0) {
       setTimeout(() => {
         // Find the last user message
-        const lastUserMessageIndex = allMessages.findLastIndex(msg => msg.type === "user");
+        const lastUserMessageIndex = allMessages.findLastIndex(
+          (msg) => msg.type === "user",
+        );
         if (lastUserMessageIndex !== -1) {
           // Calculate the position in the displayed messages array
-          const startIndex = Math.max(0, allMessages.length - displayedMessageCount);
+          const startIndex = Math.max(
+            0,
+            allMessages.length - displayedMessageCount,
+          );
           const displayedIndex = lastUserMessageIndex - startIndex;
-          
+
           // Only scroll if the last user message is in the currently displayed messages
           if (displayedIndex >= 0 && displayedIndex < messages.length) {
-            const messageElement = document.querySelector(`[data-message-id="${allMessages[lastUserMessageIndex].id}"]`);
+            const messageElement = document.querySelector(
+              `[data-message-id="${allMessages[lastUserMessageIndex].id}"]`,
+            );
             if (messageElement) {
-              messageElement.scrollIntoView({ behavior: "auto", block: "center" });
+              messageElement.scrollIntoView({
+                behavior: "auto",
+                block: "center",
+              });
             } else {
               // Fallback to scrolling to bottom if element not found
               scrollToBottomImmediate();
@@ -421,7 +431,6 @@ const Chat = () => {
     }
   }, [allMessages, isLoadingHistory, displayedMessageCount, messages]);
 
-  // Add scroll event listener for infinite scroll
   useEffect(() => {
     const container = messagesContainerRef.current;
     if (!container) return;
