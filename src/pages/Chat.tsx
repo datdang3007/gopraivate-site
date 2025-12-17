@@ -413,7 +413,7 @@ const Chat = () => {
             if (messageElement) {
               messageElement.scrollIntoView({
                 behavior: "auto",
-                block: "center",
+                block: "start",
               });
             } else {
               // Fallback to scrolling to bottom if element not found
