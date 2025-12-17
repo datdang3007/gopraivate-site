@@ -494,7 +494,7 @@ const Chat = () => {
         ref={messagesContainerRef}
         className="flex-1 overflow-y-auto px-4 py-4 lg:px-6"
       >
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-7xl mx-auto space-y-6">
           {/* Load More Indicator */}
           {isLoadingMore && (
             <div className="text-center py-4">
@@ -595,10 +595,10 @@ const Chat = () => {
               <div
                 key={message.id}
                 data-message-id={message.id}
-                className={`flex gap-3 ${message.type === "user" ? "justify-end" : "justify-start"}`}
+                className={`flex pt-3 ${message.type === "user" ? "justify-end" : "justify-start"}`}
               >
                 {message.type === "ai" && (
-                  <div className="flex-shrink-0">
+                  <div className="flex-shrink-0 mr-2">
                     <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
                       <Bot className="w-4 h-4 text-gray-600" />
                     </div>
@@ -606,7 +606,7 @@ const Chat = () => {
                 )}
 
                 <div
-                  className={`max-w-xs sm:max-w-md lg:max-w-2xl ${message.type === "user" ? "order-first" : ""}`}
+                  className={`max-w-xs sm:max-w-xl lg:max-w-4xl ${message.type === "user" ? "order-first" : ""}`}
                 >
                   <div
                     className={`rounded-2xl px-4 py-3 ${
@@ -688,7 +688,7 @@ const Chat = () => {
                 </div>
 
                 {message.type === "user" && (
-                  <div className="flex-shrink-0">
+                  <div className="ml-2 flex-shrink-0">
                     <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
                       <User className="w-4 h-4 text-white" />
                     </div>

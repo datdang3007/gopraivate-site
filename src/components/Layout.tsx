@@ -351,7 +351,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </nav>
               </div>
 
-              <div className="flex flex-col space-y-3">
+              {/* <div className="flex flex-col space-y-3">
                 <h3 className="font-semibold text-sm">Help</h3>
                 <nav className="flex flex-col space-y-2">
                   <a
@@ -373,7 +373,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     Safety
                   </a>
                 </nav>
-              </div>
+              </div> */}
             </div>
           </div>
 
