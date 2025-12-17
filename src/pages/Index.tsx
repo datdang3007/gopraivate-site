@@ -167,8 +167,9 @@ const Index = () => {
                       variant="ghost"
                       size="sm"
                       className="p-2 hover:bg-gray-200 rounded-lg h-8 w-8 sm:h-9 sm:w-9 transition-colors"
+                      disabled
                     >
-                      <Paperclip className="w-3 h-3 sm:w-4 sm:h-4 text-gray-600" />
+                      <Paperclip className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
                     </Button>
 
                     {/* Model Selector - Compact on mobile */}

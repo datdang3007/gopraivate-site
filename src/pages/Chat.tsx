@@ -693,8 +693,9 @@ const Chat = () => {
                   variant="ghost"
                   size="sm"
                   className="p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors"
+                  disabled
                 >
-                  <Paperclip className="w-4 h-4 text-gray-600" />
+                  <Paperclip className="w-4 h-4 text-gray-400" />
                 </Button>
 
                 {/* Show model selector on tablet and up */}
