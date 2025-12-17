@@ -247,8 +247,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <span className="font-bold text-lg">goprAIvate</span>
               </div>
               <p className="text-sm text-muted-foreground max-w-md">
-                Use AI Without Giving Away Sensitive Information. Leverage the
-                power of LLMs without compromising privacy.
+                Use AI Without Giving Away Sensitive Information.
+                <br />
+                Leverage the power of LLMs without compromising privacy.
               </p>
             </div>
 

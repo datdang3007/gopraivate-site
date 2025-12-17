@@ -137,8 +137,9 @@ const Index = () => {
                 <h1 className="text-5xl font-bold text-gray-900">goprAIvate</h1>
               </div>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                Use AI Without Giving Away Sensitive Information. Leverage the
-                power of LLMs without compromising privacy.
+                Use AI Without Giving Away Sensitive Information.
+                <br />
+                Leverage the power of LLMs without compromising privacy.
               </p>
             </div>
 
