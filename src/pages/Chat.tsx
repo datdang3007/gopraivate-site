@@ -389,12 +389,37 @@ const Chat = () => {
 
   // No auto-send logic needed - user messages are sent from Index.tsx
 
-  // Auto-scroll to bottom when messages change or component mounts
+  // Auto-scroll to last user message when messages change or component mounts
   useEffect(() => {
     if (!isLoadingHistory && allMessages.length > 0) {
-      setTimeout(() => scrollToBottomImmediate(), 100);
+      setTimeout(() => {
+        // Find the last user message
+        const lastUserMessageIndex = allMessages.findLastIndex(msg => msg.type === "user");
+        if (lastUserMessageIndex !== -1) {
+          // Calculate the position in the displayed messages array
+          const startIndex = Math.max(0, allMessages.length - displayedMessageCount);
+          const displayedIndex = lastUserMessageIndex - startIndex;
+          
+          // Only scroll if the last user message is in the currently displayed messages
+          if (displayedIndex >= 0 && displayedIndex < messages.length) {
+            const messageElement = document.querySelector(`[data-message-id="${allMessages[lastUserMessageIndex].id}"]`);
+            if (messageElement) {
+              messageElement.scrollIntoView({ behavior: "auto", block: "center" });
+            } else {
+              // Fallback to scrolling to bottom if element not found
+              scrollToBottomImmediate();
+            }
+          } else {
+            // If last user message is not displayed, scroll to bottom
+            scrollToBottomImmediate();
+          }
+        } else {
+          // No user messages found, scroll to bottom
+          scrollToBottomImmediate();
+        }
+      }, 100);
     }
-  }, [allMessages, isLoadingHistory]);
+  }, [allMessages, isLoadingHistory, displayedMessageCount, messages]);
 
   // Add scroll event listener for infinite scroll
   useEffect(() => {
@@ -560,6 +585,7 @@ const Chat = () => {
             messages.map((message) => (
               <div
                 key={message.id}
+                data-message-id={message.id}
                 className={`flex gap-3 ${message.type === "user" ? "justify-end" : "justify-start"}`}
               >
                 {message.type === "ai" && (
