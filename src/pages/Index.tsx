@@ -151,7 +151,7 @@ const Index = () => {
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Paste or type your prompt... (e.g., Email sarah.lee@acme.com the Q4 forecast...)"
+                  placeholder="Paste or type your prompt..."
                   className="w-full rounded-none bg-transparent border-none text-gray-900 placeholder:text-gray-400 text-sm sm:text-base leading-relaxed resize-none focus:ring-0 focus:outline-none focus:border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 min-h-[60px] sm:min-h-[80px] max-h-[150px] sm:max-h-[200px]"
                 />
               </div>
