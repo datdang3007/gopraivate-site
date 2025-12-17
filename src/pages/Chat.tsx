@@ -61,10 +61,16 @@ const Chat = () => {
   const [historyLoaded, setHistoryLoaded] = useState(false);
   // Load from localStorage, fallback to Index props, then defaults
   const [currentModel, setCurrentModel] = useState(() => {
-    return localStorage.getItem("preferredModel") || selectedModelFromIndex || "10";
+    return (
+      localStorage.getItem("selectedModel") || selectedModelFromIndex || "10"
+    );
   });
   const [currentPrivacy, setCurrentPrivacy] = useState(() => {
-    return localStorage.getItem("preferredPrivacy") || selectedPrivacyFromIndex || "medium";
+    return (
+      localStorage.getItem("selectedPrivacy") ||
+      selectedPrivacyFromIndex ||
+      "medium"
+    );
   });
 
   // Refs for scroll management
@@ -74,13 +80,13 @@ const Chat = () => {
   // Save model to localStorage when changed
   const handleModelChange = (model: string) => {
     setCurrentModel(model);
-    localStorage.setItem("preferredModel", model);
+    localStorage.setItem("selectedModel", model);
   };
 
   // Save privacy to localStorage when changed
   const handlePrivacyChange = (privacy: string) => {
     setCurrentPrivacy(privacy);
-    localStorage.setItem("preferredPrivacy", privacy);
+    localStorage.setItem("selectedPrivacy", privacy);
   };
 
   // Scroll to bottom function
