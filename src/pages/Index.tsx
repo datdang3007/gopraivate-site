@@ -12,6 +12,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -196,8 +203,90 @@ const Index = () => {
                       <Paperclip className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
                     </Button>
 
-                    {/* Model Selector - Compact on mobile */}
-                    <div className="flex items-center gap-1 sm:gap-2">
+                    {/* Mobile: Settings Dialog */}
+                    <div className="sm:hidden">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors"
+                          >
+                            <Settings className="w-3 h-3 text-gray-600" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                          <DialogHeader>
+                            <DialogTitle>Chat Settings</DialogTitle>
+                          </DialogHeader>
+                          <div className="grid gap-6 py-4">
+                            {/* AI Model Selection */}
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <label className="text-sm font-medium text-gray-700">
+                                  AI Model
+                                </label>
+                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                              </div>
+
+                              <div className="flex items-center gap-2">
+                                <Select
+                                  value={selectedModel}
+                                  onValueChange={handleModelChange}
+                                  disabled={isLoadingModels}
+                                >
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {models.map((model) => (
+                                      <SelectItem key={model.id} value={model.name}>
+                                        {model.displayName}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                {isUsingFallback && (
+                                  <span
+                                    className="text-xs text-yellow-600"
+                                    title="Using fallback models"
+                                  >
+                                    ⚠
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Privacy Level Selection */}
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium text-gray-700">
+                                Privacy Level
+                              </label>
+                              <Select
+                                value={selectedPrivacy}
+                                onValueChange={handlePrivacyChange}
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="low">Privacy: Low</SelectItem>
+                                  <SelectItem value="medium">
+                                    Privacy: Medium
+                                  </SelectItem>
+                                  <SelectItem value="high">
+                                    Privacy: High
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+
+                    {/* Desktop: Model Selector - Compact on mobile, hidden on mobile because of dialog */}
+                    <div className="hidden sm:flex items-center gap-1 sm:gap-2">
                       <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
                       <Select
                         value={selectedModel}
@@ -249,22 +338,7 @@ const Index = () => {
                     </Select>
                   </div>
 
-                  {/* Mobile: Compact Privacy Selector */}
-                  <div className="sm:hidden">
-                    <Select
-                      value={selectedPrivacy}
-                      onValueChange={handlePrivacyChange}
-                    >
-                      <SelectTrigger className="border-none bg-transparent text-xs text-gray-700 h-7 p-0 focus:ring-0 hover:bg-gray-200 rounded px-1 transition-colors min-w-[50px]">
-                        <SelectValue placeholder="Privacy" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="low">Low</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="high">High</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  
                 </div>
 
                 {/* Send Button - Full width on mobile */}
