@@ -11,9 +11,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import MessageRenderer from "@/components/MessageRenderer";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Paperclip,
   Settings,
@@ -40,6 +48,7 @@ const MESSAGES_PER_LOAD = 10;
 const Chat = () => {
   const location = useLocation();
   const navigate = useNavigate(); // Initialize useNavigate
+  const isMobile = useIsMobile();
   const initialPrompt = location.state?.initialPrompt || "";
   const selectedModelFromIndex = location.state?.selectedModel || "10"; // Get selected model from Index
   const selectedPrivacyFromIndex = location.state?.selectedPrivacy || "medium"; // Get selected privacy from Index
@@ -59,6 +68,7 @@ const Chat = () => {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [historyLoaded, setHistoryLoaded] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   // Load from localStorage, fallback to Index props, then defaults
   const [currentModel, setCurrentModel] = useState(() => {
     return (
@@ -744,7 +754,7 @@ const Chat = () => {
             {/* Toolbar */}
             <div className="flex items-center justify-between px-4 py-3 bg-gray-100 border-t border-gray-200">
               <div className="flex items-center gap-2">
-                {/* Mobile: Show essential controls only */}
+                {/* Attach File Button - Always disabled */}
                 <Button
                   variant="ghost"
                   size="sm"
@@ -754,42 +764,126 @@ const Chat = () => {
                   <Paperclip className="w-4 h-4 text-gray-400" />
                 </Button>
 
-                {/* Show model selector on tablet and up */}
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <Select
-                    value={currentModel}
-                    onValueChange={handleModelChange}
-                    disabled={isLoadingModels}
-                  >
-                    <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {models.map((model) => (
-                        <SelectItem key={model.id} value={model.name}>
-                          {model.displayName}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+                {/* Settings Button - Mobile uses Dialog, Desktop shows inline */}
+                {isMobile ? (
+                  <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors"
+                      >
+                        <Settings className="w-4 h-4 text-gray-600" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle>Chat Settings</DialogTitle>
+                      </DialogHeader>
+                      <div className="grid gap-6 py-4">
+                        {/* AI Model Selection */}
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-700">
+                            AI Model
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <Select
+                              value={currentModel}
+                              onValueChange={handleModelChange}
+                              disabled={isLoadingModels}
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {models.map((model) => (
+                                  <SelectItem key={model.id} value={model.name}>
+                                    {model.displayName}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            {isUsingFallback && (
+                              <span
+                                className="text-xs text-yellow-600"
+                                title="Using fallback models"
+                              >
+                                ⚠
+                              </span>
+                            )}
+                          </div>
+                        </div>
 
-                <div className="block">
-                  <Select
-                    value={currentPrivacy}
-                    onValueChange={handlePrivacyChange}
-                  >
-                    <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="low">Privacy: Low</SelectItem>
-                      <SelectItem value="medium">Privacy: Medium</SelectItem>
-                      <SelectItem value="high">Privacy: High</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                        {/* Privacy Level Selection */}
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-gray-700">
+                            Privacy Level
+                          </label>
+                          <Select
+                            value={currentPrivacy}
+                            onValueChange={handlePrivacyChange}
+                          >
+                            <SelectTrigger className="w-full">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="low">Privacy: Low</SelectItem>
+                              <SelectItem value="medium">Privacy: Medium</SelectItem>
+                              <SelectItem value="high">Privacy: High</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Current Status */}
+                        <div className="pt-4 border-t border-gray-200">
+                          <p className="text-xs text-gray-500">
+                            🔒 Your messages are automatically protected with PII redaction and IP masking
+                          </p>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                ) : (
+                  <>
+                    {/* Desktop: Show inline controls */}
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <Select
+                        value={currentModel}
+                        onValueChange={handleModelChange}
+                        disabled={isLoadingModels}
+                      >
+                        <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {models.map((model) => (
+                            <SelectItem key={model.id} value={model.name}>
+                              {model.displayName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="block">
+                      <Select
+                        value={currentPrivacy}
+                        onValueChange={handlePrivacyChange}
+                      >
+                        <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low">Privacy: Low</SelectItem>
+                          <SelectItem value="medium">Privacy: Medium</SelectItem>
+                          <SelectItem value="high">Privacy: High</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </>
+                )}
               </div>
 
               <Button
