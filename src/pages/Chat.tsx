@@ -766,7 +766,10 @@ const Chat = () => {
 
                 {/* Settings Button - Mobile uses Dialog, Desktop shows inline */}
                 {isMobile ? (
-                  <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+                  <Dialog
+                    open={isSettingsOpen}
+                    onOpenChange={setIsSettingsOpen}
+                  >
                     <DialogTrigger asChild>
                       <Button
                         variant="ghost"
@@ -783,11 +786,14 @@ const Chat = () => {
                       <div className="grid gap-6 py-4">
                         {/* AI Model Selection */}
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700">
-                            AI Model
-                          </label>
                           <div className="flex items-center gap-2">
+                            <label className="text-sm font-medium text-gray-700">
+                              AI Model
+                            </label>
                             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
                             <Select
                               value={currentModel}
                               onValueChange={handleModelChange}
@@ -829,17 +835,14 @@ const Chat = () => {
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="low">Privacy: Low</SelectItem>
-                              <SelectItem value="medium">Privacy: Medium</SelectItem>
-                              <SelectItem value="high">Privacy: High</SelectItem>
+                              <SelectItem value="medium">
+                                Privacy: Medium
+                              </SelectItem>
+                              <SelectItem value="high">
+                                Privacy: High
+                              </SelectItem>
                             </SelectContent>
                           </Select>
-                        </div>
-
-                        {/* Current Status */}
-                        <div className="pt-4 border-t border-gray-200">
-                          <p className="text-xs text-gray-500">
-                            🔒 Your messages are automatically protected with PII redaction and IP masking
-                          </p>
                         </div>
                       </div>
                     </DialogContent>
@@ -877,7 +880,9 @@ const Chat = () => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="low">Privacy: Low</SelectItem>
-                          <SelectItem value="medium">Privacy: Medium</SelectItem>
+                          <SelectItem value="medium">
+                            Privacy: Medium
+                          </SelectItem>
                           <SelectItem value="high">Privacy: High</SelectItem>
                         </SelectContent>
                       </Select>
