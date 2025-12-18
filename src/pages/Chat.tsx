@@ -755,7 +755,7 @@ const Chat = () => {
                 </Button>
 
                 {/* Show model selector on tablet and up */}
-                <div className="hidden md:flex items-center gap-2">
+                <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <Select
                     value={currentModel}
@@ -775,7 +775,7 @@ const Chat = () => {
                   </Select>
                 </div>
 
-                <div className="hidden lg:block">
+                <div className="block">
                   <Select
                     value={currentPrivacy}
                     onValueChange={handlePrivacyChange}
