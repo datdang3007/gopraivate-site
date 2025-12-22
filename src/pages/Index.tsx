@@ -190,167 +190,165 @@ const Index = () => {
               {/* Toolbar */}
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t border-gray-100 gap-3 sm:gap-0">
                 {/* Mobile: Stack controls vertically */}
-                <div className="flex flex-wrap items-center justify-between sm:justify-start gap-2 sm:gap-4">
-                  {/* Essential controls for mobile */}
-                  <div className="flex items-center gap-2">
-                    {/* Attach File Button */}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="p-2 hover:bg-gray-200 rounded-lg h-8 w-8 sm:h-9 sm:w-9 transition-colors"
-                      disabled
-                    >
-                      <Paperclip className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
-                    </Button>
+                <div className="w-full flex flex-wrap items-center justify-between">
+                  <div className="flex flex-1 items-center justify-start gap-2 sm:gap-4">
+                    {/* Essential controls for mobile */}
+                    <div className="flex items-center gap-2">
+                      {/* Attach File Button */}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="p-2 hover:bg-gray-200 rounded-lg h-8 w-8 sm:h-9 sm:w-9 transition-colors"
+                        disabled
+                      >
+                        <Paperclip className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
+                      </Button>
 
-                    {/* Mobile: Settings Dialog */}
-                    <div className="sm:hidden">
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors"
-                          >
-                            <Settings className="w-3 h-3 text-gray-600" />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                          <DialogHeader>
-                            <DialogTitle>Chat Settings</DialogTitle>
-                          </DialogHeader>
-                          <div className="grid gap-6 py-4">
-                            {/* AI Model Selection */}
-                            <div className="space-y-2">
-                              <div className="flex items-center gap-2">
-                                <label className="text-sm font-medium text-gray-700">
-                                  AI Model
-                                </label>
-                                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      {/* Mobile: Settings Dialog */}
+                      <div className="sm:hidden">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors"
+                            >
+                              <Settings className="w-3 h-3 text-gray-600" />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                              <DialogTitle>Chat Settings</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-6 py-4">
+                              {/* AI Model Selection */}
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                  <label className="text-sm font-medium text-gray-700">
+                                    AI Model
+                                  </label>
+                                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                  <Select
+                                    value={selectedModel}
+                                    onValueChange={handleModelChange}
+                                    disabled={isLoadingModels}
+                                  >
+                                    <SelectTrigger className="w-full">
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {models.map((model) => (
+                                        <SelectItem
+                                          key={model.id}
+                                          value={model.name}
+                                        >
+                                          {model.displayName}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  {isUsingFallback && (
+                                    <span
+                                      className="text-xs text-yellow-600"
+                                      title="Using fallback models"
+                                    >
+                                      ⚠
+                                    </span>
+                                  )}
+                                </div>
                               </div>
 
-                              <div className="flex items-center gap-2">
+                              {/* Privacy Level Selection */}
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium text-gray-700">
+                                  Privacy Level
+                                </label>
                                 <Select
-                                  value={selectedModel}
-                                  onValueChange={handleModelChange}
-                                  disabled={isLoadingModels}
+                                  value={selectedPrivacy}
+                                  onValueChange={handlePrivacyChange}
                                 >
                                   <SelectTrigger className="w-full">
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    {models.map((model) => (
-                                      <SelectItem key={model.id} value={model.name}>
-                                        {model.displayName}
-                                      </SelectItem>
-                                    ))}
+                                    <SelectItem value="low">
+                                      Privacy: Low
+                                    </SelectItem>
+                                    <SelectItem value="medium">
+                                      Privacy: Medium
+                                    </SelectItem>
+                                    <SelectItem value="high">
+                                      Privacy: High
+                                    </SelectItem>
                                   </SelectContent>
                                 </Select>
-                                {isUsingFallback && (
-                                  <span
-                                    className="text-xs text-yellow-600"
-                                    title="Using fallback models"
-                                  >
-                                    ⚠
-                                  </span>
-                                )}
                               </div>
                             </div>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
 
-                            {/* Privacy Level Selection */}
-                            <div className="space-y-2">
-                              <label className="text-sm font-medium text-gray-700">
-                                Privacy Level
-                              </label>
-                              <Select
-                                value={selectedPrivacy}
-                                onValueChange={handlePrivacyChange}
-                              >
-                                <SelectTrigger className="w-full">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="low">Privacy: Low</SelectItem>
-                                  <SelectItem value="medium">
-                                    Privacy: Medium
-                                  </SelectItem>
-                                  <SelectItem value="high">
-                                    Privacy: High
-                                  </SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
+                      {/* Desktop: Model Selector - Compact on mobile, hidden on mobile because of dialog */}
+                      <div className="hidden sm:flex items-center gap-1 sm:gap-2">
+                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
+                        <Select
+                          value={selectedModel}
+                          onValueChange={handleModelChange}
+                          disabled={isLoadingModels}
+                        >
+                          <SelectTrigger className="border-none bg-transparent text-xs sm:text-sm text-gray-700 h-7 sm:h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-1 sm:px-2 transition-colors min-w-[60px] sm:min-w-[80px]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {models.map((model) => (
+                              <SelectItem key={model.id} value={model.name}>
+                                {model.displayName}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
 
-                    {/* Desktop: Model Selector - Compact on mobile, hidden on mobile because of dialog */}
-                    <div className="hidden sm:flex items-center gap-1 sm:gap-2">
-                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full"></div>
+                    {/* Desktop only controls */}
+                    <div className="hidden sm:flex items-center gap-4">
+                      {/* Privacy Level Selector */}
                       <Select
-                        value={selectedModel}
-                        onValueChange={handleModelChange}
-                        disabled={isLoadingModels}
+                        value={selectedPrivacy}
+                        onValueChange={handlePrivacyChange}
                       >
-                        <SelectTrigger className="border-none bg-transparent text-xs sm:text-sm text-gray-700 h-7 sm:h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-1 sm:px-2 transition-colors min-w-[60px] sm:min-w-[80px]">
+                        <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {models.map((model) => (
-                            <SelectItem key={model.id} value={model.name}>
-                              {model.displayName}
-                            </SelectItem>
-                          ))}
+                          <SelectItem value="low">
+                            Privacy level: Low
+                          </SelectItem>
+                          <SelectItem value="medium">
+                            Privacy level: Medium
+                          </SelectItem>
+                          <SelectItem value="high">
+                            Privacy level: High
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
 
-                  {/* Desktop only controls */}
-                  <div className="hidden sm:flex items-center gap-4">
-                    {/* Settings Button */}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="p-2 hover:bg-gray-200 rounded-lg h-9 w-9 transition-colors"
-                    >
-                      <Settings className="w-4 h-4 text-gray-600" />
-                    </Button>
-
-                    {/* Privacy Level Selector */}
-                    <Select
-                      value={selectedPrivacy}
-                      onValueChange={handlePrivacyChange}
-                    >
-                      <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="low">Privacy level: Low</SelectItem>
-                        <SelectItem value="medium">
-                          Privacy level: Medium
-                        </SelectItem>
-                        <SelectItem value="high">
-                          Privacy level: High
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  
+                  {/* Send Button - Full width on mobile */}
+                  <Button
+                    onClick={handleSend}
+                    size="sm"
+                    className="bg-black hover:bg-gray-800 text-white rounded-lg px-4 py-2 h-8 font-medium transition-colors shadow-sm"
+                    disabled={!prompt.trim() || sendMessageMutation.isPending}
+                  >
+                    <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                    {sendMessageMutation.isPending ? "Sending..." : "Send"}
+                  </Button>
                 </div>
-
-                {/* Send Button - Full width on mobile */}
-                <Button
-                  onClick={handleSend}
-                  size="sm"
-                  className="bg-black hover:bg-gray-800 text-white rounded-lg px-4 sm:px-6 py-2 h-8 sm:h-9 font-medium transition-colors shadow-sm w-full sm:w-auto text-sm sm:text-base"
-                  disabled={!prompt.trim() || sendMessageMutation.isPending}
-                >
-                  <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-                  {sendMessageMutation.isPending ? "Sending..." : "Send"}
-                </Button>
               </div>
             </div>
           </div>
