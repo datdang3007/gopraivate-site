@@ -22,6 +22,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import MessageRenderer from "@/components/MessageRenderer";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import AppSidebar from "@/components/AppSidebar";
 import {
   Paperclip,
   Settings,
@@ -450,54 +452,58 @@ const Chat = () => {
   }, [handleScroll]);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      {/* Chat Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 lg:px-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <img
-              src="/gopraivate_v10.13.png"
-              alt="goprAIvate Logo"
-              className="h-8 w-8 object-cover rounded-full"
-            />
-            <div>
-              <h1 className="text-lg font-semibold text-gray-900">
-                goprAIvate Chat
-              </h1>
-              <p className="text-sm text-gray-500">Private AI conversation</p>
-            </div>
-          </div>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <div className="flex flex-col h-screen bg-gray-50">
+          {/* Chat Header */}
+          <div className="bg-white border-b border-gray-200 px-4 py-3 lg:px-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <SidebarTrigger className="mr-2" />
+                <img
+                  src="/gopraivate_v10.13.png"
+                  alt="goprAIvate Logo"
+                  className="h-8 w-8 object-cover rounded-full"
+                />
+                <div>
+                  <h1 className="text-lg font-semibold text-gray-900">
+                    goprAIvate Chat
+                  </h1>
+                  <p className="text-sm text-gray-500">Private AI conversation</p>
+                </div>
+              </div>
 
-          <div className="flex items-center gap-4">
-            {/* Current Model Display */}
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-sm text-gray-700 font-medium">
-                {models.find((model) => model.name === currentModel)
-                  ?.displayName || "ChatGPT 5.0"}
-              </span>
-              {isUsingFallback && (
-                <span
-                  className="text-xs text-yellow-600"
-                  title="Using fallback models"
+              <div className="flex items-center gap-4">
+                {/* Current Model Display */}
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-sm text-gray-700 font-medium">
+                    {models.find((model) => model.name === currentModel)
+                      ?.displayName || "ChatGPT 5.0"}
+                  </span>
+                  {isUsingFallback && (
+                    <span
+                      className="text-xs text-yellow-600"
+                      title="Using fallback models"
+                    >
+                      ⚠
+                    </span>
+                  )}
+                </div>
+
+                {/* Home Button */}
+                <Button
+                  onClick={() => navigate("/")}
+                  variant="ghost"
+                  size="sm"
+                  className="p-2 hover:bg-gray-100 rounded-lg h-9 w-9 transition-colors"
                 >
-                  ⚠
-                </span>
-              )}
+                  <Home className="w-4 h-4 text-gray-600" />
+                </Button>
+              </div>
             </div>
-
-            {/* Home Button */}
-            <Button
-              onClick={() => navigate("/")}
-              variant="ghost"
-              size="sm"
-              className="p-2 hover:bg-gray-100 rounded-lg h-9 w-9 transition-colors"
-            >
-              <Home className="w-4 h-4 text-gray-600" />
-            </Button>
           </div>
-        </div>
-      </div>
 
       {/* Messages Area */}
       <div
@@ -910,7 +916,9 @@ const Chat = () => {
           </p>
         </div>
       </div>
-    </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 };
 
