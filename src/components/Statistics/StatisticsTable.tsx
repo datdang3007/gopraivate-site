@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Download } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export interface Column<
   T extends Record<string, unknown> = Record<string, unknown>
@@ -117,10 +118,12 @@ export const StatisticsTable = <T extends Record<string, unknown>>({
   const paginationNumbers = getPaginationNumbers(page, totalPages);
 
   return (
-    <Card className="w-full">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
-        <div className="flex items-center gap-2">
+    <Card className="w-full shadow-sm border-border transition-shadow duration-200 hover:shadow-md">
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 pb-4">
+        <CardTitle className="text-lg font-semibold text-foreground mb-2 sm:mb-0">
+          {title}
+        </CardTitle>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
           <Input
             value={search}
             onChange={(e) => {
@@ -128,76 +131,98 @@ export const StatisticsTable = <T extends Record<string, unknown>>({
               setPage(1); // Reset page on search
             }}
             placeholder="Search..."
-            className="w-[300px]"
+            className="w-full sm:w-[300px] transition-all duration-200 focus:ring-2 focus:ring-primary/20"
           />
           <Button
             variant="outline"
             size="sm"
             disabled
-            className="ml-2 flex items-center gap-1 text-muted-foreground"
+            className="sm:ml-2 flex items-center gap-1.5 text-muted-foreground cursor-not-allowed opacity-50"
           >
-            <Download size={16} className="mr-1" />
+            <Download size={16} />
             Export
           </Button>
         </div>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {columns.map((column) => (
-                <TableHead key={column.key} className={column.className}>
-                  {column.header}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {paginatedData.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-center text-muted-foreground py-8"
-                >
-                  No data available
-                </TableCell>
+        <div className="rounded-md border border-border overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-muted/50 hover:bg-muted/50">
+                {columns.map((column) => (
+                  <TableHead
+                    key={column.key}
+                    className={cn(
+                      "font-semibold text-foreground",
+                      column.className
+                    )}
+                  >
+                    {column.header}
+                  </TableHead>
+                ))}
               </TableRow>
-            ) : (
-              paginatedData.map((row, rowIndex) => (
-                <TableRow key={rowIndex}>
-                  {columns.map((column) => (
-                    <TableCell key={column.key} className={column.className}>
-                      {getCellValue(row, column)}
-                    </TableCell>
-                  ))}
+            </TableHeader>
+            <TableBody>
+              {paginatedData.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="text-center text-muted-foreground py-12"
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <span className="text-sm">No data available</span>
+                      {search && (
+                        <span className="text-xs text-muted-foreground">
+                          Try adjusting your search query
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-        {/* Pagination UI - modern style, similar to your image */}
-        <div className="flex justify-end mt-4 items-center gap-2">
+              ) : (
+                paginatedData.map((row, rowIndex) => (
+                  <TableRow
+                    key={rowIndex}
+                    className="transition-colors duration-150 hover:bg-muted/50 cursor-pointer"
+                  >
+                    {columns.map((column) => (
+                      <TableCell
+                        key={column.key}
+                        className={cn("text-foreground", column.className)}
+                      >
+                        {getCellValue(row, column)}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        {/* Pagination UI - modern style with enhanced interactions */}
+        <div className="flex justify-end mt-6 items-center gap-2">
           <Button
             size="sm"
             variant="outline"
-            className="min-w-[80px]"
+            className="min-w-[80px] cursor-pointer transition-all duration-200 hover:bg-accent hover:border-primary/20 disabled:cursor-not-allowed"
             disabled={page === 1}
             onClick={() => setPage((p) => Math.max(1, p - 1))}
           >
             Previous
           </Button>
-          <div className="flex items-center">
+          <div className="flex items-center gap-1">
             {paginationNumbers.map((num, idx) =>
               typeof num === "number" ? (
                 <Button
                   key={num}
                   size="icon"
                   variant={num === page ? "default" : "ghost"}
-                  className={`mx-1 w-8 h-8 rounded transition ${
+                  className={cn(
+                    "w-8 h-8 rounded-md transition-all duration-200 cursor-pointer",
                     num === page
-                      ? "bg-gray-900 text-white shadow"
-                      : "text-muted-foreground"
-                  }`}
+                      ? "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
+                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                  )}
                   onClick={() => setPage(num)}
                   aria-current={num === page ? "page" : undefined}
                 >
@@ -217,7 +242,7 @@ export const StatisticsTable = <T extends Record<string, unknown>>({
           <Button
             size="sm"
             variant="outline"
-            className="min-w-[80px]"
+            className="min-w-[80px] cursor-pointer transition-all duration-200 hover:bg-accent hover:border-primary/20 disabled:cursor-not-allowed"
             disabled={page === totalPages}
             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
           >

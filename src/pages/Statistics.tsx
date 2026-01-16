@@ -1,24 +1,15 @@
-import AppSidebar from "@/components/AppSidebar";
 import { ProcessingMetrics } from "@/components/Statistics/ProcessingMetrics";
 import { StatisticsCard } from "@/components/Statistics/StatisticsCards";
 import { StatisticsTable } from "@/components/Statistics/StatisticsTable";
 import { TimeBasedMetrics } from "@/components/Statistics/TimeBasedMetrics";
-import { Button } from "@/components/ui/button";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
 import {
   BarChart3,
-  Home,
   MessageCircle,
   MessageSquare,
   MessageSquareMore,
   Shield,
 } from "lucide-react";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
 // Mock data for statistics cards
 const MOCK_STATS = {
@@ -157,138 +148,74 @@ const MOCK_REWRITTEN_CHATS_DATA = [
   },
 ];
 
-const MOCK_PII_REDACTED_CHATS_DATA = [
-  {
-    message: "How does the weather look today?",
-    piiRedactedMessage:
-      "My name is <NAME> and my email is <EMAIL>. Please write an email to <NAME>.",
-    answer: "Today's weather will be mostly sunny with a high of 75°F.",
-  },
-  {
-    message: "Remove any personal info from my resume.",
-    piiRedactedMessage: "Redact personal information from this document.",
-    answer:
-      "I've removed all names, addresses, and contact details from your resume.",
-  },
-  {
-    message: "What is the capital of France?",
-    piiRedactedMessage: "Please provide the capital city of France.",
-    answer: "The capital of France is Paris.",
-  },
-];
+const MOCK_PII_REDACTED_CHATS_DATA = [];
 
 const Statistics: React.FC = () => {
-  const navigate = useNavigate();
-
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <div className="flex flex-col h-screen">
-          {/* Chat Header */}
-          <div className="bg-white border-b border-gray-200 px-4 py-3 lg:px-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <SidebarTrigger className="mr-2" />
-                <BarChart3 className="h-8 w-8 text-gray-800" />
-                <div>
-                  <h1 className="text-lg font-semibold text-gray-900">
-                    Statistics Dashboard
-                  </h1>
-                  <p className="text-sm text-gray-500">
-                    Monitor your AI gateway usage and security
-                  </p>
-                </div>
-              </div>
+    <div className="w-full max-w-full mx-auto space-y-6">
+      {/* Statistics Cards */}
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <StatisticsCard
+          label="Total Chats"
+          value={MOCK_STATS.totalChats}
+          icon={<MessageSquare className="w-5 h-5" />}
+          change={MOCK_DELTA.totalChats}
+          changeLabel={MOCK_DELTA_LABEL.totalChats}
+        />
+        <StatisticsCard
+          label="Total Rewritten Chats"
+          value={MOCK_STATS.totalRewrittenChats}
+          icon={<MessageSquareMore className="w-5 h-5" />}
+          change={MOCK_DELTA.totalRewrittenChats}
+          changeLabel={MOCK_DELTA_LABEL.totalRewrittenChats}
+        />
+        <StatisticsCard
+          label="Total PII-Redacted Chats"
+          value={MOCK_STATS.totalPIIRedactedChats}
+          icon={<Shield className="w-5 h-5" />}
+          change={MOCK_DELTA.totalPIIRedactedChats}
+          changeLabel={MOCK_DELTA_LABEL.totalPIIRedactedChats}
+        />
+        <StatisticsCard
+          label="Total Answers"
+          value={MOCK_STATS.totalAnswers}
+          icon={<MessageCircle className="w-5 h-5" />}
+          change={MOCK_DELTA.totalAnswers}
+          changeLabel={MOCK_DELTA_LABEL.totalAnswers}
+        />
+      </div>
 
-              <div className="flex items-center gap-4">
-                {/* Home Button */}
-                <Button
-                  onClick={() => navigate("/")}
-                  variant="ghost"
-                  size="sm"
-                  className="p-2 hover:bg-gray-100 rounded-lg h-9 w-9 transition-colors"
-                >
-                  <Home className="w-4 h-4 text-gray-600" />
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Main Content */}
-          <main className="flex-1 overflow-y-auto p-6">
-            <div className="w-full space-y-6">
-              {/* Statistics Cards */}
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <StatisticsCard
-                  label="Total Chats"
-                  value={MOCK_STATS.totalChats}
-                  icon={<MessageSquare className="w-5 h-5" />}
-                  change={MOCK_DELTA.totalChats}
-                  changeLabel={MOCK_DELTA_LABEL.totalChats}
-                />
-                <StatisticsCard
-                  label="Total Rewritten Chats"
-                  value={MOCK_STATS.totalRewrittenChats}
-                  icon={<MessageSquareMore className="w-5 h-5" />}
-                  change={MOCK_DELTA.totalRewrittenChats}
-                  changeLabel={MOCK_DELTA_LABEL.totalRewrittenChats}
-                />
-                <StatisticsCard
-                  label="Total PII-Redacted Chats"
-                  value={MOCK_STATS.totalPIIRedactedChats}
-                  icon={<Shield className="w-5 h-5" />}
-                  change={MOCK_DELTA.totalPIIRedactedChats}
-                  changeLabel={MOCK_DELTA_LABEL.totalPIIRedactedChats}
-                />
-                <StatisticsCard
-                  label="Total Answers"
-                  value={MOCK_STATS.totalAnswers}
-                  icon={<MessageCircle className="w-5 h-5" />}
-                  change={MOCK_DELTA.totalAnswers}
-                  changeLabel={MOCK_DELTA_LABEL.totalAnswers}
-                />
-              </div>
-
-              {/* Time-based Metrics & Processing Metrics */}
-              <div className="flex flex-col xl:flex-row gap-4">
-                <div className="flex-[2] flex flex-col">
-                  <div className="flex-1 flex">
-                    <TimeBasedMetrics />
-                  </div>
-                </div>
-                <div className="flex-1 flex flex-col">
-                  <div className="flex-1 flex">
-                    <ProcessingMetrics />
-                  </div>
-                </div>
-              </div>
-
-              {/* Chats Table */}
-              <StatisticsTable
-                title="Chats"
-                columns={MOCK_CHATS_COLUMNS}
-                data={MOCK_CHATS_DATA}
-              />
-
-              {/* Rewritten Chats Table */}
-              <StatisticsTable
-                title="Rewritten Chats"
-                columns={MOCK_REWRITTEN_CHATS_COLUMNS}
-                data={MOCK_REWRITTEN_CHATS_DATA}
-              />
-
-              {/* PII-Redacted Chats Table */}
-              <StatisticsTable
-                title="PII-Redacted Chats"
-                columns={MOCK_PII_REDACTED_CHATS_COLUMNS}
-                data={MOCK_PII_REDACTED_CHATS_DATA}
-              />
-            </div>
-          </main>
+      {/* Time-based Metrics & Processing Metrics */}
+      <div className="flex flex-col xl:flex-row gap-6">
+        <div className="flex-[2] flex">
+          <TimeBasedMetrics />
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+        <div className="flex-1 flex">
+          <ProcessingMetrics />
+        </div>
+      </div>
+
+      {/* Chats Table */}
+      <StatisticsTable
+        title="Chats"
+        columns={MOCK_CHATS_COLUMNS}
+        data={MOCK_CHATS_DATA}
+      />
+
+      {/* Rewritten Chats Table */}
+      <StatisticsTable
+        title="Rewritten Chats"
+        columns={MOCK_REWRITTEN_CHATS_COLUMNS}
+        data={MOCK_REWRITTEN_CHATS_DATA}
+      />
+
+      {/* PII-Redacted Chats Table */}
+      <StatisticsTable
+        title="PII-Redacted Chats"
+        columns={MOCK_PII_REDACTED_CHATS_COLUMNS}
+        data={MOCK_PII_REDACTED_CHATS_DATA}
+      />
+    </div>
   );
 };
 

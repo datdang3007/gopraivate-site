@@ -57,19 +57,25 @@ export const TimeBasedMetrics = () => {
   const title = `Token Usage (Last ${timeRange} Days)`;
 
   return (
-    <Card className="w-full">
+    <Card className="w-full shadow-sm border-border transition-shadow duration-200 hover:shadow-md">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+        <CardTitle className="text-lg font-semibold text-foreground">
+          {title}
+        </CardTitle>
         <Select
           value={timeRange}
           onValueChange={(value: "7" | "30") => setTimeRange(value)}
         >
-          <SelectTrigger className="w-[140px]">
+          <SelectTrigger className="w-[140px] cursor-pointer transition-all duration-200 hover:border-primary/50">
             <SelectValue placeholder="Select time range" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="7">Last 7 days</SelectItem>
-            <SelectItem value="30">Last 30 days</SelectItem>
+            <SelectItem value="7" className="cursor-pointer">
+              Last 7 days
+            </SelectItem>
+            <SelectItem value="30" className="cursor-pointer">
+              Last 30 days
+            </SelectItem>
           </SelectContent>
         </Select>
       </CardHeader>
@@ -78,26 +84,40 @@ export const TimeBasedMetrics = () => {
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={chartData}
-              margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
+              margin={{ top: 10, right: 15, left: 5, bottom: 10 }}
             >
               <CartesianGrid
                 strokeDasharray="3 3"
                 stroke="hsl(var(--border))"
-                opacity={0.2}
+                opacity={0.3}
               />
               <XAxis
                 dataKey="day"
-                tick={{ fill: "hsl(var(--muted-foreground))" }}
+                tick={{
+                  fill: "hsl(var(--muted-foreground))",
+                  fontSize: 12,
+                }}
                 tickLine={{ stroke: "hsl(var(--border))" }}
                 axisLine={{ stroke: "hsl(var(--border))" }}
               />
               <YAxis
-                tick={{ fill: "hsl(var(--muted-foreground))" }}
+                tick={{
+                  fill: "hsl(var(--muted-foreground))",
+                  fontSize: 12,
+                }}
                 tickLine={{ stroke: "hsl(var(--border))" }}
                 axisLine={{ stroke: "hsl(var(--border))" }}
               />
-              <ChartTooltip content={<ChartTooltipContent />} />
-              <Bar dataKey="tokens" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+              <ChartTooltip
+                content={<ChartTooltipContent />}
+                cursor={{ fill: "hsl(var(--primary) / 0.1)" }}
+              />
+              <Bar
+                dataKey="tokens"
+                fill="#3b82f6"
+                radius={[6, 6, 0, 0]}
+                className="transition-all duration-300 hover:opacity-80"
+              />
             </BarChart>
           </ResponsiveContainer>
         </ChartContainer>

@@ -215,7 +215,9 @@ const AppSidebar: React.FC = () => {
                       disabled={item.disabled}
                       isActive={item.path ? isActive(item.path) : false}
                       className={cn(
-                        item.disabled && "opacity-50 cursor-not-allowed"
+                        item.disabled && "opacity-50 cursor-not-allowed",
+                        !item.disabled &&
+                          "cursor-pointer transition-colors duration-200"
                       )}
                     >
                       <Icon className="h-4 w-4" />
@@ -244,10 +246,10 @@ const AppSidebar: React.FC = () => {
                   <SidebarMenuItem key={chat.id}>
                     <SidebarMenuButton
                       onClick={() => handleChatClick(chat.id)}
-                      className="text-left"
+                      className="text-left cursor-pointer transition-colors duration-200 hover:bg-accent"
                       size="sm"
                     >
-                      <Clock className="h-4 w-4 shrink-0" />
+                      <Clock className="h-4 w-4 shrink-0 text-muted-foreground" />
                       <span
                         className={cn(
                           "truncate group-data-[collapsible=icon]:hidden",

@@ -22,8 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import MessageRenderer from "@/components/MessageRenderer";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/AppSidebar";
+import { DashboardLayoutContext } from "@/components/DashboardLayout";
 import {
   Paperclip,
   Settings,
@@ -34,7 +33,6 @@ import {
   RotateCcw,
   User,
   Bot,
-  Home, // Import Home icon
 } from "lucide-react";
 
 interface Message {
@@ -153,7 +151,7 @@ const Chat = () => {
     if (allMessages.length > 0) {
       const startIndex = Math.max(
         0,
-        allMessages.length - displayedMessageCount,
+        allMessages.length - displayedMessageCount
       );
       setMessages(allMessages.slice(startIndex));
     }
@@ -194,7 +192,7 @@ const Chat = () => {
                 const sortedData = parsedData.sort(
                   (a, b) =>
                     new Date(a.updated_at).getTime() -
-                    new Date(b.updated_at).getTime(),
+                    new Date(b.updated_at).getTime()
                 );
 
                 // Load all messages at once
@@ -206,7 +204,7 @@ const Chat = () => {
           } catch (error) {
             console.error(
               "❌ [Chat] Failed to parse chat history JSONraw:",
-              error,
+              error
             );
           }
 
@@ -257,7 +255,7 @@ const Chat = () => {
 
     // Sort messages by timestamp to maintain chronological order
     return historyMessages.sort(
-      (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
+      (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
     );
   };
 
@@ -407,20 +405,20 @@ const Chat = () => {
       setTimeout(() => {
         // Find the last user message
         const lastUserMessageIndex = allMessages.findLastIndex(
-          (msg) => msg.type === "user",
+          (msg) => msg.type === "user"
         );
         if (lastUserMessageIndex !== -1) {
           // Calculate the position in the displayed messages array
           const startIndex = Math.max(
             0,
-            allMessages.length - displayedMessageCount,
+            allMessages.length - displayedMessageCount
           );
           const displayedIndex = lastUserMessageIndex - startIndex;
 
           // Only scroll if the last user message is in the currently displayed messages
           if (displayedIndex >= 0 && displayedIndex < messages.length) {
             const messageElement = document.querySelector(
-              `[data-message-id="${allMessages[lastUserMessageIndex].id}"]`,
+              `[data-message-id="${allMessages[lastUserMessageIndex].id}"]`
             );
             if (messageElement) {
               messageElement.scrollIntoView({
@@ -451,105 +449,43 @@ const Chat = () => {
     return () => container.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <div className="flex flex-col h-screen bg-gray-50">
-          {/* Chat Header */}
-          <div className="bg-white border-b border-gray-200 px-4 py-3 lg:px-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <SidebarTrigger className="mr-2" />
-                <img
-                  src="/gopraivate_v10.13.png"
-                  alt="goprAIvate Logo"
-                  className="h-8 w-8 object-cover rounded-full"
-                />
-                <div>
-                  <h1 className="text-lg font-semibold text-gray-900">
-                    goprAIvate Chat
-                  </h1>
-                  <p className="text-sm text-gray-500">Private AI conversation</p>
-                </div>
-              </div>
+  const { setHeaderActions } = React.useContext(DashboardLayoutContext);
 
-              <div className="flex items-center gap-4">
-                {/* Current Model Display */}
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-sm text-gray-700 font-medium">
-                    {models.find((model) => model.name === currentModel)
-                      ?.displayName || "ChatGPT 5.0"}
-                  </span>
-                  {isUsingFallback && (
-                    <span
-                      className="text-xs text-yellow-600"
-                      title="Using fallback models"
-                    >
-                      ⚠
-                    </span>
-                  )}
-                </div>
-
-                {/* Home Button */}
-                <Button
-                  onClick={() => navigate("/")}
-                  variant="ghost"
-                  size="sm"
-                  className="p-2 hover:bg-gray-100 rounded-lg h-9 w-9 transition-colors"
-                >
-                  <Home className="w-4 h-4 text-gray-600" />
-                </Button>
-              </div>
-            </div>
-          </div>
-
-      {/* Messages Area */}
-      <div
-        ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto px-4 py-4 lg:px-6"
-      >
-        <div className="max-w-7xl mx-auto space-y-6">
-          {/* Load More Indicator */}
-          {isLoadingMore && (
-            <div className="text-center py-4">
-              <div className="flex space-x-2 justify-center">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                <div
-                  className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                  style={{ animationDelay: "0.1s" }}
-                ></div>
-                <div
-                  className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                  style={{ animationDelay: "0.2s" }}
-                ></div>
-              </div>
-              <p className="text-xs text-gray-500 mt-2">
-                Loading more messages...
-              </p>
-            </div>
+  // Update header actions when model changes
+  React.useEffect(() => {
+    const headerActions = (
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+          <span className="text-sm text-foreground font-medium">
+            {models.find((model) => model.name === currentModel)?.displayName ||
+              "ChatGPT 5.0"}
+          </span>
+          {isUsingFallback && (
+            <span
+              className="text-xs text-yellow-600"
+              title="Using fallback models"
+            >
+              ⚠
+            </span>
           )}
+        </div>
+      </div>
+    );
+    setHeaderActions(headerActions);
+  }, [currentModel, models, isUsingFallback, setHeaderActions]);
 
-          {/* Show indicator when there are more messages to load */}
-          {!isLoadingMore &&
-            displayedMessageCount < allMessages.length &&
-            messages.length > 0 && (
-              <div className="text-center py-2">
-                <p className="text-xs text-gray-500">
-                  Scroll up to load{" "}
-                  {Math.min(10, allMessages.length - displayedMessageCount)}{" "}
-                  more messages
-                </p>
-              </div>
-            )}
-          {isLoadingHistory ? (
-            <div className="text-center py-12">
-              <div className="mb-6">
-                <Bot className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                  Loading chat history...
-                </h2>
+  return (
+      <div className="flex flex-col h-full">
+        {/* Messages Area */}
+        <div
+          ref={messagesContainerRef}
+          className="flex-1 overflow-y-auto px-4 py-4 lg:px-6"
+        >
+          <div className="max-w-7xl mx-auto space-y-6">
+            {/* Load More Indicator */}
+            {isLoadingMore && (
+              <div className="text-center py-4">
                 <div className="flex space-x-2 justify-center">
                   <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                   <div
@@ -561,364 +497,409 @@ const Chat = () => {
                     style={{ animationDelay: "0.2s" }}
                   ></div>
                 </div>
-              </div>
-            </div>
-          ) : messages.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="mb-6">
-                <Bot className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                  Start a conversation
-                </h2>
-                <p className="text-gray-500 max-w-md mx-auto">
-                  Your messages are automatically protected with PII redaction
-                  and privacy shielding.
+                <p className="text-xs text-gray-500 mt-2">
+                  Loading more messages...
                 </p>
               </div>
+            )}
 
-              {/* Suggested prompts */}
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-3xl mx-auto">
-                <Card
-                  className="p-4 cursor-pointer hover:shadow-md transition-shadow border-dashed"
-                  onClick={() =>
-                    setPrompt("Help me write a professional email")
-                  }
-                >
-                  <p className="text-sm text-gray-700">
-                    Help me write a professional email
+            {/* Show indicator when there are more messages to load */}
+            {!isLoadingMore &&
+              displayedMessageCount < allMessages.length &&
+              messages.length > 0 && (
+                <div className="text-center py-2">
+                  <p className="text-xs text-gray-500">
+                    Scroll up to load{" "}
+                    {Math.min(10, allMessages.length - displayedMessageCount)}{" "}
+                    more messages
                   </p>
-                </Card>
-                <Card
-                  className="p-4 cursor-pointer hover:shadow-md transition-shadow border-dashed"
-                  onClick={() => setPrompt("Explain this code to me")}
-                >
-                  <p className="text-sm text-gray-700">
-                    Explain this code to me
-                  </p>
-                </Card>
-                <Card
-                  className="p-4 cursor-pointer hover:shadow-md transition-shadow border-dashed"
-                  onClick={() => setPrompt("Summarize this document")}
-                >
-                  <p className="text-sm text-gray-700">
-                    Summarize this document
-                  </p>
-                </Card>
+                </div>
+              )}
+            {isLoadingHistory ? (
+              <div className="text-center py-12">
+                <div className="mb-6">
+                  <Bot className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                    Loading chat history...
+                  </h2>
+                  <div className="flex space-x-2 justify-center">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div
+                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.1s" }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.2s" }}
+                    ></div>
+                  </div>
+                </div>
               </div>
-            </div>
-          ) : (
-            messages.map((message) => (
-              <div
-                key={message.id}
-                data-message-id={message.id}
-                className={`flex pt-3 ${message.type === "user" ? "justify-end" : "justify-start"}`}
-              >
-                {message.type === "ai" && (
-                  <div className="flex-shrink-0 mr-2">
-                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                      <Bot className="w-4 h-4 text-gray-600" />
-                    </div>
-                  </div>
-                )}
+            ) : messages.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="mb-6">
+                  <Bot className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                    Start a conversation
+                  </h2>
+                  <p className="text-gray-500 max-w-md mx-auto">
+                    Your messages are automatically protected with PII redaction
+                    and privacy shielding.
+                  </p>
+                </div>
 
+                {/* Suggested prompts */}
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-3xl mx-auto">
+                  <Card
+                    className="p-4 cursor-pointer hover:shadow-md transition-shadow border-dashed"
+                    onClick={() =>
+                      setPrompt("Help me write a professional email")
+                    }
+                  >
+                    <p className="text-sm text-gray-700">
+                      Help me write a professional email
+                    </p>
+                  </Card>
+                  <Card
+                    className="p-4 cursor-pointer hover:shadow-md transition-shadow border-dashed"
+                    onClick={() => setPrompt("Explain this code to me")}
+                  >
+                    <p className="text-sm text-gray-700">
+                      Explain this code to me
+                    </p>
+                  </Card>
+                  <Card
+                    className="p-4 cursor-pointer hover:shadow-md transition-shadow border-dashed"
+                    onClick={() => setPrompt("Summarize this document")}
+                  >
+                    <p className="text-sm text-gray-700">
+                      Summarize this document
+                    </p>
+                  </Card>
+                </div>
+              </div>
+            ) : (
+              messages.map((message) => (
                 <div
-                  className={`max-w-xs sm:max-w-xl lg:max-w-4xl ${message.type === "user" ? "order-first" : ""}`}
+                  key={message.id}
+                  data-message-id={message.id}
+                  className={`flex pt-3 ${
+                    message.type === "user" ? "justify-end" : "justify-start"
+                  }`}
                 >
-                  <div
-                    className={`rounded-2xl px-4 py-3 ${
-                      message.type === "user"
-                        ? "bg-black text-white"
-                        : "bg-white border border-gray-200"
-                    }`}
-                  >
-                    {message.type === "user" ? (
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                        {message.content}
-                      </p>
-                    ) : (
-                      <div className="text-sm leading-relaxed">
-                        <MessageRenderer
-                          content={message.content}
-                          fallback={
-                            <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-900">
-                              {message.content}
-                            </p>
-                          }
-                        />
+                  {message.type === "ai" && (
+                    <div className="flex-shrink-0 mr-2">
+                      <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                        <Bot className="w-4 h-4 text-gray-600" />
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
 
                   <div
-                    className={`flex items-center gap-2 mt-2 text-xs text-gray-500 ${
-                      message.type === "user" ? "justify-end" : "justify-start"
+                    className={`max-w-xs sm:max-w-xl lg:max-w-4xl ${
+                      message.type === "user" ? "order-first" : ""
                     }`}
                   >
-                    <span>
-                      {message.timestamp.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </span>
-                    {/* {message.model && (
+                    <div
+                      className={`rounded-2xl px-4 py-3 ${
+                        message.type === "user"
+                          ? "bg-black text-white"
+                          : "bg-white border border-gray-200"
+                      }`}
+                    >
+                      {message.type === "user" ? (
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                          {message.content}
+                        </p>
+                      ) : (
+                        <div className="text-sm leading-relaxed">
+                          <MessageRenderer
+                            content={message.content}
+                            fallback={
+                              <p className="text-sm leading-relaxed whitespace-pre-wrap text-gray-900">
+                                {message.content}
+                              </p>
+                            }
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <div
+                      className={`flex items-center gap-2 mt-2 text-xs text-gray-500 ${
+                        message.type === "user"
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
+                      <span>
+                        {message.timestamp.toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                      {/* {message.model && (
                       <span>
                         •{" "}
                         {models.find((model) => model.name === message.model)
                           ?.displayName || message.model}
                       </span>
                     )} */}
+                    </div>
+
+                    {message.type === "ai" && (
+                      <div className="flex items-center gap-2 mt-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 px-2 text-gray-500 hover:text-gray-700"
+                        >
+                          <Copy className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 px-2 text-gray-500 hover:text-gray-700"
+                        >
+                          <ThumbsUp className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 px-2 text-gray-500 hover:text-gray-700"
+                        >
+                          <ThumbsDown className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 px-2 text-gray-500 hover:text-gray-700"
+                        >
+                          <RotateCcw className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
 
-                  {message.type === "ai" && (
-                    <div className="flex items-center gap-2 mt-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 px-2 text-gray-500 hover:text-gray-700"
-                      >
-                        <Copy className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 px-2 text-gray-500 hover:text-gray-700"
-                      >
-                        <ThumbsUp className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 px-2 text-gray-500 hover:text-gray-700"
-                      >
-                        <ThumbsDown className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 px-2 text-gray-500 hover:text-gray-700"
-                      >
-                        <RotateCcw className="w-3 h-3" />
-                      </Button>
+                  {message.type === "user" && (
+                    <div className="ml-2 flex-shrink-0">
+                      <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
+                        <User className="w-4 h-4 text-white" />
+                      </div>
                     </div>
                   )}
                 </div>
+              ))
+            )}
 
-                {message.type === "user" && (
-                  <div className="ml-2 flex-shrink-0">
-                    <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
-                      <User className="w-4 h-4 text-white" />
-                    </div>
+            {isLoading && (
+              <div className="flex gap-3">
+                <div className="flex-shrink-0">
+                  <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                    <Bot className="w-4 h-4 text-gray-600" />
                   </div>
-                )}
-              </div>
-            ))
-          )}
-
-          {isLoading && (
-            <div className="flex gap-3">
-              <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                  <Bot className="w-4 h-4 text-gray-600" />
+                </div>
+                <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
+                  <div className="flex space-x-2">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                    <div
+                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.1s" }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.2s" }}
+                    ></div>
+                  </div>
                 </div>
               </div>
-              <div className="bg-white border border-gray-200 rounded-2xl px-4 py-3">
-                <div className="flex space-x-2">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                  <div
-                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                    style={{ animationDelay: "0.1s" }}
-                  ></div>
-                  <div
-                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                    style={{ animationDelay: "0.2s" }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          )}
+            )}
 
-          {/* Scroll anchor */}
-          <div ref={messagesEndRef} />
+            {/* Scroll anchor */}
+            <div ref={messagesEndRef} />
+          </div>
         </div>
-      </div>
 
-      {/* Input Area */}
-      <div className="bg-white border-t border-gray-200 px-4 py-4 lg:px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden">
-            {/* Textarea */}
-            <div className="p-4">
-              <Textarea
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Type your message... (your privacy is protected)"
-                className="w-full rounded-none bg-transparent border-none text-gray-900 placeholder:text-gray-400 text-sm leading-relaxed resize-none focus:ring-0 focus:outline-none focus:border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 min-h-[60px] max-h-[120px]"
-              />
-            </div>
+        {/* Input Area */}
+        <div className="bg-white border-t border-gray-200 px-4 py-4 lg:px-6">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden">
+              {/* Textarea */}
+              <div className="p-4">
+                <Textarea
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type your message... (your privacy is protected)"
+                  className="w-full rounded-none bg-transparent border-none text-gray-900 placeholder:text-gray-400 text-sm leading-relaxed resize-none focus:ring-0 focus:outline-none focus:border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 min-h-[60px] max-h-[120px]"
+                />
+              </div>
 
-            {/* Toolbar */}
-            <div className="flex items-center justify-between px-4 py-3 bg-gray-100 border-t border-gray-200">
-              <div className="flex items-center gap-2">
-                {/* Attach File Button - Always disabled */}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors"
-                  disabled
-                >
-                  <Paperclip className="w-4 h-4 text-gray-400" />
-                </Button>
-
-                {/* Settings Button - Mobile uses Dialog, Desktop shows inline */}
-                {isMobile ? (
-                  <Dialog
-                    open={isSettingsOpen}
-                    onOpenChange={setIsSettingsOpen}
+              {/* Toolbar */}
+              <div className="flex items-center justify-between px-4 py-3 bg-gray-100 border-t border-gray-200">
+                <div className="flex items-center gap-2">
+                  {/* Attach File Button - Always disabled */}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors"
+                    disabled
                   >
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors"
-                      >
-                        <Settings className="w-4 h-4 text-gray-600" />
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Chat Settings</DialogTitle>
-                      </DialogHeader>
-                      <div className="grid gap-6 py-4">
-                        {/* AI Model Selection */}
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <label className="text-sm font-medium text-gray-700">
-                              AI Model
-                            </label>
-                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <Paperclip className="w-4 h-4 text-gray-400" />
+                  </Button>
+
+                  {/* Settings Button - Mobile uses Dialog, Desktop shows inline */}
+                  {isMobile ? (
+                    <Dialog
+                      open={isSettingsOpen}
+                      onOpenChange={setIsSettingsOpen}
+                    >
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="p-2 hover:bg-gray-200 rounded-lg h-8 w-8 transition-colors"
+                        >
+                          <Settings className="w-4 h-4 text-gray-600" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Chat Settings</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-6 py-4">
+                          {/* AI Model Selection */}
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                              <label className="text-sm font-medium text-gray-700">
+                                AI Model
+                              </label>
+                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <Select
+                                value={currentModel}
+                                onValueChange={handleModelChange}
+                                disabled={isLoadingModels}
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {models.map((model) => (
+                                    <SelectItem
+                                      key={model.id}
+                                      value={model.name}
+                                    >
+                                      {model.displayName}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              {isUsingFallback && (
+                                <span
+                                  className="text-xs text-yellow-600"
+                                  title="Using fallback models"
+                                >
+                                  ⚠
+                                </span>
+                              )}
+                            </div>
                           </div>
 
-                          <div className="flex items-center gap-2">
+                          {/* Privacy Level Selection */}
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium text-gray-700">
+                              Privacy Level
+                            </label>
                             <Select
-                              value={currentModel}
-                              onValueChange={handleModelChange}
-                              disabled={isLoadingModels}
+                              value={currentPrivacy}
+                              onValueChange={handlePrivacyChange}
                             >
                               <SelectTrigger className="w-full">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                {models.map((model) => (
-                                  <SelectItem key={model.id} value={model.name}>
-                                    {model.displayName}
-                                  </SelectItem>
-                                ))}
+                                <SelectItem value="low">
+                                  Privacy: Low
+                                </SelectItem>
+                                <SelectItem value="medium">
+                                  Privacy: Medium
+                                </SelectItem>
+                                <SelectItem value="high">
+                                  Privacy: High
+                                </SelectItem>
                               </SelectContent>
                             </Select>
-                            {isUsingFallback && (
-                              <span
-                                className="text-xs text-yellow-600"
-                                title="Using fallback models"
-                              >
-                                ⚠
-                              </span>
-                            )}
                           </div>
                         </div>
-
-                        {/* Privacy Level Selection */}
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium text-gray-700">
-                            Privacy Level
-                          </label>
-                          <Select
-                            value={currentPrivacy}
-                            onValueChange={handlePrivacyChange}
-                          >
-                            <SelectTrigger className="w-full">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="low">Privacy: Low</SelectItem>
-                              <SelectItem value="medium">
-                                Privacy: Medium
+                      </DialogContent>
+                    </Dialog>
+                  ) : (
+                    <>
+                      {/* Desktop: Show inline controls */}
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <Select
+                          value={currentModel}
+                          onValueChange={handleModelChange}
+                          disabled={isLoadingModels}
+                        >
+                          <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {models.map((model) => (
+                              <SelectItem key={model.id} value={model.name}>
+                                {model.displayName}
                               </SelectItem>
-                              <SelectItem value="high">
-                                Privacy: High
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
-                    </DialogContent>
-                  </Dialog>
-                ) : (
-                  <>
-                    {/* Desktop: Show inline controls */}
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <Select
-                        value={currentModel}
-                        onValueChange={handleModelChange}
-                        disabled={isLoadingModels}
-                      >
-                        <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {models.map((model) => (
-                            <SelectItem key={model.id} value={model.name}>
-                              {model.displayName}
+
+                      <div className="block">
+                        <Select
+                          value={currentPrivacy}
+                          onValueChange={handlePrivacyChange}
+                        >
+                          <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="low">Privacy: Low</SelectItem>
+                            <SelectItem value="medium">
+                              Privacy: Medium
                             </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                            <SelectItem value="high">Privacy: High</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </>
+                  )}
+                </div>
 
-                    <div className="block">
-                      <Select
-                        value={currentPrivacy}
-                        onValueChange={handlePrivacyChange}
-                      >
-                        <SelectTrigger className="border-none bg-transparent text-sm text-gray-700 h-8 p-0 focus:ring-0 hover:bg-gray-200 rounded px-2 transition-colors">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="low">Privacy: Low</SelectItem>
-                          <SelectItem value="medium">
-                            Privacy: Medium
-                          </SelectItem>
-                          <SelectItem value="high">Privacy: High</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </>
-                )}
+                <Button
+                  onClick={handleSend}
+                  size="sm"
+                  className="bg-black hover:bg-gray-800 text-white rounded-lg px-4 py-2 h-8 font-medium transition-colors shadow-sm"
+                  disabled={!prompt.trim() || isLoading}
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  <span className="hidden sm:inline">Send</span>
+                </Button>
               </div>
-
-              <Button
-                onClick={handleSend}
-                size="sm"
-                className="bg-black hover:bg-gray-800 text-white rounded-lg px-4 py-2 h-8 font-medium transition-colors shadow-sm"
-                disabled={!prompt.trim() || isLoading}
-              >
-                <Send className="w-4 h-4 mr-2" />
-                <span className="hidden sm:inline">Send</span>
-              </Button>
             </div>
-          </div>
 
-          {/* Privacy notice */}
-          <p className="text-xs text-gray-500 text-center mt-3">
-            🔒 Your messages are automatically protected with PII redaction and
-            IP masking
-          </p>
+            {/* Privacy notice */}
+            <p className="text-xs text-gray-500 text-center mt-3">
+              🔒 Your messages are automatically protected with PII redaction
+              and IP masking
+            </p>
+          </div>
         </div>
       </div>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
   );
 };
 
