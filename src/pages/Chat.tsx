@@ -34,6 +34,7 @@ import {
   User,
   Bot,
 } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 interface Message {
   id: string;
@@ -259,8 +260,9 @@ const Chat = () => {
     );
   };
 
-  const handleSend = async () => {
-    if (!prompt.trim()) return;
+  const handleSend = async (messageToSend?: string) => {
+    const messageContent = messageToSend || prompt;
+    if (!messageContent.trim()) return;
 
     // Check if user is authenticated
     const token = localStorage.getItem("authToken");
@@ -279,13 +281,15 @@ const Chat = () => {
     const userMessage: Message = {
       id: Date.now().toString(),
       type: "user",
-      content: prompt,
+      content: messageContent,
       timestamp: new Date(),
     };
 
     setAllMessages((prev) => [...prev, userMessage]);
-    const currentPrompt = prompt;
-    setPrompt("");
+    const currentPrompt = messageContent;
+    if (!messageToSend) {
+      setPrompt("");
+    }
     setIsLoading(true);
 
     // Auto-scroll when sending message
@@ -383,6 +387,54 @@ const Chat = () => {
   const handleSendWithModelChange = (model: string) => {
     setCurrentModel(model); // Update the current model
     handleSend(); // Then send the message
+  };
+
+  // Wrapper for handleSend to use in onClick
+  const handleSendClick = () => {
+    handleSend();
+  };
+
+  // Handle copy message content
+  const handleCopyMessage = async (content: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      toast({
+        title: "Copied!",
+        description: "Message content has been copied to clipboard",
+      });
+    } catch (error) {
+      console.error("Failed to copy:", error);
+      toast({
+        title: "Copy failed",
+        description: "Failed to copy message content",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Handle resend - find the last user message before the current AI message
+  const handleResend = (aiMessageId: string) => {
+    // Find the index of the current AI message
+    const aiMessageIndex = allMessages.findIndex(
+      (msg) => msg.id === aiMessageId
+    );
+
+    if (aiMessageIndex === -1) return;
+
+    // Find the last user message before this AI message
+    for (let i = aiMessageIndex - 1; i >= 0; i--) {
+      if (allMessages[i].type === "user") {
+        handleSend(allMessages[i].content);
+        return;
+      }
+    }
+
+    // If no user message found, show error
+    toast({
+      title: "Resend failed",
+      description: "No previous user message found to resend",
+      variant: "destructive",
+    });
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -632,12 +684,55 @@ const Chat = () => {
                           : "justify-start"
                       }`}
                     >
-                      <span>
-                        {message.timestamp.toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
+                      <div>
+                        <span>
+                          {message.timestamp.toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                      </div>
+
+                      {message.type === "ai" && (
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 px-2 text-gray-500 hover:text-gray-700"
+                            onClick={() => handleCopyMessage(message.content)}
+                            title="Copy message"
+                          >
+                            <Copy className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 px-2 text-gray-500 hover:text-gray-700 opacity-50 cursor-not-allowed"
+                            disabled
+                            title="Like (disabled)"
+                          >
+                            <ThumbsUp className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 px-2 text-gray-500 hover:text-gray-700 opacity-50 cursor-not-allowed"
+                            disabled
+                            title="Unlike (disabled)"
+                          >
+                            <ThumbsDown className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 px-2 text-gray-500 hover:text-gray-700"
+                            onClick={() => handleResend(message.id)}
+                            title="Resend last user message"
+                          >
+                            <RotateCcw className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      )}
                       {/* {message.model && (
                       <span>
                         •{" "}
@@ -647,38 +742,7 @@ const Chat = () => {
                     )} */}
                     </div>
 
-                    {message.type === "ai" && (
-                      <div className="flex items-center gap-2 mt-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 px-2 text-gray-500 hover:text-gray-700"
-                        >
-                          <Copy className="w-3 h-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 px-2 text-gray-500 hover:text-gray-700"
-                        >
-                          <ThumbsUp className="w-3 h-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 px-2 text-gray-500 hover:text-gray-700"
-                        >
-                          <ThumbsDown className="w-3 h-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 px-2 text-gray-500 hover:text-gray-700"
-                        >
-                          <RotateCcw className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    )}
+                    
                   </div>
 
                   {message.type === "user" && (
@@ -881,7 +945,7 @@ const Chat = () => {
                 </div>
 
                 <Button
-                  onClick={handleSend}
+                  onClick={handleSendClick}
                   size="sm"
                   className="bg-black hover:bg-gray-800 text-white rounded-lg px-4 py-2 h-8 font-medium transition-colors shadow-sm"
                   disabled={!prompt.trim() || isLoading}

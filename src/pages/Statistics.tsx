@@ -1,3 +1,5 @@
+import { getClientIP } from "@/api";
+import { useStatistics } from "@/api/hooks/useStatistics";
 import { ProcessingMetrics } from "@/components/Statistics/ProcessingMetrics";
 import { StatisticsCard } from "@/components/Statistics/StatisticsCards";
 import { StatisticsTable } from "@/components/Statistics/StatisticsTable";
@@ -9,7 +11,7 @@ import {
   MessageSquareMore,
   Shield,
 } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 
 // Mock data for statistics cards
 const MOCK_STATS = {
@@ -151,6 +153,23 @@ const MOCK_REWRITTEN_CHATS_DATA = [
 const MOCK_PII_REDACTED_CHATS_DATA = [];
 
 const Statistics: React.FC = () => {
+
+  const statisticsMutation = useStatistics();
+
+  useEffect(() => {
+    const fetch = async () => {
+      const clientIP = await getClientIP();
+      const payload = {
+        ip: clientIP,
+        user_id: localStorage.getItem("userId") || "",
+        project_id: import.meta.env.VITE_PROJECT_ID || "",
+      };
+      statisticsMutation.mutate(payload);
+    };
+    fetch();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="w-full max-w-full mx-auto space-y-6">
       {/* Statistics Cards */}
