@@ -1,4 +1,5 @@
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { LineChart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,6 +10,7 @@ interface StatisticsCardProps {
   change?: string;
   changeClassName?: string;
   changeLabel?: string;
+  loading?: boolean;
 }
 
 export const StatisticsCard: React.FC<StatisticsCardProps> = ({
@@ -18,6 +20,7 @@ export const StatisticsCard: React.FC<StatisticsCardProps> = ({
   change,
   changeClassName,
   changeLabel,
+  loading = false,
 }) => {
   return (
     <Card className="group w-full shadow-sm border border-border bg-card rounded-xl transition-all duration-200 hover:shadow-md hover:border-primary/20 hover:-translate-y-0.5">
@@ -38,23 +41,32 @@ export const StatisticsCard: React.FC<StatisticsCardProps> = ({
         </div>
       </CardHeader>
       <CardContent>
-        <div className="text-[2rem] leading-9 font-semibold text-foreground mb-1">
-          {value}
-        </div>
-        {change && (
-          <div
-            className={cn(
-              "text-xs mt-2 flex items-center gap-1.5 font-medium transition-colors duration-200",
-              changeClassName || "text-green-600 dark:text-green-500"
+        {loading ? (
+          <>
+            <Skeleton className="h-9 w-24 mb-1" />
+            {change && <Skeleton className="h-4 w-32 mt-2" />}
+          </>
+        ) : (
+          <>
+            <div className="text-[2rem] leading-9 font-semibold text-foreground mb-1">
+              {value}
+            </div>
+            {change && (
+              <div
+                className={cn(
+                  "text-xs mt-2 flex items-center gap-1.5 font-medium transition-colors duration-200",
+                  changeClassName || "text-green-600 dark:text-green-500"
+                )}
+              >
+                <span className="font-semibold">{change}</span>
+                {changeLabel && (
+                  <span className="text-muted-foreground font-normal">
+                    {changeLabel}
+                  </span>
+                )}
+              </div>
             )}
-          >
-            <span className="font-semibold">{change}</span>
-            {changeLabel && (
-              <span className="text-muted-foreground font-normal">
-                {changeLabel}
-              </span>
-            )}
-          </div>
+          </>
         )}
       </CardContent>
     </Card>

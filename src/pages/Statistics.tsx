@@ -11,7 +11,7 @@ import {
   MessageSquareMore,
   Shield,
 } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 // Mock data for statistics cards
 const MOCK_STATS = {
@@ -153,8 +153,10 @@ const MOCK_REWRITTEN_CHATS_DATA = [
 const MOCK_PII_REDACTED_CHATS_DATA = [];
 
 const Statistics: React.FC = () => {
-
+  const [statisticsData, setStatisticsData] = useState(null);
   const statisticsMutation = useStatistics();
+
+  const isLoading = statisticsMutation.isPending;
 
   useEffect(() => {
     const fetch = async () => {
@@ -164,7 +166,8 @@ const Statistics: React.FC = () => {
         user_id: localStorage.getItem("userId") || "",
         project_id: import.meta.env.VITE_PROJECT_ID || "",
       };
-      statisticsMutation.mutate(payload);
+      const newStatisticsData = await statisticsMutation.mutateAsync(payload);
+      setStatisticsData(newStatisticsData?.variables || null);
     };
     fetch();
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,10 +179,11 @@ const Statistics: React.FC = () => {
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatisticsCard
           label="Total Chats"
-          value={MOCK_STATS.totalChats}
+          value={statisticsData?.total_chats || 0}
           icon={<MessageSquare className="w-5 h-5" />}
-          change={MOCK_DELTA.totalChats}
-          changeLabel={MOCK_DELTA_LABEL.totalChats}
+          change={''}
+          changeLabel={''}
+          loading={isLoading}
         />
         <StatisticsCard
           label="Total Rewritten Chats"
@@ -187,6 +191,7 @@ const Statistics: React.FC = () => {
           icon={<MessageSquareMore className="w-5 h-5" />}
           change={MOCK_DELTA.totalRewrittenChats}
           changeLabel={MOCK_DELTA_LABEL.totalRewrittenChats}
+          loading={isLoading}
         />
         <StatisticsCard
           label="Total PII-Redacted Chats"
@@ -194,6 +199,7 @@ const Statistics: React.FC = () => {
           icon={<Shield className="w-5 h-5" />}
           change={MOCK_DELTA.totalPIIRedactedChats}
           changeLabel={MOCK_DELTA_LABEL.totalPIIRedactedChats}
+          loading={isLoading}
         />
         <StatisticsCard
           label="Total Answers"
@@ -201,6 +207,7 @@ const Statistics: React.FC = () => {
           icon={<MessageCircle className="w-5 h-5" />}
           change={MOCK_DELTA.totalAnswers}
           changeLabel={MOCK_DELTA_LABEL.totalAnswers}
+          loading={isLoading}
         />
       </div>
 
