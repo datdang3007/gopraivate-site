@@ -21,40 +21,77 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-// Mock data for 7 days
-const data7Days = [
-  { day: "Mon", tokens: 1250 },
-  { day: "Tue", tokens: 2100 },
-  { day: "Wed", tokens: 1800 },
-  { day: "Thu", tokens: 2400 },
-  { day: "Fri", tokens: 2200 },
-  { day: "Sat", tokens: 800 },
-  { day: "Sun", tokens: 750 },
-];
-
-// Mock data for 30 days (last 30 days, showing weekly averages)
-const data30Days = [
-  { day: "Week 1", tokens: 1500 },
-  { day: "Week 2", tokens: 1800 },
-  { day: "Week 3", tokens: 2100 },
-  { day: "Week 4", tokens: 1950 },
-];
-
-const chartConfig = {
-  tokens: {
-    label: "Token Usage",
-    color: "#3b82f6", // Blue color matching the image
-  },
+type ActivityRecord = {
+  activity_date: string;
+  chat_count?: number;
+  tokens_used?: number;
+  active_users?: number;
 };
 
-export const TimeBasedMetrics = () => {
+type TimeBasedMetricsProps = {
+  records?: ActivityRecord[];
+  metric?: "tokens_used" | "chat_count" | "active_users";
+};
+
+const FALLBACK_ACTIVITY_DATA: ActivityRecord[] = [];
+
+const METRIC_LABEL: Record<Required<TimeBasedMetricsProps>["metric"], string> =
+  {
+    tokens_used: "Token Usage",
+    chat_count: "Chat Count",
+    active_users: "Active Users",
+  };
+
+export const TimeBasedMetrics: React.FC<TimeBasedMetricsProps> = ({
+  records,
+  metric = "tokens_used",
+}) => {
   const [timeRange, setTimeRange] = useState<"7" | "30">("7");
 
   const chartData = useMemo(() => {
-    return timeRange === "7" ? data7Days : data30Days;
-  }, [timeRange]);
+    const source =
+      records && records.length > 0 ? records : FALLBACK_ACTIVITY_DATA;
+    const sorted = [...source].sort(
+      (a, b) =>
+        new Date(a.activity_date).getTime() -
+        new Date(b.activity_date).getTime(),
+    );
 
-  const title = `Token Usage (Last ${timeRange} Days)`;
+    const limit = timeRange === "7" ? 7 : 30;
+    const windowed = sorted.slice(-limit);
+
+    return windowed.map((item) => {
+      const date = new Date(item.activity_date);
+      const label =
+        timeRange === "7"
+          ? date.toLocaleDateString("en-US", { weekday: "short" })
+          : date.toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+            });
+
+      const value =
+        metric === "chat_count"
+          ? (item.chat_count ?? 0)
+          : metric === "active_users"
+            ? (item.active_users ?? 0)
+            : (item.tokens_used ?? 0);
+
+      return { day: label, value };
+    });
+  }, [records, metric, timeRange]);
+
+  const chartConfig = useMemo(
+    () => ({
+      value: {
+        label: METRIC_LABEL[metric],
+        color: "#3b82f6",
+      },
+    }),
+    [metric],
+  );
+
+  const title = `${METRIC_LABEL[metric]} (Last ${timeRange} Days)`;
 
   return (
     <Card className="w-full shadow-sm border-border transition-shadow duration-200 hover:shadow-md">
@@ -113,7 +150,7 @@ export const TimeBasedMetrics = () => {
                 cursor={{ fill: "hsl(var(--primary) / 0.1)" }}
               />
               <Bar
-                dataKey="tokens"
+                dataKey="value"
                 fill="#3b82f6"
                 radius={[6, 6, 0, 0]}
                 className="transition-all duration-300 hover:opacity-80"

@@ -5,13 +5,55 @@ import { StatisticsCard } from "@/components/Statistics/StatisticsCards";
 import { StatisticsTable } from "@/components/Statistics/StatisticsTable";
 import { TimeBasedMetrics } from "@/components/Statistics/TimeBasedMetrics";
 import {
-  BarChart3,
   MessageCircle,
   MessageSquare,
   MessageSquareMore,
   Shield,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+
+interface StatisticsResponse {
+  summary: {
+    total_chats: number;
+    unique_users: number;
+    total_tokens: number;
+    total_chat_hist_tokens: number;
+    chats_with_pii: number;
+    first_chat_date: string;
+    last_chat_date: string;
+    total_pii_entities: number;
+  };
+  // pii_by_type: any[];
+  // model_usage: any[];
+  daily_activity: {
+    activity_date: string;
+    chat_count: number;
+    tokens_used: number;
+    active_users: number;
+  }[];
+  top_users: {
+    user_id: string;
+    chat_count: number;
+    total_tokens: number;
+    last_activity: string;
+  }[];
+  recent_chats: {
+    id: number;
+    project_id: string;
+    user_id: string;
+    chat_model: string | null;
+    token_count: number | null;
+    totalTokens: number;
+    language: string;
+    created_at: string;
+    is_new_topic: boolean;
+    user_input: string;
+    rewrittenQuery: string;
+    PII_redactedQuery: string | null;
+    chat_output: string;
+    had_pii_redaction: number;
+  }[];
+}
 
 // Mock data for statistics cards
 const MOCK_STATS = {
@@ -35,128 +77,75 @@ const MOCK_DELTA_LABEL = {
   totalAnswers: "from last week",
 };
 
-const MOCK_CHATS_COLUMNS = [
-  { key: "message", header: "Chat message" },
-  { key: "answer", header: "Answer" },
+const CHATS_COLUMNS = [
+  { key: "message", header: "Chat message", size: "50%" },
+  { key: "answer", header: "Answer", size: "50%" },
 ];
 
-const MOCK_REWRITTEN_CHATS_COLUMNS = [
-  { key: "message", header: "Chat message" },
-  { key: "rewrittenMessage", header: "Rewritten chat message" },
-  { key: "answer", header: "Answer" },
+const REWRITTEN_CHATS_COLUMNS = [
+  { key: "message", header: "Chat message", size: "25%" },
+  { key: "rewrittenMessage", header: "Rewritten chat message", size: "25%" },
+  { key: "answer", header: "Answer", size: "50%" },
 ];
 
-const MOCK_PII_REDACTED_CHATS_COLUMNS = [
-  { key: "message", header: "Chat message" },
-  { key: "piiRedactedMessage", header: "PII-redacted chat message" },
-  { key: "answer", header: "Answer" },
+const PII_REDACTED_CHATS_COLUMNS = [
+  { key: "message", header: "Chat message", size: "25%" },
+  {
+    key: "piiRedactedMessage",
+    header: "PII-redacted chat message",
+    size: "25%",
+  },
+  { key: "answer", header: "Answer", size: "50%" },
 ];
-
-const MOCK_CHATS_DATA = [
-  {
-    message: "How does the weather look today?",
-    answer: "Today's weather will be mostly sunny with a high of 75°F.",
-  },
-  {
-    message: "Remove any personal info from my resume.",
-    answer:
-      "I've removed all names, addresses, and contact details from your resume.",
-  },
-  {
-    message: "What is the capital of France?",
-    answer: "The capital of France is Paris.",
-  },
-  {
-    message: "What's the latest news in technology?",
-    answer: "Here are the latest headlines in technology for today.",
-  },
-  {
-    message: "Can you summarize this article for me?",
-    answer: "Sure, here's a brief summary of the article provided.",
-  },
-  {
-    message: "Book a meeting for tomorrow at 10am.",
-    answer: "Your meeting has been scheduled for tomorrow at 10am.",
-  },
-  {
-    message: "Translate 'thank you' to French.",
-    answer: "'Thank you' in French is 'merci'.",
-  },
-  {
-    message: "What's the population of Tokyo?",
-    answer: "As of 2021, Tokyo's population is approximately 14 million.",
-  },
-  {
-    message: "Set a reminder for my doctor's appointment next week.",
-    answer: "Reminder set for your doctor's appointment next week.",
-  },
-  {
-    message: "How do I reset my password?",
-    answer:
-      "To reset your password, click 'Forgot password' on the login page.",
-  },
-  {
-    message: "Find vegetarian recipes for dinner.",
-    answer: "Here are several vegetarian dinner recipes you might enjoy.",
-  },
-  {
-    message: "Define the term 'blockchain'.",
-    answer:
-      "Blockchain is a distributed digital ledger for recording transactions securely.",
-  },
-  {
-    message: "Email me my itinerary for next month.",
-    answer: "I have sent your travel itinerary for next month to your email.",
-  },
-  {
-    message: "What time is sunset today?",
-    answer: "Sunset today is at 6:42 PM.",
-  },
-  {
-    message: "Convert 100 USD to EUR.",
-    answer: "100 USD is approximately 93.50 EUR at the current exchange rate.",
-  },
-  {
-    message: "Who is the prime minister of Canada?",
-    answer: "The current prime minister of Canada is Justin Trudeau.",
-  },
-  {
-    message: "List all files in my Documents folder.",
-    answer: "Here is a list of all files in your Documents folder.",
-  },
-  {
-    message: "Recommend a movie to watch tonight.",
-    answer:
-      "I recommend watching 'Inception' for an exciting movie experience.",
-  },
-];
-
-const MOCK_REWRITTEN_CHATS_DATA = [
-  {
-    message: "How does the weather look today?",
-    rewrittenMessage: "Can you tell me about today's weather?",
-    answer: "Today's weather will be mostly sunny with a high of 75°F.",
-  },
-  {
-    message: "Remove any personal info from my resume.",
-    rewrittenMessage: "Redact personal information from this document.",
-    answer:
-      "I've removed all names, addresses, and contact details from your resume.",
-  },
-  {
-    message: "What is the capital of France?",
-    rewrittenMessage: "Please provide the capital city of France.",
-    answer: "The capital of France is Paris.",
-  },
-];
-
-const MOCK_PII_REDACTED_CHATS_DATA = [];
 
 const Statistics: React.FC = () => {
-  const [statisticsData, setStatisticsData] = useState(null);
+  const [statisticsData, setStatisticsData] =
+    useState<StatisticsResponse | null>(null);
   const statisticsMutation = useStatistics();
 
   const isLoading = statisticsMutation.isPending;
+
+  const totalRewrittenChats = statisticsData
+    ? statisticsData.recent_chats.filter((chat) => chat?.rewrittenQuery)
+        ?.length || 0
+    : 0;
+  const totalPIIRedactedChats = statisticsData
+    ? statisticsData.recent_chats.filter((chat) => chat?.PII_redactedQuery)
+        ?.length || 0
+    : 0;
+  const totalAnswers = statisticsData
+    ? statisticsData.recent_chats.filter((chat) => chat?.chat_output)?.length ||
+      0
+    : 0;
+  const summary = {
+    totalChats: statisticsData?.recent_chats?.length || 0,
+    totalRewrittenChats: totalRewrittenChats,
+    totalPIIRedactedChats: totalPIIRedactedChats,
+    totalAnswers: totalAnswers,
+  };
+
+  const activityRecords = statisticsData?.daily_activity || [];
+
+  const dataTableChats = statisticsData?.recent_chats?.map((chat) => ({
+    message: chat?.user_input ?? "",
+    answer: chat?.chat_output ?? "",
+  }));
+
+  const dataTableWrittenChats = statisticsData?.recent_chats
+    ?.filter((chat) => chat?.rewrittenQuery)
+    .map((chat) => ({
+      message: chat?.user_input ?? "",
+      answer: chat?.chat_output ?? "",
+      rewrittenMessage: chat?.rewrittenQuery ?? "",
+    }));
+
+  const dataTablePIIRedactedChats = statisticsData?.recent_chats?.map(
+    (chat) => ({
+      message: chat?.user_input ?? "",
+      answer: chat?.chat_output ?? "",
+      piiRedactedMessage: chat?.PII_redactedQuery ?? "",
+    }),
+  );
 
   useEffect(() => {
     const fetch = async () => {
@@ -167,10 +156,10 @@ const Statistics: React.FC = () => {
         project_id: import.meta.env.VITE_PROJECT_ID || "",
       };
       const newStatisticsData = await statisticsMutation.mutateAsync(payload);
-      setStatisticsData(newStatisticsData?.variables || null);
+      setStatisticsData(JSON.parse(newStatisticsData.JSONraw) || null);
     };
     fetch();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -179,34 +168,34 @@ const Statistics: React.FC = () => {
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatisticsCard
           label="Total Chats"
-          value={statisticsData?.total_chats || 0}
+          value={summary.totalChats}
           icon={<MessageSquare className="w-5 h-5" />}
-          change={''}
-          changeLabel={''}
+          change={""}
+          changeLabel={""}
           loading={isLoading}
         />
         <StatisticsCard
           label="Total Rewritten Chats"
-          value={MOCK_STATS.totalRewrittenChats}
+          value={summary.totalRewrittenChats}
           icon={<MessageSquareMore className="w-5 h-5" />}
-          change={MOCK_DELTA.totalRewrittenChats}
-          changeLabel={MOCK_DELTA_LABEL.totalRewrittenChats}
+          change={""}
+          changeLabel={""}
           loading={isLoading}
         />
         <StatisticsCard
           label="Total PII-Redacted Chats"
-          value={MOCK_STATS.totalPIIRedactedChats}
+          value={summary.totalPIIRedactedChats}
           icon={<Shield className="w-5 h-5" />}
-          change={MOCK_DELTA.totalPIIRedactedChats}
-          changeLabel={MOCK_DELTA_LABEL.totalPIIRedactedChats}
+          change={""}
+          changeLabel={""}
           loading={isLoading}
         />
         <StatisticsCard
           label="Total Answers"
-          value={MOCK_STATS.totalAnswers}
+          value={summary.totalAnswers}
           icon={<MessageCircle className="w-5 h-5" />}
-          change={MOCK_DELTA.totalAnswers}
-          changeLabel={MOCK_DELTA_LABEL.totalAnswers}
+          change={""}
+          changeLabel={""}
           loading={isLoading}
         />
       </div>
@@ -214,7 +203,7 @@ const Statistics: React.FC = () => {
       {/* Time-based Metrics & Processing Metrics */}
       <div className="flex flex-col xl:flex-row gap-6">
         <div className="flex-[2] flex">
-          <TimeBasedMetrics />
+          <TimeBasedMetrics records={activityRecords} metric="tokens_used" />
         </div>
         <div className="flex-1 flex">
           <ProcessingMetrics />
@@ -224,22 +213,22 @@ const Statistics: React.FC = () => {
       {/* Chats Table */}
       <StatisticsTable
         title="Chats"
-        columns={MOCK_CHATS_COLUMNS}
-        data={MOCK_CHATS_DATA}
+        columns={CHATS_COLUMNS}
+        data={dataTableChats}
       />
 
       {/* Rewritten Chats Table */}
       <StatisticsTable
         title="Rewritten Chats"
-        columns={MOCK_REWRITTEN_CHATS_COLUMNS}
-        data={MOCK_REWRITTEN_CHATS_DATA}
+        columns={REWRITTEN_CHATS_COLUMNS}
+        data={dataTableWrittenChats}
       />
 
       {/* PII-Redacted Chats Table */}
       <StatisticsTable
         title="PII-Redacted Chats"
-        columns={MOCK_PII_REDACTED_CHATS_COLUMNS}
-        data={MOCK_PII_REDACTED_CHATS_DATA}
+        columns={PII_REDACTED_CHATS_COLUMNS}
+        data={dataTablePIIRedactedChats}
       />
     </div>
   );

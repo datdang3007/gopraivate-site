@@ -12,18 +12,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Download } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import MessageRenderer from "@/components/MessageRenderer";
 
 export interface Column<
-  T extends Record<string, unknown> = Record<string, unknown>
+  T extends Record<string, unknown> = Record<string, unknown>,
 > {
   key: string;
   header: string;
   accessor?: string | ((row: T) => React.ReactNode);
   className?: string;
+  size?: string; // e.g. "50%" or "200px"
 }
 
 export interface StatisticsTableProps<
-  T extends Record<string, unknown> = Record<string, unknown>
+  T extends Record<string, unknown> = Record<string, unknown>,
 > {
   title: string;
   columns: Column<T>[];
@@ -66,10 +75,23 @@ function getPaginationNumbers(current: number, total: number, delta = 2) {
 export const StatisticsTable = <T extends Record<string, unknown>>({
   title,
   columns,
-  data,
+  data = [],
 }: StatisticsTableProps<T>) => {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [selectedCell, setSelectedCell] = useState<{
+    header: string;
+    value: string;
+  } | null>(null);
+
+  const cellClampStyles: React.CSSProperties = {
+    display: "-webkit-box",
+    WebkitLineClamp: 3,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    wordBreak: "break-word",
+  };
 
   const filteredData = useMemo(() => {
     if (!search.trim()) return data;
@@ -80,16 +102,16 @@ export const StatisticsTable = <T extends Record<string, unknown>>({
           typeof column.accessor === "function"
             ? column.accessor(row)
             : column.accessor
-            ? row[column.accessor]
-            : row[column.key];
+              ? row[column.accessor]
+              : row[column.key];
         return value && value.toString().toLowerCase().includes(searchLower);
-      })
+      }),
     );
   }, [search, data, columns]);
 
   const totalPages = Math.max(
     1,
-    Math.ceil(filteredData.length / ITEMS_PER_PAGE)
+    Math.ceil(filteredData.length / ITEMS_PER_PAGE),
   );
   const paginatedData = useMemo(() => {
     const start = (page - 1) * ITEMS_PER_PAGE;
@@ -101,6 +123,32 @@ export const StatisticsTable = <T extends Record<string, unknown>>({
       setPage(totalPages);
     }
   }, [totalPages, page]);
+
+  const normalizeCellValue = (value: React.ReactNode): string => {
+    if (value === null || value === undefined) return "";
+    if (typeof value === "string") return value;
+    if (typeof value === "number" || typeof value === "boolean") {
+      return String(value);
+    }
+    if (Array.isArray(value)) {
+      return value
+        .map((item) => normalizeCellValue(item as React.ReactNode))
+        .filter(Boolean)
+        .join(", ");
+    }
+    if (React.isValidElement(value)) {
+      const children = (value.props as { children?: React.ReactNode })
+        ?.children;
+      if (typeof children === "string") return children;
+      if (Array.isArray(children)) {
+        return children
+          .map((child) => normalizeCellValue(child as React.ReactNode))
+          .filter(Boolean)
+          .join(" ");
+      }
+    }
+    return "";
+  };
 
   const getCellValue = (row: T, column: Column<T>): React.ReactNode => {
     if (column.accessor) {
@@ -154,8 +202,9 @@ export const StatisticsTable = <T extends Record<string, unknown>>({
                     key={column.key}
                     className={cn(
                       "font-semibold text-foreground",
-                      column.className
+                      column.className,
                     )}
+                    style={column.size ? { width: column.size } : undefined}
                   >
                     {column.header}
                   </TableHead>
@@ -185,14 +234,44 @@ export const StatisticsTable = <T extends Record<string, unknown>>({
                     key={rowIndex}
                     className="transition-colors duration-150 hover:bg-muted/50 cursor-pointer"
                   >
-                    {columns.map((column) => (
-                      <TableCell
-                        key={column.key}
-                        className={cn("text-foreground", column.className)}
-                      >
-                        {getCellValue(row, column)}
-                      </TableCell>
-                    ))}
+                    {columns.map((column) => {
+                      const cellValue = getCellValue(row, column);
+                      const normalizedValue = normalizeCellValue(cellValue);
+                      const handleOpen = () => {
+                        if (!normalizedValue) return;
+                        setSelectedCell({
+                          header: column.header,
+                          value: normalizedValue,
+                        });
+                      };
+
+                      return (
+                        <TableCell
+                          key={column.key}
+                          className={cn("text-foreground", column.className)}
+                          style={
+                            column.size ? { width: column.size } : undefined
+                          }
+                          role="button"
+                          tabIndex={0}
+                          onClick={handleOpen}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              handleOpen();
+                            }
+                          }}
+                          title={normalizedValue || undefined}
+                        >
+                          <div
+                            style={cellClampStyles}
+                            className="text-sm leading-6"
+                          >
+                            {cellValue}
+                          </div>
+                        </TableCell>
+                      );
+                    })}
                   </TableRow>
                 ))
               )}
@@ -221,7 +300,7 @@ export const StatisticsTable = <T extends Record<string, unknown>>({
                     "w-8 h-8 rounded-md transition-all duration-200 cursor-pointer",
                     num === page
                       ? "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
-                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-foreground",
                   )}
                   onClick={() => setPage(num)}
                   aria-current={num === page ? "page" : undefined}
@@ -236,7 +315,7 @@ export const StatisticsTable = <T extends Record<string, unknown>>({
                 >
                   ...
                 </span>
-              )
+              ),
             )}
           </div>
           <Button
@@ -250,6 +329,25 @@ export const StatisticsTable = <T extends Record<string, unknown>>({
           </Button>
         </div>
       </CardContent>
+
+      <Dialog
+        open={Boolean(selectedCell)}
+        onOpenChange={(open) => {
+          if (!open) setSelectedCell(null);
+        }}
+      >
+        <DialogContent className="max-w-3xl w-[min(92vw,900px)]">
+          <DialogHeader>
+            <DialogTitle>{selectedCell?.header || "Details"}</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Full content from the selected cell.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="max-h-[70vh] overflow-y-auto rounded-lg border border-border bg-muted/30 p-4">
+            <MessageRenderer content={selectedCell?.value || ""} />
+          </div>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
